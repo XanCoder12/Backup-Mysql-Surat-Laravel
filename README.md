@@ -1,10 +1,12 @@
 # Archive-Surat BP SUML
 
-Sistem Manajemen Surat Digital untuk Kantor Metrologi dengan alur approval multi-tahap, tracking SLA real-time, dan dashboard komprehensif.
 
 
 <img width="832" height="300" alt="White_SUML" src="https://github.com/user-attachments/assets/78b6958d-42ce-4c73-97f3-22b93f136dcc" />
 
+<hr>
+
+Sistem Manajemen Surat Digital untuk Kantor Metrologi dengan alur approval multi-tahap, tracking SLA real-time, dan dashboard komprehensif.
 
 
 ### 🔐 Autentikasi & Keamanan
@@ -39,6 +41,10 @@ Sistem Manajemen Surat Digital untuk Kantor Metrologi dengan alur approval multi
 - **Scheduled Tasks** - Cleanup expired files otomatis setiap hari
 
 ---
+
+<img width="1362" height="734" alt="Screenshot 2026-04-14 110447" src="https://github.com/user-attachments/assets/6daa3f14-117d-417d-9a3b-96e7c1ed144e" />
+
+<img width="1365" height="767" alt="Screenshot 2026-04-14 110923" src="https://github.com/user-attachments/assets/ddea5fd4-685d-4c65-97f0-4a1111d65e90" />
 
 ## 🛠 Teknologi yang Digunakan
 
