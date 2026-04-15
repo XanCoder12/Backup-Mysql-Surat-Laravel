@@ -8,7 +8,8 @@
       "Bash(npm run *)",
       "Bash(composer *)",
       "Bash(curl *)",
-      "Bash(type *)"
+      "Bash(type *)",
+      "Bash(del *)"
     ]
   },
   "$version": 3

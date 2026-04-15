@@ -353,9 +353,6 @@
     </div>
 </div>
 
-{{-- SISTEM KOMENTAR / DISKUSI --}}
-<x-komentar-section :surat="$surat" />
-
 {{-- Modal Hapus Surat --}}
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -432,11 +429,5 @@
         </div>
     </div>
 </div>
-
-{{-- Pass user ID to JavaScript --}}
-<script>
-    window.currentUserId = {{ auth()->id() }};
-    window.isAdmin = {{ auth()->user()->isAdmin() ? 'true' : 'false' }};
-</script>
 
 @endsection
