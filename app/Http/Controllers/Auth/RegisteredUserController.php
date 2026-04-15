@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -39,13 +40,34 @@ class RegisteredUserController extends Controller
             'admin_code'    => ['nullable', 'string'],
         ]);
 
-        // Cek secret code
+        // Cek secret code admin (sebelum hit Google API)
         $role = 'user';
         if ($request->filled('admin_code')) {
             if ($request->admin_code !== config('app.admin_secret_code')) {
                 return back()->withErrors(['admin_code' => 'Kode admin tidak valid.']);
             }
             $role = 'admin';
+        }
+
+        // Verifikasi Google reCAPTCHA (paling akhir, setelah semua validasi lolos)
+        $recaptchaToken = $request->input('g-recaptcha-response');
+        if (empty($recaptchaToken)) {
+            return back()->withErrors(['recaptcha' => 'Harap selesaikan verifikasi reCAPTCHA terlebih dahulu.'])->withInput();
+        }
+
+        $recaptchaVerify = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret'   => config('services.recaptcha.secret'),
+            'response' => $recaptchaToken,
+            'remoteip' => $request->ip(),
+        ]);
+
+        if (! $recaptchaVerify->json('success')) {
+            $errCodes = implode(', ', $recaptchaVerify->json('error-codes', []));
+            \Illuminate\Support\Facades\Log::warning('reCAPTCHA gagal', [
+                'error-codes' => $errCodes,
+                'ip'          => $request->ip(),
+            ]);
+            return back()->withErrors(['recaptcha' => 'Verifikasi reCAPTCHA gagal atau kadaluarsa. Silakan coba lagi.'])->withInput();
         }
 
         $user = User::create([
