@@ -32,6 +32,7 @@
                 <option value="proses"  {{ request('status') === 'proses'  ? 'selected' : '' }}>Proses</option>
                 <option value="selesai" {{ request('status') === 'selesai' ? 'selected' : '' }}>Selesai</option>
                 <option value="ditolak" {{ request('status') === 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                <option value="revisi"  {{ request('status') === 'revisi'  ? 'selected' : '' }}>Revisi</option>
             </select>
         </div>
 
@@ -121,6 +122,8 @@
                                 <span class="badge badge-green">Selesai</span>
                             @elseif($surat->status === 'ditolak')
                                 <span class="badge badge-red">Ditolak</span>
+                            @elseif($surat->status === 'revisi')
+                                <span class="badge badge-amber">📝 Revisi ({{ $surat->revisi_count }}x)</span>
                             @else
                                 <span class="badge badge-amber">Proses</span>
                             @endif
