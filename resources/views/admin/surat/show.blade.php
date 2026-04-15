@@ -28,6 +28,8 @@
                             <span class="badge badge-green">✓ Selesai</span>
                         @elseif($surat->status === 'ditolak')
                             <span class="badge badge-red">✗ Ditolak</span>
+                        @elseif($surat->status === 'revisi')
+                            <span class="badge badge-amber">📝 Revisi ke-{{ $surat->revisi_count }}</span>
                         @else
                             <span class="badge badge-amber">● Proses</span>
                         @endif
@@ -316,6 +318,105 @@
                 <div style="font-size:14px; font-weight:600; color:#15803d;">Surat Selesai</div>
                 <div style="font-size:12px; color:#6b7280; margin-top:4px;">Semua tahapan telah selesai</div>
             </div>
+        @elseif($surat->status === 'revisi')
+            {{-- FILE REVISI MENUNGGU REVIEW --}}
+            <div class="card" style="text-align:center; padding:24px; background:#fef3c7; border:1px solid #f59e0b;">
+                <div style="font-size:32px; margin-bottom:8px;">📝</div>
+                <div style="font-size:14px; font-weight:600; color:#92400e;">File Perbaikan Menunggu Review</div>
+                <div style="font-size:12px; color:#a16207; margin-top:4px;">
+                    User sudah upload file revisi ke-{{ $surat->revisi_count }} pada {{ $surat->revisi_uploaded_at?->format('d M Y, H:i') }}
+                </div>
+                <div style="font-size:11px; color:#6b7280; margin-top:8px; padding:8px; background:rgba(255,255,255,0.5); border-radius:6px;">
+                    Silakan review file baru dan klik Setujui atau Tolak di bawah.
+                </div>
+            </div>
+
+            {{-- Tampilkan form setujui & tolak untuk status revisi --}}
+            @php
+                $canApprove = Auth::user()->canApproveTahap($surat->tahap_sekarang);
+            @endphp
+
+            @if($canApprove)
+                {{-- SETUJUI --}}
+                <div class="card">
+                    <h2 style="font-size:14px; font-weight:600; margin-bottom:12px; color:#15803d;">
+                        ✅ Setujui File Revisi & Teruskan
+                    </h2>
+                    <form action="{{ route('admin.surat.setujui', $surat) }}" method="POST">
+                        @csrf
+
+                        @if($surat->tahap_sekarang === 5)
+                            <div style="margin-bottom:10px;">
+                                <label style="font-size:12px; color:#6b7280; display:block; margin-bottom:4px;">
+                                    Nomor Surat <span style="color:#b91c1c;">*</span>
+                                </label>
+                                <input type="text" name="nomor_surat" required
+                                       placeholder="Contoh: 024/KU.01/IV/2025"
+                                       style="width:100%; padding:7px 10px; border:1px solid #e5e7eb;
+                                              border-radius:7px; font-size:13px; box-sizing:border-box;">
+                            </div>
+                        @endif
+
+                        <div style="margin-bottom:10px;">
+                            <label style="font-size:12px; color:#6b7280; display:block; margin-bottom:4px;">
+                                Catatan (opsional)
+                            </label>
+                            <textarea name="catatan" rows="3" placeholder="Tambahkan catatan..."
+                                      style="width:100%; padding:7px 10px; border:1px solid #e5e7eb;
+                                             border-radius:7px; font-size:13px; resize:vertical; box-sizing:border-box;">
+                            </textarea>
+                        </div>
+
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:10px; padding:8px 10px;
+                                    background:#f0fdf4; border-radius:6px; border:1px solid #bbf7d0;">
+                            Tahap berikutnya:
+                            <strong style="color:#15803d;">
+                                {{ \App\Models\Surat::NAMA_TAHAP[$surat->tahap_sekarang + 1] ?? 'Selesai' }}
+                            </strong>
+                        </div>
+
+                        <button type="submit" class="btn btn-success" style="width:100%;">
+                            ✓ Setujui File Revisi & Teruskan
+                        </button>
+                    </form>
+                </div>
+
+                {{-- TOLAK --}}
+                <div class="card">
+                    <h2 style="font-size:14px; font-weight:600; margin-bottom:12px; color:#b91c1c;">
+                        ✗ Tolak File Revisi
+                    </h2>
+                    <form action="{{ route('admin.surat.tolak', $surat) }}" method="POST">
+                        @csrf
+                        <div style="margin-bottom:10px;">
+                            <label style="font-size:12px; color:#6b7280; display:block; margin-bottom:4px;">
+                                Alasan Penolakan <span style="color:#b91c1c;">*</span>
+                            </label>
+                            <textarea name="catatan" rows="3" required
+                                      placeholder="Tuliskan alasan penolakan file revisi..."
+                                      style="width:100%; padding:7px 10px; border:1px solid #e5e7eb;
+                                             border-radius:7px; font-size:13px; resize:vertical; box-sizing:border-box;">
+                            </textarea>
+                            @error('catatan')
+                                <div style="color:#b91c1c; font-size:12px; margin-top:4px;">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-danger" style="width:100%;"
+                                onclick="return confirm('Yakin ingin menolak file revisi ini? User bisa upload ulang.')">
+                            ✗ Tolak File Revisi
+                        </button>
+                    </form>
+                </div>
+            @else
+                <div class="card" style="text-align:center; padding:24px; background:#fef3c7; border:1px solid #f59e0b;">
+                    <div style="font-size:32px; margin-bottom:8px;">⚠️</div>
+                    <div style="font-size:14px; font-weight:600; color:#92400e;">Anda Tidak Berwenang</div>
+                    <div style="font-size:12px; color:#a16207; margin-top:4px;">
+                        Role Anda ({{ Auth::user()->getRoleLabel() }}) tidak sesuai untuk tahap ini.
+                    </div>
+                </div>
+            @endif
+
         @else
             <div class="card" style="text-align:center; padding:24px;">
                 <div style="font-size:32px; margin-bottom:8px;">❌</div>
