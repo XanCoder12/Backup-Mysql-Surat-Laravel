@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use App\Notifications\SuratMasukNotification;
 use App\Notifications\DeleteRequestNotification;
 use App\Notifications\SuratDeletedNotification;
+use App\Notifications\FileRevisiNotification;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -215,5 +216,70 @@ use Illuminate\Support\Facades\Storage;
 
         // Hapus surat (tahapans akan terhapus otomatis karena cascade)
         $surat->delete();
+    }
+
+    /**
+     * Upload ulang file perbaikan jika surat ditolak
+     */
+    public function reuploadFile(Request $request, Surat $surat)
+    {
+        // Pastikan hanya pemilik yang bisa upload ulang
+        abort_if($surat->user_id !== Auth::id(), 403);
+
+        // Hanya bisa jika status ditolak
+        if (!$surat->bisaRevisi()) {
+            return back()->with('error', 'Upload ulang hanya bisa dilakukan jika surat ditolak.');
+        }
+
+        $request->validate([
+            'file_word'     => 'required|file|mimes:docx,doc|max:10240',
+            'file_lampiran' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:20480',
+        ]);
+
+        if ($surat->file_word) {
+            $wordPath = storage_path('app/public/' . $surat->file_word);
+            if (file_exists($wordPath)) {
+                @unlink($wordPath);
+            }
+        }
+        if ($surat->file_lampiran) {
+            $lampiranPath = storage_path('app/public/' . $surat->file_lampiran);
+            if (file_exists($lampiranPath)) {
+                @unlink($lampiranPath);
+            }
+        }
+
+        // Upload file baru
+        $fileWord = $request->file('file_word')->store('surat/word', 'public');
+        $fileLamp = $request->file('file_lampiran')
+                  ? $request->file('file_lampiran')->store('surat/lampiran', 'public')
+                  : null;
+
+        $tahapDitolak = $surat->tahap_sekarang;
+        $tahapanDitolak = $surat->tahapans()->where('tahap', $tahapDitolak)->first();
+        $namaTahapDitolak = $tahapanDitolak ? $tahapanDitolak->nama_tahap : 'Tahap ' . $tahapDitolak;
+
+        $surat->update([
+            'file_word'         => $fileWord,
+            'file_lampiran'     => $fileLamp,
+            'status'            => 'revisi',
+            'status_revisi'     => true,
+            'revisi_count'      => $surat->revisi_count + 1,
+            'revisi_uploaded_at'=> now(),
+        ]);
+
+        $surat->tahapans()->where('tahap', $tahapDitolak)->update([
+            'status' => 'proses',
+        ]);
+
+        // Notif ke SEMUA admin
+        User::whereIn('role', ['admin', 'admin_aspirasi', 'admin_kasubbag_tu', 'admin_kepala_balai'])
+            ->each(fn($a) => $a->notify(new FileRevisiNotification(
+                $surat,
+                $tahapDitolak,
+                $namaTahapDitolak
+            )));
+
+        return back()->with('success', 'File perbaikan berhasil diupload! Menunggu review admin.');
     }
 }
