@@ -17,7 +17,7 @@
         @forelse($templates as $tpl)
             <div class="d-flex align-items-center gap-3 py-2 border-bottom">
                 <i class="bi bi-file-earmark-word" style="color:#2563eb; font-size:22px;"></i>
-                <span style="font-size:14px; flex:1; color:#374151;">{{ $tpl['nama'] }}</span>
+                <span style="font-size:14px; flex:1; color:#6b7280;">{{ $tpl['nama'] }}</span>
                 <a href="{{ $tpl['url'] }}" target="_blank" rel="noopener noreferrer"
                    class="btn btn-sm btn-primary" style="font-size:12px; border-radius:7px; background:#1e3a5f; border-color:#1e3a5f;">
                     <i class="bi bi-download me-1"></i> Unduh
