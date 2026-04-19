@@ -97,18 +97,44 @@
                 </div>
 
                 {{-- Lampiran --}}
-                <div class="mt-4 pt-3 border-top d-flex gap-2 flex-wrap">
-                    <a href="{{ route('user.surat.preview', [$surat, 'word']) }}"
-                       class="btn btn-sm d-flex align-items-center gap-2"
-                       style="font-size:12px;border:1px solid var(--border-color);border-radius:8px;color:#1e3a5f;background:var(--bg-secondary);">
-                        <i class="bi bi-file-earmark-word" style="color:#2563eb;"></i> Preview / Unduh Surat
-                    </a>
-                    @if($surat->file_lampiran)
-                        <a href="{{ route('user.surat.preview', [$surat, 'lampiran']) }}"
-                           class="btn btn-sm d-flex align-items-center gap-2"
-                           style="font-size:12px;border:1px solid var(--border-color);border-radius:8px;color:#1e3a5f;background:var(--bg-secondary);">
-                            <i class="bi bi-paperclip"></i> Preview / Unduh Lampiran
-                        </a>
+                <div class="mt-4 pt-3 border-top">
+                    <div style="font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:12px; letter-spacing:0.5px;">DOKUMEN LAMPIRAN</div>
+                    
+                    @if($surat->file_dihapus_pada)
+                        <div class="alert alert-secondary d-flex align-items-center gap-2" style="font-size:12px; border-radius:10px; border:none; background:var(--bg-tertiary);">
+                            <i class="bi bi-info-circle-fill text-secondary"></i>
+                            <div>
+                                <strong>File Fisik Telah Dihapus</strong><br>
+                                File ini telah dibersihkan dari penyimpanan pada {{ $surat->file_dihapus_pada->format('d M Y, H:i') }}. Tracking histori tetap tersedia.
+                            </div>
+                        </div>
+                    @else
+                        <div class="d-flex gap-2 flex-wrap">
+                            @if($surat->file_word)
+                                <a href="{{ route('user.surat.preview', [$surat, 'word']) }}"
+                                   class="btn btn-sm d-flex align-items-center gap-2"
+                                   style="font-size:12px;border:1px solid var(--border-color);border-radius:8px;color:#1e3a5f;background:var(--bg-secondary);">
+                                    <i class="bi bi-file-earmark-word" style="color:#2563eb;"></i> Preview / Unduh Surat
+                                </a>
+                            @endif
+                            @if($surat->file_lampiran)
+                                <a href="{{ route('user.surat.preview', [$surat, 'lampiran']) }}"
+                                   class="btn btn-sm d-flex align-items-center gap-2"
+                                   style="font-size:12px;border:1px solid var(--border-color);border-radius:8px;color:#1e3a5f;background:var(--bg-secondary);">
+                                    <i class="bi bi-paperclip"></i> Preview / Unduh Lampiran
+                                </a>
+                            @endif
+
+                            @if($surat->status === 'selesai' && ($surat->file_word || $surat->file_lampiran))
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-danger d-flex align-items-center gap-2"
+                                        style="font-size:12px; border-radius:8px;"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#purgeFilesModal">
+                                    <i class="bi bi-shield-lock"></i> Bersihkan File Fisik
+                                </button>
+                            @endif
+                        </div>
                     @endif
                 </div>
 
@@ -449,5 +475,40 @@
         </div>
     </div>
 </div>
+
+@if($surat->status === 'selesai' && !$surat->file_dihapus_pada)
+{{-- Modal Purge Files --}}
+<div class="modal fade" id="purgeFilesModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Bersihkan File Fisik</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-4">
+                    <div class="rounded-circle bg-danger bg-opacity-10 d-flex align-items-center justify-content-center mx-auto mb-3" style="width:64px; height:64px;">
+                        <i class="bi bi-shield-lock-fill text-danger" style="font-size:32px;"></i>
+                    </div>
+                    <h6 class="fw-bold">Hapus File Saja?</h6>
+                    <p class="text-muted small">Tindakan ini akan menghapus file Word dan Lampiran dari server secara permanen untuk menjaga privasi/storage.</p>
+                </div>
+                
+                <div class="alert alert-info border-0 mb-0" style="font-size:12px; border-radius:12px;">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <strong>Jangan Khawatir:</strong> Seluruh riwayat pemrosesan (tracking), catatan admin, dan status surat tetap akan tersimpan di dashboard ini. Hanya file dokumennya saja yang tidak akan bisa didownload lagi.
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0 p-4">
+                <button type="button" class="btn btn-light w-100 mb-2" data-bs-dismiss="modal" style="border-radius:10px; font-size:13px; font-weight:600;">Batal</button>
+                <form action="{{ route('user.surat.purgeFiles', $surat) }}" method="POST" class="w-100">
+                    @csrf
+                    <button type="submit" class="btn btn-danger w-100 py-2" style="border-radius:10px; font-size:13px; font-weight:600;">Ya, Bersihkan File</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 
 @endsection
