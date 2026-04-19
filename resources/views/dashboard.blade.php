@@ -243,11 +243,27 @@
                 </p>
             </div>
         </div>
-        <a href="{{ route('user.surat.create') }}" class="btn btn-primary-modern d-flex align-items-center gap-2">
+        <a href="{{ $isLibur ? 'javascript:void(0)' : route('user.surat.create') }}" 
+           class="btn btn-primary-modern d-flex align-items-center gap-2 {{ $isLibur ? 'disabled' : '' }}"
+           @if($isLibur) onclick="Swal.fire({icon: 'info', title: 'Layanan Tutup', text: 'Pengajuan surat baru hanya tersedia pada hari kerja (Senin - Jumat) pukul 07:00 - 17:00 WIB.', confirmButtonColor: '#1e3a5f'})" @endif>
             <i class="bi bi-plus-circle-fill"></i> Ajukan Surat Baru
         </a>
     </div>
 </div>
+
+@if($isLibur)
+<div class="alert alert-warning border-0 shadow-sm animate-in mb-4" style="border-radius:16px; background:#fffbeb; color:#b45309; animation-delay: 0.05s; border-left: 5px solid #f59e0b !important;">
+    <div class="d-flex align-items-center gap-3 p-2">
+        <div style="font-size:32px;">⏰</div>
+        <div>
+            <h6 class="fw-bold mb-1">Layanan Sedang Tutup</h6>
+            <p class="mb-0" style="font-size:13px; opacity:0.9;">
+                Saat ini pukul <strong>{{ now()->format('H:i') }} WIB</strong>. Pengajuan surat baru hanya tersedia pada hari kerja <strong>(Senin-Jumat)</strong> pukul <strong>07:00 - 17:00 WIB</strong>.
+            </p>
+        </div>
+    </div>
+</div>
+@endif
 
 {{-- STAT CARDS --}}
 <div class="row g-4 mb-4">
