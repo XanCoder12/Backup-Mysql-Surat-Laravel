@@ -249,6 +249,26 @@
     {{-- KOLOM KANAN --}}
     <div class="col-12 col-lg-4">
 
+        {{-- QR CODE VERIFIKASI --}}
+        <div class="card card-custom mb-3">
+            <div class="card-body p-4 text-center">
+                <h6 class="fw-bold mb-3" style="color:var(--text-primary);font-size:13px;text-transform:uppercase;letter-spacing:0.05em;">QR Code Verifikasi</h6>
+                <div style="background:white; padding:10px; border-radius:12px; display:inline-block; border:1px solid var(--border-color); margin-bottom:12px;">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode(route('surat.verifikasi', $surat->uuid)) }}" 
+                         alt="QR Code Verifikasi" style="display:block; width:120px; height:120px;">
+                </div>
+                <div style="font-size:11px; color:var(--text-secondary); line-height:1.4;">
+                    Ini adalah QR Code unik untuk memverifikasi keaslian surat ini di portal publik.
+                </div>
+                <div class="mt-2">
+                    <a href="{{ route('surat.verifikasi', $surat->uuid) }}" target="_blank" 
+                       style="font-size:12px; color:#4f46e5; font-weight:600; text-decoration:none;">
+                       Buka Halaman Verifikasi ↗
+                    </a>
+                </div>
+            </div>
+        </div>
+
         {{-- STATUS CARD --}}
         @php
             $statusCardBg = match($surat->status) {
