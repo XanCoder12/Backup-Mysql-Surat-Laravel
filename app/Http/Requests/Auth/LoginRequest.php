@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -42,17 +43,25 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        // Cek apakah input adalah email atau NIP
         $input = $this->input('email');
-        $isEmail = filter_var($input, FILTER_VALIDATE_EMAIL);
+        $credential = $this->input('password');
         
-        // Coba login
+        // Determine if input is email or NIP
+        $isEmail = filter_var($input, FILTER_VALIDATE_EMAIL);
+        $isNip = User::isValidNipFormat($input);
+        
+        $attempt = false;
+
         if ($isEmail) {
-            // Login pakai email
-            $attempt = Auth::attempt(['email' => $input, 'password' => $this->input('password')], $this->boolean('remember'));
+            // Login with email + password only
+            $attempt = Auth::attempt(['email' => $input, 'password' => $credential], $this->boolean('remember'));
+        } elseif ($isNip) {
+            // Login with NIP + password only
+            $attempt = Auth::attempt(['nip' => $input, 'password' => $credential], $this->boolean('remember'));
         } else {
-            // Login pakai NIP
-            $attempt = Auth::attempt(['nip' => $input, 'password' => $this->input('password')], $this->boolean('remember'));
+            // Assume input is username (name field)
+            // Login with username + password only
+            $attempt = Auth::attempt(['name' => $input, 'password' => $credential], $this->boolean('remember'));
         }
 
         if (!$attempt) {
