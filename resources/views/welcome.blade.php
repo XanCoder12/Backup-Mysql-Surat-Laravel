@@ -7,7 +7,7 @@
     <title>BP SUML | Sistem Persuratan </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="{{ asset('images/BPSUML2.png') }}">
+    <link rel="icon" href="{{ asset('images/Metrologi.png') }}">
 
     <style>
         * {
@@ -220,7 +220,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h2 style="font-size:14px; font-weight:700; color:#fff; letter-spacing:-0.2px;">Balai Pengelola SUML</h2>
+                    <h2 style="font-size:14px; font-weight:700; color:#fff; letter-spacing:-0.2px;">Balai Pengelolaan SUML</h2>
                     <p style="font-size:10px; color:rgba(255,255,255,0.65); margin-top:2px;"> BPSUML Data Pengelolaan</p>
                 </div>
             </div>
@@ -232,7 +232,7 @@
                 <!-- Logo Image -->
                 <div class="icon-wrap">
                     <a href="{{ url('/') }}">
-                        <img src="{{ asset('images/BPSUML2.png') }}" alt="Logo Metrologi">
+                        <img src="{{ asset('images/metrologi.png') }}" alt="Logo Metrologi">
                     </a>
                 </div>
 
@@ -240,7 +240,7 @@
                     Selamat Datang
                 </h1>
                 <p style="font-size:14px; color:rgba(255,255,255,0.7); margin-bottom:20px; line-height:1.5; font-weight:500;">
-                    Sistem Informasi Balai Pengelola SUML
+                    Sistem Informasi Balai Pengelolaan SUML
                 </p>
 
                 <div class="divider-glow"></div>
@@ -250,7 +250,7 @@
                 <a href="{{ route('register') }}" class="btn-secondary">Buat Akun Baru</a>
 
                 <p style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:32px; letter-spacing:0.3px; font-weight:500;">
-                    &copy; {{ date('Y') }} Balai Pengelola SUML. Hak Cipta Dilindungi.
+                    &copy; {{ date('Y') }} Balai Pengelolaan SUML. Hak Cipta Dilindungi.
                 </p>
             </div>
         </div>
