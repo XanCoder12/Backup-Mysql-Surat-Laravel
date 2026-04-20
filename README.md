@@ -14,14 +14,17 @@ Sistem Manajemen Surat Digital untuk Kantor Metrologi dengan alur approval multi
 - Reset password via email
 - Konfirmasi password untuk aksi sensitif
 - Role-based access control (Admin & User)
-
+- veRECAPTCHA V2 google api
+  
 ### 👥 Fitur User (Staff/Pegawai)
-- **Ajukan Surat** - Upload dokumen Word (.docx/.doc) + lampiran (PDF/JPG/PNG)
-- **Tracking Real-time** - Pantau progres surat di 10 tahapan approval
-- **Monitoring SLA** - Deadline 24 jam kerja dengan countdown & indikator overdue
+- **Ajukan Surat** - Upload dokumen Word (.docx/.doc) + lampiran (PDF/JPG/PNG). dan jika udah selesai user bisa hapus surat nya aja tanpa menghapus tracking nya
+- **Tracking Real-time** - Pantau progres surat di 10 tahapan approval samppe followup
+- **Monitoring SLA** - Deadline 24 jam kerja dengan countdown & indikator overdue  jika terlambat ada peringatan dan contoh terlambat -1.1j
 - **Template Surat** - Download template surat resmi
-- **Notifikasi** - Notifikasi real-time untuk setiap update status surat
-- **Dashboard** - Statistik surat, surat aktif, dan template tersedia
+- **Notifikasi** - Notifikasi real-time untuk setiap update status surat(perlu di refresh). 
+- **Dashboard** - Statistik surat, surat aktif, notifikasi dan template tersedia
+- **FAQ** - Untuk bantuan atau apapun itu
+- **Qrcode** - Untuk memverifikasi apakah itu suratnya beneran terdaftar atau palsu. dan bisa di liha lewat hp 
 
 ### 👨‍💼 Fitur Admin
 - **Dashboard Admin** - Statistik lengkap, antrian surat, tracking SLA
@@ -293,11 +296,12 @@ Sistem notifikasi **real-time** untuk update status surat:
 1. **Surat Masuk** - Dikirim ke admin saat user mengajukan surat
 2. **Surat Diproses** - Dikirim ke admin lain saat surat diproses
 3. **Surat Status Update** - Dikirim ke user saat surat diapprove/reject/selesai
+4. **Surat Dihapus** - admin bisa tau kalo user telah menghapus surat
 
 ### Metode Delivery
 - **Polling**: Cek notifikasi setiap 3 detik
 - **Server-Sent Events (SSE)**: Streaming real-time (alternatif polling)
-- **Database**: Disimpan di tabel `notifications`
+- **Database**: apa weh
 
 ### Fitur Notifikasi
 - 🎨 Color-coded by severity (success/info/warning/danger)
