@@ -138,15 +138,46 @@
     .notification-item {
         padding: 16px 24px;
         border-bottom: 1px solid #f1f5f9;
-        transition: background 0.2s ease;
+        transition: all 0.2s ease;
+        position: relative;
     }
     
     .notification-item:hover {
         background: #f8fafc;
     }
+
+    .notification-item.removing {
+        opacity: 0;
+        transform: translateX(20px);
+    }
     
     .notification-item:last-child {
         border-bottom: none;
+    }
+
+    .btn-delete-notif {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        border: none;
+        background: transparent;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        transition: all 0.2s;
+        z-index: 10;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .btn-delete-notif:hover {
+        background: #fee2e2;
+        color: #ef4444;
     }
     
     @keyframes fadeInUp {
@@ -423,42 +454,47 @@
                     </span>
                 @endif
             </div>
-            <div style="max-height:280px; overflow-y:auto;">
+            <div id="dashboard-notif-list" style="max-height:280px; overflow-y:auto;">
                 @forelse(auth()->user()->notifications->take(6) as $notif)
-                    <a href="{{ route('notif.read', $notif->id) }}" class="notification-item d-block text-decoration-none">
-                        <div class="d-flex align-items-start gap-3">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                 style="width:36px; height:36px; background:{{ match($notif->data['type'] ?? 'info') {
-                                     'success' => '#dcfce7',
-                                     'warning' => '#fef3c7',
-                                     'danger' => '#fee2e2',
-                                     default => '#dbeafe'
-                                 } }};">
-                                @switch($notif->data['type'] ?? 'info')
-                                    @case('success') <i class="bi bi-check-circle-fill" style="color:#15803d;"></i> @break
-                                    @case('warning') <i class="bi bi-exclamation-triangle-fill" style="color:#b45309;"></i> @break
-                                    @case('danger')  <i class="bi bi-x-circle-fill" style="color:#b91c1c;"></i> @break
-                                    @default         <i class="bi bi-info-circle-fill" style="color:#1d4ed8;"></i>
-                                @endswitch
+                    <div class="notification-item-wrapper position-relative">
+                        <a href="{{ route('notif.read', $notif->id) }}" class="notification-item d-block text-decoration-none">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                                     style="width:36px; height:36px; background:{{ match($notif->data['type'] ?? 'info') {
+                                         'success' => '#dcfce7',
+                                         'warning' => '#fef3c7',
+                                         'danger' => '#fee2e2',
+                                         default => '#dbeafe'
+                                     } }};">
+                                    @switch($notif->data['type'] ?? 'info')
+                                        @case('success') <i class="bi bi-check-circle-fill" style="color:#15803d;"></i> @break
+                                        @case('warning') <i class="bi bi-exclamation-triangle-fill" style="color:#b45309;"></i> @break
+                                        @case('danger')  <i class="bi bi-x-circle-fill" style="color:#b91c1c;"></i> @break
+                                        @default         <i class="bi bi-info-circle-fill" style="color:#1d4ed8;"></i>
+                                    @endswitch
+                                </div>
+                                <div class="flex-grow-1 min-w-0">
+                                    <div class="fw-semibold mb-1" style="color:#1e293b; font-size:13px;">
+                                        {{ $notif->data['title'] ?? 'Notifikasi' }}
+                                    </div>
+                                    <div class="text-muted" style="font-size:12px;">
+                                        {{ Str::limit($notif->data['message'] ?? '', 60) }}
+                                    </div>
+                                    <div style="font-size:11px; color:#94a3b8; margin-top:4px;">
+                                        {{ $notif->created_at->diffForHumans() }}
+                                    </div>
+                                </div>
+                                @if(!$notif->read_at)
+                                    <div class="flex-shrink-0 pe-4">
+                                        <span class="badge rounded-circle" style="width:8px; height:8px; background:#3b82f6; padding:0;"></span>
+                                    </div>
+                                @endif
                             </div>
-                            <div class="flex-grow-1 min-w-0">
-                                <div class="fw-semibold mb-1" style="color:#1e293b; font-size:13px;">
-                                    {{ $notif->data['title'] ?? 'Notifikasi' }}
-                                </div>
-                                <div class="text-muted" style="font-size:12px;">
-                                    {{ Str::limit($notif->data['message'] ?? '', 60) }}
-                                </div>
-                                <div style="font-size:11px; color:#94a3b8; margin-top:4px;">
-                                    {{ $notif->created_at->diffForHumans() }}
-                                </div>
-                            </div>
-                            @if(!$notif->read_at)
-                                <div class="flex-shrink-0">
-                                    <span class="badge rounded-circle" style="width:8px; height:8px; background:#3b82f6; padding:0;"></span>
-                                </div>
-                            @endif
-                        </div>
-                    </a>
+                        </a>
+                        <button class="btn-delete-notif" data-id="{{ $notif->id }}" title="Hapus notifikasi">
+                            <i class="bi bi-x"></i>
+                        </button>
+                    </div>
                 @empty
                     <div class="text-center py-4 text-muted">
                         <i class="bi bi-bell-slash-fill" style="font-size:40px; display:block; margin-bottom:8px;"></i>
@@ -654,6 +690,55 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             }
+        });
+    }
+
+    // Handle Dashboard Notification Deletion
+    const notifList = document.getElementById('dashboard-notif-list');
+    if (notifList) {
+        notifList.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn-delete-notif');
+            if (!btn) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const id = btn.dataset.id;
+            const wrapper = btn.closest('.notification-item-wrapper');
+            const item = wrapper.querySelector('.notification-item');
+
+            // Add removing class for animation
+            item.classList.add('removing');
+
+            // Call API
+            fetch(`/notif/delete/${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    setTimeout(() => {
+                        wrapper.remove();
+                        if (notifList.querySelectorAll('.notification-item-wrapper').length === 0) {
+                            notifList.innerHTML = `
+                                <div class="text-center py-4 text-muted">
+                                    <i class="bi bi-bell-slash-fill" style="font-size:40px; display:block; margin-bottom:8px;"></i>
+                                    <p class="mb-0" style="font-size:13px;">Belum ada notifikasi</p>
+                                </div>
+                            `;
+                        }
+                    }, 300);
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting notification:', error);
+                item.classList.remove('removing');
+            });
         });
     }
 });
