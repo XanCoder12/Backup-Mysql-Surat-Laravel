@@ -4,238 +4,284 @@
 
 @section('content')
 
-{{-- STAT CARDS --}}
+    <div x-data="dashboardData()" x-init="initDashboard()" style="position:relative;">
 
-<div class="stat-grid">
-    <div class="stat-card blue">
-        <div class="stat-label">Total Surat Bulan Ini</div>
-        <div class="stat-value">{{ $totalBulanIni }}</div>
-        <div class="stat-sub">{{ now()->translatedFormat('F Y') }}</div>
-    </div>
-    <div class="stat-card green">
-        <div class="stat-label">Selesai</div>
-        <div class="stat-value">{{ $totalSelesai }}</div>
-        <div class="stat-sub">Sudah diarsipkan</div>
-    </div>
-    <div class="stat-card amber">
-        <div class="stat-label">Sedang Proses</div>
-        <div class="stat-value">{{ $totalProses }}</div>
-        <div class="stat-sub">Menunggu tindak lanjut</div>
-    </div>
-    <div class="stat-card red">
-        <div class="stat-label">Melewati SLA</div>
-        <div class="stat-value">{{ $totalTerlambat }}</div>
-        <div class="stat-sub">Harus segera ditangani</div>
-    </div>
-</div>
-
-<div class="dashboard-grid">
-
-    {{-- ANTRIAN VERIFIKASI --}}
-    <div class="card" style="grid-column:1/-1;">
-        <div class="section-header">
-            <div>
-                <h2>📥 Antrian Menunggu Aksi</h2>
-                <small>Surat yang perlu diproses sekarang</small>
-            </div>
-            <a href="{{ route('admin.surat.index') }}" class="btn btn-sm">Lihat Semua →</a>
+        {{-- LOADING INDICATOR --}}
+        <div x-show="connecting"
+            style="position:fixed; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, #3b82f6, #8b5cf6); animation:pulse 1.5s infinite; z-index:9999;">
         </div>
 
-        @if($antrian->isEmpty())
-            <div style="text-align:center; padding:32px; color:#9ca3af; font-size:13px;">
-                ✅ Tidak ada antrian saat ini
-            </div>
-        @else
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Judul Surat</th>
-                            <th>Pengusul</th>
-                            <th>Jenis</th>
-                            <th>Sifat</th>
-                            <th>Tahap Sekarang</th>
-                            <th>SLA</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($antrian as $surat)
-                        <tr>
-                            <td>
-                                <div style="font-weight:500; color:#111827; max-width:220px;">
-                                    {{ \Illuminate\Support\Str::limit($surat->judul, 45) }}
-                                </div>
-                                <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
-                                    {{ $surat->created_at?->diffForHumans() ?? 'Tanpa tanggal' }}
-                                </div>
-                            </td>
-                            <td>
-                                <div style="font-size:13px;">{{ $surat->user?->name ?? '—' }}</div>
-                            </td>
-                            <td>
-                                <span class="badge badge-purple">{{ $surat->jenis_label }}</span>
-                            </td>
-                            <td>
-                                @if($surat->sifat === 'segera')
-                                    <span class="badge badge-red">Segera</span>
-                                @elseif($surat->sifat === 'rahasia')
-                                    <span class="badge badge-amber">Rahasia</span>
-                                @else
-                                    <span class="badge badge-gray">Biasa</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div style="font-size:12px; font-weight:500; color:#1d4ed8;">
-                                    Tahap {{ $surat->tahap_sekarang }}/10
-                                </div>
-                                <div style="font-size:11px; color:#6b7280; margin-top:2px;">
-                                    {{ $surat->nama_tahap }}
-                                </div>
-                                <div class="progress-bar" style="margin-top:5px; width:100px;">
-                                    <div
-                                        class="progress-fill"
-                                        @style(['width' => min(100, max(0, (int) $surat->proses_persen)).'%'])
-                                    ></div>
-                                </div>
-                            </td>
-                            <td>
-                                @if($surat->sla_status === 'terlambat')
-                                    <span class="badge badge-red">⚠ Terlambat</span>
-                                @else
-                                    <span class="badge badge-green">⏱ {{ $surat->sisa_jam }}</span>
-                                @endif
-                            </td>
-                            <td>
-                                <a href="{{ route('admin.surat.show', $surat) }}"
-                                   class="btn btn-sm btn-primary">Proses →</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @endif
-    </div>
+        {{-- STAT CARDS --}}
 
-    {{-- REKAP PER JENIS --}}
-    <div class="card">
-        <div class="section-header">
-            <h2>📊 Rekap Per Jenis</h2>
+        <div class="stat-grid">
+            <div class="stat-card blue">
+                <div class="stat-label">Total Surat Bulan Ini</div>
+                <div class="stat-value" x-text="stats.totalBulanIni">{{ $totalBulanIni }}</div>
+                <div class="stat-sub">{{ now()->translatedFormat('F Y') }}</div>
+            </div>
+            <div class="stat-card green">
+                <div class="stat-label">Selesai</div>
+                <div class="stat-value" x-text="stats.totalSelesai">{{ $totalSelesai }}</div>
+                <div class="stat-sub">Sudah diarsipkan</div>
+            </div>
+            <div class="stat-card amber">
+                <div class="stat-label">Sedang Proses</div>
+                <div class="stat-value" x-text="stats.totalProses">{{ $totalProses }}</div>
+                <div class="stat-sub">Menunggu tindak lanjut</div>
+            </div>
+            <div class="stat-card red">
+                <div class="stat-label">Melewati SLA</div>
+                <div class="stat-value" x-text="stats.totalTerlambat">{{ $totalTerlambat }}</div>
+                <div class="stat-sub">Harus segera ditangani</div>
+            </div>
         </div>
-        @forelse($rekapJenis as $jenis => $jumlah)
-            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f3f4f6;">
-                <span style="font-size:13px; color:#374151;">
-                    {{ \App\Models\Surat::JENIS_LABEL[$jenis] ?? $jenis }}
-                </span>
-                <span class="badge badge-blue">{{ $jumlah }}</span>
-            </div>
-        @empty
-            <div style="text-align:center; padding:24px; color:#9ca3af; font-size:13px;">
-                Belum ada surat bulan ini
-            </div>
-        @endforelse
-    </div>
 
-    {{-- SURAT TERBARU --}}
-    <div class="card">
-        <div class="section-header">
-            <h2>🕐 Surat Terbaru</h2>
-        </div>
-        @forelse($suratTerbaru as $surat)
-            <div style="display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid #f3f4f6;">
-                <div style="flex:1; min-width:0;">
-                    <div style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                        {{ $surat->judul }}
+        <div class="dashboard-grid">
+
+            {{-- ANTRIAN VERIFIKASI --}}
+            <div class="card" style="grid-column:1/-1;">
+                <div class="section-header">
+                    <div>
+                        <h2>📥 Antrian Menunggu Aksi <span x-show="antrian.count > 0"
+                                style="font-size:14px; color:#ef4444; margin-left:8px;"
+                                x-text="'(' + antrian.count + ')'"></span></h2>
+                        <small style="color:var(--text-secondary);">Surat yang perlu diproses sekarang</small>
                     </div>
-                    <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
-                        {{ $surat->user?->name ?? '—' }} · {{ $surat->created_at?->diffForHumans() ?? 'Tanpa tanggal' }}
+                    <a href="{{ route('admin.surat.index') }}" class="btn btn-sm">Lihat Semua →</a>
+                </div>
+
+                <template x-if="antrian.items && antrian.items.length === 0">
+                    <div style="text-align:center; padding:32px; color:var(--text-secondary); font-size:13px;">
+                        ✅ Tidak ada antrian saat ini
+                    </div>
+                </template>
+
+                <template x-if="antrian.items && antrian.items.length > 0">
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Judul Surat</th>
+                                    <th>Pengusul</th>
+                                    <th>Jenis</th>
+                                    <th>Sifat</th>
+                                    <th>Tahap Sekarang</th>
+                                    <th>SLA</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="surat in antrian.items" :key="surat.id">
+                                    <tr>
+                                        <td>
+                                            <div style="font-weight:500; color:var(--text-primary); max-width:220px;"
+                                                x-text="surat.judul"></div>
+                                            <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;"
+                                                x-text="formatDate(surat.created_at)"></div>
+                                        </td>
+                                        <td>
+                                            <div style="font-size:13px; color:var(--text-primary);" x-text="surat.user ? surat.user.name : '—'"></div>
+                                        </td>
+                                        <td><span class="badge badge-purple" x-text="surat.jenis"></span></td>
+                                        <td><span class="badge"
+                                                :class="surat.sifat === 'segera' ? 'badge-red' : 'badge-gray'"
+                                                x-text="surat.sifat || 'Biasa'"></span></td>
+                                        <td>
+                                            <div style="font-size:12px; font-weight:500; color:#3b82f6;"
+                                                x-text="'Tahap ' + surat.tahap_sekarang + '/10'"></div>
+                                        </td>
+                                        <td><span :class="surat.sla_status === 'terlambat' ? 'badge-red' : 'badge-green'"
+                                                class="badge"
+                                                x-text="surat.sla_status === 'terlambat' ? '⚠ Terlambat' : '⏱ Aktif'"></span>
+                                        </td>
+                                        <td><a :href="'/Admin/Surat/' + surat.uuid" class="btn btn-sm btn-primary">Proses
+                                                →</a></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </template>
+            </div>
+
+            {{-- REKAP PER JENIS --}}
+            <div class="card">
+                <div class="section-header">
+                    <h2>📊 Rekap Per Jenis</h2>
+                </div>
+                @forelse($rekapJenis as $jenis => $jumlah)
+                    <div
+                        style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-color);">
+                        <span style="font-size:13px; color:var(--text-primary);">
+                            {{ \App\Models\Surat::JENIS_LABEL[$jenis] ?? $jenis }}
+                        </span>
+                        <span class="badge badge-blue">{{ $jumlah }}</span>
+                    </div>
+                @empty
+                    <div style="text-align:center; padding:24px; color:var(--text-secondary); font-size:13px;">
+                        Belum ada surat bulan ini
+                    </div>
+                @endforelse
+            </div>
+
+            {{-- SURAT TERBARU --}}
+            <div class="card">
+                <div class="section-header">
+                    <h2>🕐 Surat Terbaru</h2>
+                </div>
+                @forelse($suratTerbaru as $surat)
+                    <div
+                        style="display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid var(--border-color);">
+                        <div style="flex:1; min-width:0;">
+                            <div
+                                style="font-size:13px; font-weight:500; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                {{ $surat->judul }}
+                            </div>
+                            <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">
+                                {{ $surat->user?->name ?? '—' }} · {{ $surat->created_at?->diffForHumans() ?? 'Tanpa tanggal' }}
+                            </div>
+                        </div>
+                        @if($surat->status === 'selesai')
+                            <span class="badge badge-green">Selesai</span>
+                        @elseif($surat->status === 'ditolak')
+                            <span class="badge badge-red">Ditolak</span>
+                        @else
+                            <span class="badge badge-amber">Proses</span>
+                        @endif
+                    </div>
+                @empty
+                    <div style="text-align:center; padding:24px; color:var(--text-secondary); font-size:13px;">
+                        Belum ada data surat
+                    </div>
+                @endforelse
+            </div>
+
+            {{-- RIWAYAT PEMROSESAN SURAT (BULAN INI) --}}
+            <div class="card" style="grid-column:1/-1;">
+                <div class="section-header">
+                    <div>
+                        <h2>👥 Riwayat Pemrosesan Surat</h2>
+                        <small style="color:var(--text-secondary);">Siapa saja yang telah memproses tiap surat bulan ini</small>
                     </div>
                 </div>
-                @if($surat->status === 'selesai')
-                    <span class="badge badge-green">Selesai</span>
-                @elseif($surat->status === 'ditolak')
-                    <span class="badge badge-red">Ditolak</span>
+
+                @if($suratDenganPengolah->isEmpty())
+                    <div style="text-align:center; padding:32px; color:var(--text-secondary); font-size:13px;">
+                        Belum ada data pemrosesan bulan ini
+                    </div>
                 @else
-                    <span class="badge badge-amber">Proses</span>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Judul Surat</th>
+                                    <th>Pengusul</th>
+                                    <th>Status</th>
+                                    <th>Admin Pengolah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($suratDenganPengolah as $surat)
+                                    <tr>
+                                        <td>
+                                            <div style="font-weight:500; color:var(--text-primary); max-width:200px;">
+                                                {{ \Illuminate\Support\Str::limit($surat->judul, 40) }}
+                                            </div>
+                                            <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">
+                                                {{ $surat->created_at?->format('d M Y') ?? 'Tanpa tanggal' }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="font-size:13px; color:var(--text-primary);">{{ $surat->user?->name ?? '—' }}</div>
+                                        </td>
+                                        <td>
+                                            @if($surat->status === 'selesai')
+                                                <span class="badge badge-green">✓ Selesai</span>
+                                            @elseif($surat->status === 'ditolak')
+                                                <span class="badge badge-red">✗ Ditolak</span>
+                                            @else
+                                                <span class="badge badge-amber">● Proses</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div style="display:flex; flex-wrap:wrap; gap:4px;">
+                                                @forelse($surat->tahapans as $tahapan)
+                                                    <span class="badge badge-blue"
+                                                        title="Tahap {{ $tahapan->tahap }}: {{ $tahapan->nama_tahap }}"
+                                                        style="cursor:help; font-size:11px; padding:3px 6px;">
+                                                        {{ $tahapan->diprosesByUser?->getRoleLabel() ?? '—' }}
+                                                    </span>
+                                                @empty
+                                                    <span style="font-size:13px; color:var(--text-secondary);">Belum ada yang proses</span>
+                                                @endforelse
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 @endif
             </div>
-        @empty
-            <div style="text-align:center; padding:24px; color:#9ca3af; font-size:13px;">
-                Belum ada data surat
-            </div>
-        @endforelse
-    </div>
 
-    {{-- RIWAYAT PEMROSESAN SURAT (BULAN INI) --}}
-    <div class="card" style="grid-column:1/-1;">
-        <div class="section-header">
-            <div>
-                <h2>👥 Riwayat Pemrosesan Surat</h2>
-                <small>Siapa saja yang telah memproses tiap surat bulan ini</small>
-            </div>
         </div>
 
-        @if($suratDenganPengolah->isEmpty())
-            <div style="text-align:center; padding:32px; color:#9ca3af; font-size:13px;">
-                Belum ada data pemrosesan bulan ini
-            </div>
-        @else
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Judul Surat</th>
-                            <th>Pengusul</th>
-                            <th>Status</th>
-                            <th>Admin Pengolah</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($suratDenganPengolah as $surat)
-                        <tr>
-                            <td>
-                                <div style="font-weight:500; color:#111827; max-width:200px;">
-                                    {{ \Illuminate\Support\Str::limit($surat->judul, 40) }}
-                                </div>
-                                <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
-                                    {{ $surat->created_at?->format('d M Y') ?? 'Tanpa tanggal' }}
-                                </div>
-                            </td>
-                            <td>
-                                <div style="font-size:13px;">{{ $surat->user?->name ?? '—' }}</div>
-                            </td>
-                            <td>
-                                @if($surat->status === 'selesai')
-                                    <span class="badge badge-green">✓ Selesai</span>
-                                @elseif($surat->status === 'ditolak')
-                                    <span class="badge badge-red">✗ Ditolak</span>
-                                @else
-                                    <span class="badge badge-amber">● Proses</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div style="display:flex; flex-wrap:wrap; gap:4px;">
-                                    @forelse($surat->tahapans as $tahapan)
-                                        <span 
-                                            class="badge badge-blue" 
-                                            title="Tahap {{ $tahapan->tahap }}: {{ $tahapan->nama_tahap }}"
-                                            style="cursor:help; font-size:11px; padding:3px 6px;">
-                                            {{ $tahapan->diprosesByUser?->name ?? '—' }}
-                                        </span>
-                                    @empty
-                                        <span style="font-size:13px; color:#9ca3af;">Belum ada yang proses</span>
-                                    @endforelse
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @endif
-    </div>
-
-</div>
+    </div> {{-- End of Alpine x-data div --}}
 
 @endsection
+
+@push('scripts')
+    <script>
+        function dashboardData() {
+            return {
+                stats: {
+                    totalBulanIni: {{ $totalBulanIni }},
+                    totalSelesai: {{ $totalSelesai }},
+                    totalProses: {{ $totalProses }},
+                    totalTerlambat: {{ $totalTerlambat }},
+                },
+                antrian: {
+                    items: {!! json_encode($antrian) !!},
+                    count: {{ $antrianCount }},
+                },
+                connecting: false,
+                dashboard: null,
+
+                initDashboard() {
+                    this.connecting = true;
+                    this.dashboard = window.initRealtimeDashboard('admin');
+
+                    if (this.dashboard) {
+                        this.dashboard.on('statsUpdate', (data) => {
+                            this.stats = {
+                                totalBulanIni: data.totalBulanIni,
+                                totalSelesai: data.totalSelesai,
+                                totalProses: data.totalProses,
+                                totalTerlambat: data.totalTerlambat,
+                            };
+                            this.connecting = false;
+                        });
+
+                        this.dashboard.on('antrianUpdate', (data) => {
+                            this.antrian.items = data.items || [];
+                            this.antrian.count = data.count || 0;
+                        });
+
+                        this.dashboard.on('error', (error) => {
+                            console.error('Dashboard error:', error);
+                        });
+                    }
+                },
+
+                formatDate(date) {
+                    if (!date) return '';
+                    return new Date(date).toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                }
+            }
+        }
+    </script>
+@endpush
