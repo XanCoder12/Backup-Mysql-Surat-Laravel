@@ -847,6 +847,10 @@
                 class="menu-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                 <span class="menu-icon"><i class="bi bi-people"></i></span> Data Pegawai
             </a>
+            <a href="{{ route('admin.logs.index') }}"
+                class="menu-item {{ request()->routeIs('admin.logs.*') ? 'active' : '' }}">
+                <span class="menu-icon"><i class="bi bi-journal-text"></i></span> System Logs
+            </a>            
             <div class="menu-label">Chart</div>
             <a href="{{ route('admin.chart.index') }}"
                 class="menu-item {{ request()->routeIs('admin.chart.*') ? 'active' : '' }}">
