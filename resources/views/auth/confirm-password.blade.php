@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Konfirmasi Kata Sandi — Sistem Surat Metrologi</title>
-    <link rel="icon" href="{{ asset('images/BPSUML2.png') }}">
+    <link rel="icon" href="{{ asset('images/metrologi.png') }}">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -241,7 +241,7 @@
         <div class="panel-left">
             <div class="logo-outer">
                 <div class="logo-inner">
-                    <img src="{{ asset('images/BPSUML2.png') }}" alt="Logo Dinas">
+                    <img src="{{ asset('images/metrologi.png') }}" alt="Logo Dinas">
                 </div>
             </div>
             <div class="brand-title">Balai Pengelola SUML<br>dan Perindustrian</div>
