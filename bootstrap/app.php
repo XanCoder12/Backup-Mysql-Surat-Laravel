@@ -17,6 +17,16 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin.role.check' => \App\Http\Middleware\RedirectIfAdminRoleNotSelected::class,
         ]);
 
+        $middleware->redirectTo(
+            users: function ($request) {
+                $user = auth()->user();
+                if ($user && $user->isAdmin()) {
+                    return route('admin.dashboard');
+                }
+                return route('dashboard');
+            }
+        );
+
         // Add HSTS header middleware to web group
         $middleware->web(\App\Http\Middleware\AddHstsHeader::class);
     })
