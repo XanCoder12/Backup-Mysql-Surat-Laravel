@@ -57,7 +57,7 @@
                     </div>
                     <div class="col-sm-6">
                         <div style="color:var(--text-secondary);font-size:11px;font-weight:600;margin-bottom:3px;">TANGGAL PENGAJUAN</div>
-                        <div style="color:var(--text-primary);">{{ $surat->created_at->Format('d F Y, H:i') }}</div>
+                        <div style="color:var(--text-primary);">{{ $surat->created_at?->format('d F Y, H:i') ?? '-' }}</div>
                     </div>
                     @if($surat->nomor_surat)
                     <div class="col-sm-6">
@@ -105,7 +105,7 @@
                             <i class="bi bi-info-circle-fill text-secondary"></i>
                             <div>
                                 <strong>File Fisik Telah Dihapus</strong><br>
-                                File ini telah dibersihkan dari penyimpanan pada {{ $surat->file_dihapus_pada->format('d M Y, H:i') }}. Tracking histori tetap tersedia.
+                                File ini telah dibersihkan dari penyimpanan pada {{ $surat->file_dihapus_pada?->format('d M Y, H:i') ?? '-' }}. Tracking histori tetap tersedia.
                             </div>
                         </div>
                     @else
@@ -190,85 +190,127 @@
         </div>
 
         {{-- TRACKING TIMELINE --}}
-        <div class="card card-custom">
+        <div class="card card-custom mb-3 overflow-hidden">
             <div class="card-body p-4">
-                <h6 class="fw-bold mb-4" style="color:var(--text-primary);">
-                    <i class="bi bi-map me-2"></i>Timeline Proses Surat
-                </h6>
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h6 class="fw-bold mb-0" style="color:var(--text-primary);">
+                        <i class="bi bi-map me-2"></i>Tracking Progress Surat
+                    </h6>
+                    <span class="badge bg-light text-dark" style="font-size:10px; border:1px solid var(--border-color);">
+                        Status: {{ $surat->nama_tahap }}
+                    </span>
+                </div>
 
-                <div class="tracking-steps">
-                @foreach($surat->tahapans as $tahapan)
-                    <div class="step-item {{ $tahapan->status === 'selesai' ? 'done' : '' }}">
-                        <div style="position:relative;">
-                            <div class="step-circle {{ $tahapan->status }}" style="
-                                width:36px;height:36px;font-size:14px;
-                                {{ $tahapan->status === 'proses' ? 'box-shadow:0 0 0 4px #dbeafe;' : '' }}
-                            ">
-                                @if($tahapan->status === 'selesai')
-                                    <i class="bi bi-check-lg"></i>
-                                @elseif($tahapan->status === 'proses')
-                                    <i class="bi bi-hourglass-split"></i>
-                                @elseif($tahapan->status === 'ditolak')
-                                    <i class="bi bi-x-lg"></i>
-                                @else
-                                    {{ $tahapan->tahap }}
+                {{-- Container Horizontal Scroll --}}
+                <div class="table-responsive pb-2" style="scrollbar-width: thin;">
+                    <div class="d-flex align-items-start pt-3 px-2" style="min-width: 800px; margin-bottom: 20px;">
+                        @foreach($surat->tahapans as $index => $tahapan)
+                            <div class="flex-grow-1 position-relative" style="flex-basis: 0;">
+                                {{-- Garis Penghubung --}}
+                                @if(!$loop->last)
+                                    @php
+                                        $nextTahapan = $surat->tahapans[$index + 1];
+                                        $lineColor = '#e5e7eb'; // default abu-abu
+                                        if ($tahapan->status === 'selesai') {
+                                            $lineColor = '#22c55e'; // hijau jika sudah lewat
+                                        }
+                                        if ($tahapan->status === 'ditolak' || $nextTahapan->status === 'ditolak') {
+                                            $lineColor = '#fee2e2'; // merah muda jika ada penolakan
+                                        }
+                                    @endphp
+                                    <div style="position: absolute; top: 18px; left: 50%; width: 100%; height: 3px; background: {{ $lineColor }}; z-index: 1;"></div>
                                 @endif
+
+                                {{-- Lingkaran Status --}}
+                                <div class="d-flex flex-column align-items-center position-relative" style="z-index: 2;">
+                                    <div class="step-circle {{ $tahapan->status }}" style="
+                                        width:38px;height:38px;font-size:14px;
+                                        display: flex; align-items: center; justify-content: center;
+                                        border-radius: 50%;
+                                        background: {{ $tahapan->status === 'selesai' ? '#22c55e' : ($tahapan->status === 'proses' ? '#1e3a5f' : ($tahapan->status === 'ditolak' ? '#ef4444' : '#f3f4f6')) }};
+                                        color: {{ $tahapan->status === 'menunggu' ? '#9ca3af' : '#fff' }};
+                                        transition: all 0.3s ease;
+                                        border: 2px solid {{ $tahapan->status === 'menunggu' ? '#e5e7eb' : 'transparent' }};
+                                        {{ $tahapan->status === 'proses' ? 'box-shadow: 0 0 0 4px rgba(30, 58, 95, 0.2);' : '' }}
+                                    ">
+                                        @if($tahapan->status === 'selesai')
+                                            <i class="bi bi-check-lg"></i>
+                                        @elseif($tahapan->status === 'proses')
+                                            <i class="bi bi-hourglass-split"></i>
+                                        @elseif($tahapan->status === 'ditolak')
+                                            <i class="bi bi-x-lg"></i>
+                                        @else
+                                            <span style="font-weight: 700;">{{ $tahapan->tahap }}</span>
+                                        @endif
+                                    </div>
+
+                                    {{-- Label Tahapan --}}
+                                    <div class="text-center mt-3 px-1">
+                                        <div style="font-size:11px; font-weight:700; color:var(--text-primary); line-height:1.2; min-height: 28px; display: flex; align-items: center; justify-content: center;">
+                                            {{ $tahapan->nama_tahap }}
+                                        </div>
+                                        <div style="font-size:9px; color:var(--text-secondary); margin-top:4px; font-weight: 500;">
+                                            @if($tahapan->selesai_pada)
+                                                {{ $tahapan->selesai_pada?->format('d/m/y') }}<br>{{ $tahapan->selesai_pada?->format('H:i') }}
+                                            @elseif($tahapan->status === 'proses')
+                                                <span class="text-primary">Sedang diproses</span>
+                                            @else
+                                                <span class="opacity-50">Menunggu</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            @if(!$loop->last)
-                                <div class="step-line" style="left:17px;"></div>
-                            @endif
-                        </div>
-
-                        <div class="step-content" style="padding-bottom:{{ $loop->last ? '0' : '24px' }};">
-                            <div class="d-flex align-items-start justify-content-between gap-2">
-                                <div class="step-title {{ $tahapan->status }}" style="font-size:14px;color:var(--text-primary);">
-                                    {{ $tahapan->nama_tahap }}
-                                    @if($tahapan->status === 'proses')
-                                        <span class="badge rounded-pill ms-1" style="background:#dbeafe;color:#1d4ed8;font-size:10px;font-weight:500;">Sedang diproses</span>
-                                    @endif
-                                </div>
-                                @if($tahapan->selesai_pada)
-                                    <span style="font-size:11px;color:var(--text-secondary);white-space:nowrap;flex-shrink:0;">
-                                        {{ $tahapan->selesai_pada->format('d M Y, H:i') }}
-                                    </span>
-                                @endif
-                            </div>
-
-                            @if($tahapan->diprosesByUser)
-                                <div class="step-meta">
-                                    <i class="bi bi-person-check me-1"></i>
-                                    Diproses oleh <strong>{{ $tahapan->diprosesByUser->getRoleLabel() }}</strong>
-                                </div>
-                            @endif
-
-                            @if($tahapan->catatan)
-                                <div class="step-note mt-2" style="
-                                    {{ $tahapan->status === 'ditolak' ? 'border-left-color:#ef4444;background:#fef2f2;' : '' }}
-                                    {{ $tahapan->status === 'selesai' ? 'border-left-color:#22c55e;background:#f0fdf4;' : '' }}
-                                ">
-                                    <i class="bi bi-chat-left-text me-1"></i>
-                                    <em>{{ $tahapan->catatan }}</em>
-                                </div>
-                            @endif
-
-                            {{-- Pesan status khusus --}}
-                            @if($tahapan->status === 'ditolak' && $loop->index === $surat->tahap_sekarang - 1)
-                                <div class="alert alert-danger py-2 px-3 mt-2 mb-0" style="font-size:12px;border-radius:8px;border:none;">
-                                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                                    Surat ditolak pada tahap ini.
-                                    @if($surat->status === 'ditolak')
-                                        Silakan upload ulang file perbaikan di bawah.
-                                    @elseif($surat->status === 'revisi')
-                                        File perbaikan sedang menunggu review admin.
-                                    @endif
-                                </div>
-                            @endif
-                        </div>
+                        @endforeach
                     </div>
-                @endforeach
                 </div>
             </div>
         </div>
+
+        {{-- CATATAN ADMIN & REVIEW --}}
+        @php
+            $catatans = $surat->tahapans->whereNotNull('catatan')->sortByDesc('updated_at');
+        @endphp
+
+        @if($catatans->count() > 0)
+        <div class="card card-custom mb-3">
+            <div class="card-body p-4">
+                <h6 class="fw-bold mb-4" style="color:var(--text-primary);">
+                    <i class="bi bi-chat-left-dots me-2 text-primary"></i>Catatan & Feedback Admin
+                </h6>
+                
+                <div class="d-flex flex-column gap-3">
+                    @foreach($catatans as $tahapan)
+                        <div class="p-3 rounded-4 border-0 shadow-sm" style="
+                            background: {{ $tahapan->status === 'ditolak' ? '#fff1f2' : ($tahapan->status === 'selesai' ? '#f0fdf4' : '#f8fafc') }};
+                            border-left: 4px solid {{ $tahapan->status === 'ditolak' ? '#ef4444' : ($tahapan->status === 'selesai' ? '#22c55e' : '#1e3a5f') }} !important;
+                        ">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="d-flex flex-column">
+                                    <span class="fw-bold" style="font-size:12px; color:{{ $tahapan->status === 'ditolak' ? '#b91c1c' : ($tahapan->status === 'selesai' ? '#15803d' : '#1e3a5f') }};">
+                                        Tahap: {{ $tahapan->nama_tahap }}
+                                    </span>
+                                    @if($tahapan->diprosesByUser)
+                                        <small class="text-muted" style="font-size:10px;">
+                                            <i class="bi bi-person-check"></i> {{ $tahapan->diprosesByUser->getRoleLabel() }}
+                                        </small>
+                                    @endif
+                                </div>
+                                <span class="badge bg-white text-muted border" style="font-size:10px;">
+                                    {{ $tahapan->updated_at->diffForHumans() }}
+                                </span>
+                            </div>
+                            
+                            <div class="mt-2" style="font-size:13px; color:var(--text-primary); line-height:1.6; font-style: italic;">
+                                "{!! nl2br(e($tahapan->catatan)) !!}"
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        @endif
+
 
     </div>
 
@@ -417,10 +459,9 @@
                         Apakah Anda yakin ingin menghapus surat:
                     </p>
                     <div class="alert alert-light" style="border-left:4px solid #1e3a5f;font-size:13px;background:var(--bg-tertiary);color:var(--text-primary);border-color:var(--border-color);">
-                        <strong>{{ $surat->judul }}</strong><br>
-                        <span class="text-muted">{{ $surat->jenis_label }} · {{ $surat->created_at->format('d M Y') }}</span>
+                    <strong>{{ $surat->judul }}</strong><br>
+                    <span class="text-muted">{{ $surat->jenis_label }} · {{ $surat->created_at?->format('d M Y') ?? '-' }}</span>
                     </div>
-                    
                     @php
                         $bisaLangsungHapus = in_array($surat->status, ['ditolak', 'selesai']) || $surat->sla_status === 'terlambat';
                         $existingRequest = \App\Models\SuratDeleteRequest::where('surat_id', $surat->id)->where('status', 'pending')->first();
