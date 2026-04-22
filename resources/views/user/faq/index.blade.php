@@ -126,6 +126,102 @@
                     </div>
                 </div>
 
+                <div class="accordion-item mb-3 shadow-sm border" style="border-radius: 12px !important;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" 
+                                style="font-size: 14px; background: #fff; color: #1e3a5f; border-radius: 12px !important;">
+                            Kenapa saya tidak menerima notifikasi dari sistem?
+                        </button>
+                    </h2>
+                    <div id="collapseNine" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body border-top" style="font-size: 14px; line-height: 1.7; color: #111827 !important; background: #ffffff !important;">
+                            Pastikan Anda sudah mengizinkan notifikasi di browser. Klik ikon <strong>🔔 lonceng</strong> di pojok kanan atas untuk melihat notifikasi terbaru. Jika notifikasi tidak muncul otomatis, coba <strong>refresh halaman</strong> atau periksa pengaturan izin notifikasi di browser Anda (biasanya di bagian ikon gembok/kunci di address bar).
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item mb-3 shadow-sm border" style="border-radius: 12px !important;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen" 
+                                style="font-size: 14px; background: #fff; color: #1e3a5f; border-radius: 12px !important;">
+                            Format dan ukuran file apa saja yang diterima sistem?
+                        </button>
+                    </h2>
+                    <div id="collapseTen" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body border-top" style="font-size: 14px; line-height: 1.7; color: #111827 !important; background: #ffffff !important;">
+                            Untuk <strong>file surat utama</strong>, sistem hanya menerima format <strong>.docx</strong> (Microsoft Word). Untuk <strong>lampiran pendukung</strong>, Anda dapat mengunggah file berformat <strong>PDF, JPG, atau PNG</strong>. Ukuran maksimal per file adalah <strong>10 MB</strong>. Pastikan file tidak terpassword/terenkripsi agar dapat diproses oleh sistem.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item mb-3 shadow-sm border" style="border-radius: 12px !important;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEleven" 
+                                style="font-size: 14px; background: #fff; color: #1e3a5f; border-radius: 12px !important;">
+                            Apa arti masing-masing tahapan status surat (Tahap 1 - 10)?
+                        </button>
+                    </h2>
+                    <div id="collapseEleven" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body border-top" style="font-size: 14px; line-height: 1.7; color: #111827 !important; background: #ffffff !important;">
+                            Berikut penjelasan setiap tahap pemrosesan surat:
+                            <ul class="mt-2 mb-0" style="padding-left: 20px; line-height: 2;">
+                                <li><strong>Tahap 1</strong> — Surat baru diajukan, menunggu verifikasi awal.</li>
+                                <li><strong>Tahap 2</strong> — Diterima oleh Bagian Persuratan, sedang diperiksa kelengkapan berkas.</li>
+                                <li><strong>Tahap 3</strong> — Diteruskan ke Arsiparis untuk pencatatan dan penomoran.</li>
+                                <li><strong>Tahap 4</strong> — Dalam proses review oleh Kasubbag TU.</li>
+                                <li><strong>Tahap 5</strong> — Menunggu persetujuan Kepala Balai.</li>
+                                <li><strong>Tahap 6</strong> — Disetujui, sedang dalam proses penandatanganan.</li>
+                                <li><strong>Tahap 7</strong> — Surat telah ditandatangani, menunggu penomoran resmi.</li>
+                                <li><strong>Tahap 8</strong> — Surat bernomor resmi, siap didistribusikan.</li>
+                                <li><strong>Tahap 9</strong> — Sedang dalam proses pengiriman/distribusi.</li>
+                                <li><strong>Tahap 10</strong> — <span class="text-success fw-bold">Selesai</span>. Surat telah terkirim ke pihak yang bersangkutan.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item mb-3 shadow-sm border" style="border-radius: 12px !important;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwelve" 
+                                style="font-size: 14px; background: #fff; color: #1e3a5f; border-radius: 12px !important;">
+                            Bagaimana jika saya lupa password atau akun tidak bisa login?
+                        </button>
+                    </h2>
+                    <div id="collapseTwelve" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body border-top" style="font-size: 14px; line-height: 1.7; color: #111827 !important; background: #ffffff !important;">
+                            Silakan hubungi <strong>Admin IT / Bagian Persuratan</strong> secara langsung untuk mereset password akun Anda. Saat ini fitur reset password mandiri belum tersedia. Siapkan <strong>NIP/identitas pegawai</strong> Anda untuk mempercepat proses verifikasi oleh admin.
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="accordion-item mb-3 shadow-sm border" style="border-radius: 12px !important;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThirteen" 
+                                style="font-size: 14px; background: #fff; color: #1e3a5f; border-radius: 12px !important;">
+                            Apakah data dan dokumen surat saya aman di sistem ini?
+                        </button>
+                    </h2>
+                    <div id="collapseThirteen" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body border-top" style="font-size: 14px; line-height: 1.7; color: #111827 !important; background: #ffffff !important;">
+                            Ya, sistem ini dirancang dengan keamanan berlapis. Setiap akun hanya dapat mengakses surat miliknya sendiri. Seluruh aksi tercatat dalam riwayat untuk keperluan audit. Dokumen yang Anda unggah hanya dapat diakses oleh pihak yang terlibat dalam alur persetujuan surat tersebut. Disarankan untuk tidak berbagi akun Anda dengan siapapun.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item mb-3 shadow-sm border" style="border-radius: 12px !important;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFourteen" 
+                                style="font-size: 14px; background: #fff; color: #1e3a5f; border-radius: 12px !important;">
+                            Jika anda sudah bisa login dengan memasukan NIP(tanpa email) dan password itu artinya..
+                        </button>
+                    </h2>
+                    <div id="collapseFourteen" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body border-top" style="font-size: 14px; line-height: 1.7; color: #111827 !important; background: #ffffff !important;">
+                           Anda sudah di daftar sama admin dan <strong>segera ubah password dan email anda</strong>, dengan password awal <strong>12345678</strong> anda bisa mengubah password. lalu email juga bisa di ubah yang awalnya <strong>user{id}@gmail.com </strong> jadi email asli anda(saran email yang direkomendasikan adalah gmail.com). ubah lewat menu profile anda lihat pojok kanan atas, 
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
              {{-- Contact Support Section --}}
@@ -141,6 +237,7 @@
                     </a>
                 </div>
             </div>
+            
 
         </div>
     </div>
