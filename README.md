@@ -450,4 +450,4 @@ Untuk pertanyaan atau bantuan teknis, hubungi tim developer atau administrator s
 
 ---
 
-**Dibuat dengan ❤️ untuk Kantor Metrologi**
+**WWeb ini dibikin oleh Saya Sendiri Full stack Developer**
