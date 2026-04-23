@@ -9,21 +9,46 @@
 {{-- Custom Styles --}}
 <style>
     .dashboard-header {
-        background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
-        border-radius: 16px;
-        padding: 32px;
+        background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+        border-radius: 20px;
+        padding: 36px;
         color: white;
         margin-bottom: 32px;
-        box-shadow: 0 10px 40px rgba(30, 58, 95, 0.2);
+        box-shadow: 0 15px 40px rgba(15, 23, 42, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .dashboard-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(255,255,255,0) 50%);
+        animation: rotateBg 15s linear infinite;
+        z-index: 0;
+    }
+    
+    @keyframes rotateBg {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .dashboard-header > div {
+        position: relative;
+        z-index: 1;
     }
     
     .stat-card-modern {
-        background: white;
-        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
         padding: 24px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid #f1f5f9;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(255, 255, 255, 0.8);
         position: relative;
         overflow: hidden;
     }
@@ -31,28 +56,48 @@
     .stat-card-modern::before {
         content: '';
         position: absolute;
-        top: 0;
+        bottom: 0;
         left: 0;
         right: 0;
         height: 4px;
         background: linear-gradient(90deg, var(--accent-color), var(--accent-color-light));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
     }
     
     .stat-card-modern:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        border-color: var(--accent-color-light);
+    }
+    
+    .stat-card-modern:hover::before {
+        transform: scaleX(1);
     }
     
     .stat-icon-wrapper {
         width: 56px;
         height: 56px;
-        border-radius: 14px;
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 24px;
         margin-bottom: 16px;
         background: var(--icon-bg);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .stat-card-modern:hover .stat-icon-wrapper {
+        transform: scale(1.1) rotate(10deg);
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-color-light) 100%);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+    
+    .stat-card-modern:hover .stat-icon-wrapper i {
+        color: white !important;
+        transition: color 0.3s ease;
     }
     
     .stat-value-modern {
@@ -61,6 +106,11 @@
         color: #1e293b;
         line-height: 1;
         margin-bottom: 6px;
+        transition: color 0.3s ease;
+    }
+    
+    .stat-card-modern:hover .stat-value-modern {
+        color: var(--accent-color);
     }
     
     .stat-label-modern {
@@ -71,39 +121,65 @@
     
     .card-modern {
         background: white;
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-        border: 1px solid #f1f5f9;
+        border-radius: 20px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+        border: 1px solid rgba(241, 245, 249, 0.8);
         overflow: hidden;
-        transition: all 0.3s ease;
+        transition: all 0.4s ease;
     }
     
     .card-modern:hover {
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        transform: translateY(-4px);
     }
     
     .card-header-modern {
         padding: 20px 24px;
         border-bottom: 1px solid #f1f5f9;
-        background: #fafbfc;
+        background: rgba(250, 251, 252, 0.8);
+        backdrop-filter: blur(8px);
     }
     
     .card-body-modern {
         padding: 24px;
     }
     
-    .surat-item {
+    .surat-item, .notification-item {
         padding: 16px 24px;
         border-bottom: 1px solid #f1f5f9;
-        transition: all 0.2s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
+        position: relative;
+        background: transparent;
     }
     
-    .surat-item:hover {
+    .surat-item::before, .notification-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: #3b82f6;
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+        opacity: 0;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+    
+    .surat-item:hover, .notification-item:hover {
         background: #f8fafc;
+        padding-left: 32px;
+        padding-right: 16px;
     }
     
-    .surat-item:last-child {
+    .surat-item:hover::before, .notification-item:hover::before {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+    
+    .surat-item:last-child, .notification-item:last-child {
         border-bottom: none;
     }
     
@@ -112,49 +188,61 @@
         height: 10px;
         border-radius: 50%;
         display: inline-block;
+        box-shadow: 0 0 0 2px white, 0 0 0 4px currentColor;
     }
     
     .btn-primary-modern {
-        background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
         border: none;
         color: white;
-        padding: 12px 24px;
-        border-radius: 10px;
+        padding: 14px 28px;
+        border-radius: 14px;
         font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+    
+    .btn-primary-modern::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transform: skewX(-20deg);
+        transition: all 0.5s ease;
+        z-index: -1;
     }
     
     .btn-primary-modern:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(30, 58, 95, 0.4);
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 12px 25px rgba(59, 130, 246, 0.4);
+        color: white;
+    }
+    
+    .btn-primary-modern:hover::after {
+        left: 150%;
     }
     
     .chart-container {
         position: relative;
         height: 280px;
+        transition: transform 0.4s ease;
     }
     
-    .notification-item {
-        padding: 16px 24px;
-        border-bottom: 1px solid #f1f5f9;
-        transition: all 0.2s ease;
-        position: relative;
+    .card-modern:hover .chart-container {
+        transform: scale(1.02);
     }
     
-    .notification-item:hover {
-        background: #f8fafc;
-    }
-
     .notification-item.removing {
         opacity: 0;
         transform: translateX(20px);
     }
     
-    .notification-item:last-child {
-        border-bottom: none;
-    }
-
     .btn-delete-notif {
         position: absolute;
         top: 12px;
@@ -174,25 +262,142 @@
         cursor: pointer;
         line-height: 1;
     }
-
+    
     .btn-delete-notif:hover {
         background: #fee2e2;
         color: #ef4444;
+        transform: scale(1.1) rotate(90deg);
     }
     
     @keyframes fadeInUp {
         from {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px) scale(0.98);
         }
         to {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
     }
     
     .animate-in {
-        animation: fadeInUp 0.5s ease-out;
+        animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    .help-center-glass {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.95) 100%);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 8px 32px rgba(37, 99, 235, 0.08), inset 0 0 0 1px rgba(255,255,255,0.5);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .help-center-glass:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 40px rgba(37, 99, 235, 0.15), inset 0 0 0 1px rgba(255,255,255,0.8);
+    }
+
+    .help-center-glass:hover .bi-headset {
+        animation: wiggle 1s ease-in-out infinite;
+        display: inline-block;
+    }
+
+    @keyframes wiggle {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(-15deg); }
+        50% { transform: rotate(15deg); }
+        75% { transform: rotate(-15deg); }
+    }
+
+    .help-center-glass::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, rgba(255,255,255,0) 60%);
+        z-index: -1;
+        animation: pulseGradient 8s linear infinite;
+    }
+
+    .help-center-glass::after {
+        content: '';
+        position: absolute;
+        bottom: -20px;
+        right: -20px;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, rgba(255,255,255,0) 70%);
+        border-radius: 50%;
+        z-index: -1;
+    }
+
+    @keyframes pulseGradient {
+        0% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.1); opacity: 1; }
+        100% { transform: scale(1); opacity: 0.5; }
+    }
+
+    .btn-glass-primary {
+        background: rgba(37, 99, 235, 0.85);
+        color: white !important;
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 10px 16px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 13px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn-glass-primary:hover {
+        background: rgba(30, 58, 95, 0.95);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .template-card-link {
+        transition: all 0.3s ease;
+    }
+
+    .template-card-link:hover {
+        transform: translateX(6px);
+        background: #eff6ff !important;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+    }
+
+    .template-card-link:hover i {
+        animation: bounceDown 1s ease infinite;
+    }
+
+    @keyframes bounceDown {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(3px); }
+    }
+
+    .sla-item {
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+
+    .sla-item:hover {
+        background: #f8fafc;
+        border-color: #f1f5f9;
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.02);
     }
 
     /* MOBILE RESPONSIVE TWEAKS */
@@ -514,7 +719,7 @@
             </div>
             <div class="card-body-modern">
                 @foreach($suratAktif as $surat)
-                    <div class="mb-3">
+                    <div class="mb-3 sla-item p-2 rounded">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <span class="fw-semibold" style="font-size:13px; color:#1e293b;">
                                 {{ Str::limit($surat->judul, 30) }}
@@ -553,20 +758,43 @@
             </div>
             <div class="card-body-modern">
                 @forelse($templates as $tpl)
-                    <div class="d-flex align-items-center gap-3 mb-3 p-2 rounded" style="background:#f8fafc;">
+                    <div class="template-card-link d-flex align-items-center gap-3 mb-3 p-2 rounded" style="background:#f8fafc; border: 1px solid #f1f5f9; cursor: pointer;" onclick="window.open('{{ $tpl['url'] }}', '_blank')">
                         <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:36px; height:36px; background:#dbeafe;">
                             <i class="bi bi-file-earmark-word-fill" style="color:#2563eb; font-size:16px;"></i>
                         </div>
                         <span class="flex-grow-1" style="font-size:13px; color:#1e293b; font-weight:500;">{{ $tpl['nama'] }}</span>
-                        <a href="{{ $tpl['url'] }}" target="_blank" class="btn btn-sm" style="font-size:12px; background:#eff6ff; color:#1d4ed8; border:none; padding:6px 12px; border-radius:8px;">
+                        <span class="btn btn-sm" style="font-size:12px; background:#eff6ff; color:#1d4ed8; border:none; padding:6px 12px; border-radius:8px;">
                             <i class="bi bi-download me-1"></i> Unduh
-                        </a>
+                        </span>
                     </div>
                 @empty
                     <div class="text-center text-muted py-3">
                         <p class="mb-0" style="font-size:13px;">Belum ada template tersedia.</p>
                     </div>
                 @endforelse
+            </div>
+        </div>
+
+        {{-- PUSAT BANTUAN (GLASSMORPHISM) --}}
+        <div class="help-center-glass mt-4 animate-in" style="animation-delay: 0.5s;">
+            <div class="d-flex align-items-start gap-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px; background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%); border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);">
+                    <i class="bi bi-headset" style="font-size: 24px; color: #2563eb;"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-1" style="color:#1e293b;">Pusat Bantuan</h6>
+                    <p class="mb-3 text-muted" style="font-size: 13px; line-height: 1.5;">
+                        Butuh bantuan atau mengalami kendala? Tim dukungan kami siap membantu Anda.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="https://wa.me/6281321098877" target="_blank" class="btn-glass-primary">
+                            <i class="bi bi-whatsapp"></i> Chat Admin
+                        </a>
+                        <a href="{{ route('user.faq.index') }}" class="btn-glass-primary" style="background: rgba(255, 255, 255, 0.7); color: #1e3a5f !important; border-color: rgba(30, 58, 95, 0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                            <i class="bi bi-book"></i> Panduan
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
