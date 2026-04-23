@@ -9,15 +9,15 @@
           style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
 
         <div style="flex:2; min-width:180px;">
-            <label style="font-size:11px; color:#6b7280; display:block; margin-bottom:4px;">Cari Judul</label>
+            <label style="font-size:11px; color:var(--text-secondary); display:block; margin-bottom:4px;">Cari Judul</label>
             <input type="text" name="search" value="{{ request('search') }}"
                    placeholder="Cari judul surat..."
-                   style="width:100%; padding:7px 10px; border:1px solid #e5e7eb; border-radius:7px; font-size:13px;">
+                   style="width:100%; padding:7px 10px; border:1px solid var(--border-color); background:var(--bg-tertiary); color:var(--text-primary); border-radius:7px; font-size:13px;">
         </div>
 
         <div style="flex:1; min-width:140px;">
-            <label style="font-size:11px; color:#6b7280; display:block; margin-bottom:4px;">Jenis Surat</label>
-            <select name="jenis" style="width:100%; padding:7px 10px; border:1px solid #e5e7eb; border-radius:7px; font-size:13px;">
+            <label style="font-size:11px; color:var(--text-secondary); display:block; margin-bottom:4px;">Jenis Surat</label>
+            <select name="jenis" style="width:100%; padding:7px 10px; border:1px solid var(--border-color); background:var(--bg-tertiary); color:var(--text-primary); border-radius:7px; font-size:13px;">
                 <option value="">Semua Jenis</option>
                 @foreach(\App\Models\Surat::JENIS_LABEL as $val => $label)
                     <option value="{{ $val }}" {{ request('jenis') === $val ? 'selected' : '' }}>{{ $label }}</option>
@@ -26,8 +26,8 @@
         </div>
 
         <div style="flex:1; min-width:120px;">
-            <label style="font-size:11px; color:#6b7280; display:block; margin-bottom:4px;">Status</label>
-            <select name="status" style="width:100%; padding:7px 10px; border:1px solid #e5e7eb; border-radius:7px; font-size:13px;">
+            <label style="font-size:11px; color:var(--text-secondary); display:block; margin-bottom:4px;">Status</label>
+            <select name="status" style="width:100%; padding:7px 10px; border:1px solid var(--border-color); background:var(--bg-tertiary); color:var(--text-primary); border-radius:7px; font-size:13px;">
                 <option value="">Semua</option>
                 <option value="proses"  {{ request('status') === 'proses'  ? 'selected' : '' }}>Proses</option>
                 <option value="selesai" {{ request('status') === 'selesai' ? 'selected' : '' }}>Selesai</option>
@@ -37,8 +37,8 @@
         </div>
 
         <div style="flex:1; min-width:120px;">
-            <label style="font-size:11px; color:#6b7280; display:block; margin-bottom:4px;">Tahap</label>
-            <select name="tahap" style="width:100%; padding:7px 10px; border:1px solid #e5e7eb; border-radius:7px; font-size:13px;">
+            <label style="font-size:11px; color:var(--text-secondary); display:block; margin-bottom:4px;">Tahap</label>
+            <select name="tahap" style="width:100%; padding:7px 10px; border:1px solid var(--border-color); background:var(--bg-tertiary); color:var(--text-primary); border-radius:7px; font-size:13px;">
                 <option value="">Semua Tahap</option>
                 @foreach(\App\Models\Surat::NAMA_TAHAP as $no => $nama)
                     <option value="{{ $no }}" {{ request('tahap') == $no ? 'selected' : '' }}>{{ $no }}. {{ $nama }}</option>
@@ -63,7 +63,7 @@
     </div>
 
     @if($surats->isEmpty())
-        <div style="text-align:center; padding:40px; color:#9ca3af; font-size:13px;">
+        <div style="text-align:center; padding:40px; color:var(--text-secondary); font-size:13px;">
             📭 Tidak ada surat yang ditemukan
         </div>
     @else
@@ -85,12 +85,12 @@
                 <tbody>
                 @foreach($surats as $surat)
                     <tr>
-                        <td style="color:#9ca3af; font-size:12px;">{{ $loop->iteration }}</td>
+                        <td style="color:var(--text-secondary); font-size:12px;">{{ $loop->iteration }}</td>
                         <td>
-                            <div style="font-weight:500; color:#111827; max-width:200px;">
+                            <div style="font-weight:500; color:var(--text-primary); max-width:200px;">
                                 {{ \Illuminate\Support\Str::limit($surat->judul, 40) }}
                             </div>
-                            <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                            <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">
                                 {{ $surat->created_at?->format('d M Y') ?? '—' }}
                             </div>
                         </td>
@@ -106,10 +106,10 @@
                             @endif
                         </td>
                         <td>
-                            <div style="font-size:12px; font-weight:500; color:#1d4ed8;">
+                            <div style="font-size:12px; font-weight:500; color:#3b82f6;">
                                 Tahap {{ $surat->tahap_sekarang }}/10
                             </div>
-                            <div style="font-size:11px; color:#6b7280;">{{ $surat->nama_tahap }}</div>
+                            <div style="font-size:11px; color:var(--text-secondary);">{{ $surat->nama_tahap }}</div>
                             <div class="progress-bar" style="margin-top:4px; width:90px;">
                                 <div
                                     class="progress-fill"
