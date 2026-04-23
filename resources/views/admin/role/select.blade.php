@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pilih Role Admin — Surat Metrologi</title>
-    <link rel="icon" href="{{ asset('images/BPSUML2.png') }}">
+    <link rel="icon" href="{{ asset('images/metrologi.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -138,7 +138,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="{{ asset('images/BPSUML2.png') }}" alt="Logo">
+            <img src="{{ asset('images/metrologi.png') }}" alt="Logo">
             <h1>Pilih Role Admin</h1>
             <p>
                 Selamat datang, <strong>{{ Auth::user()->name }}</strong>!<br>
