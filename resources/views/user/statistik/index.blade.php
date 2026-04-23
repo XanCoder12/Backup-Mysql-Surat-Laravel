@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid py-4">
     <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 animate-in">
         <div>
             <h2 class="h4 mb-0 fw-bold" style="color: var(--text-primary);">
                 <i class="bi bi-bar-chart-line text-primary me-2"></i>Statistik Saya
@@ -13,7 +13,7 @@
     </div>
 
     <!-- Cards Row -->
-    <div class="row g-4 mb-4">
+    <div class="row g-4 mb-4 animate-in" style="animation-delay: 0.1s;">
         <!-- Total Surat -->
         <div class="col-6 col-md-3">
             <div class="stat-card">
@@ -53,7 +53,7 @@
         <!-- Line Chart -->
         <div class="col-md-8">
             <div class="card-custom p-4 h-100">
-                <h5 class="fw-bold mb-4" style="font-size: 15px;"><i class="bi bi-graph-up text-primary me-2"></i>Tren Pengajuan Surat (6 Bulan Terakhir)</h5>
+                <h5 class="fw-bold mb-4" style="font-size: 15px;"><i class="bi bi-graph-up text-primary me-2"></i>Tren Pengajuan Surat (Line Chart)</h5>
                 <div style="height: 300px; position: relative;">
                     <canvas id="lineChart"></canvas>
                 </div>
@@ -65,6 +65,28 @@
                 <h5 class="fw-bold mb-4" style="font-size: 15px;"><i class="bi bi-pie-chart text-success me-2"></i>Status Pengajuan</h5>
                 <div style="height: 250px; position: relative; display: flex; justify-content: center;">
                     <canvas id="doughnutChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Charts Row -->
+    <div class="row g-4 mt-1">
+        <!-- Distribusi Jenis Surat -->
+        <div class="col-md-6">
+            <div class="card-custom p-4 h-100">
+                <h5 class="fw-bold mb-4" style="font-size: 15px;"><i class="bi bi-pie-chart-fill text-info me-2"></i>Distribusi Jenis Surat</h5>
+                <div style="height: 250px; position: relative; display: flex; justify-content: center;">
+                    <canvas id="jenisChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- Bar Chart Tren -->
+        <div class="col-md-6">
+            <div class="card-custom p-4 h-100">
+                <h5 class="fw-bold mb-4" style="font-size: 15px;"><i class="bi bi-bar-chart-fill text-warning me-2"></i>Tren Pengajuan Surat (Bar Chart)</h5>
+                <div style="height: 250px; position: relative;">
+                    <canvas id="barChart"></canvas>
                 </div>
             </div>
         </div>
@@ -157,6 +179,97 @@
                 }
             }
         });
+
+        // Distribusi Jenis Surat
+        const jenisCtx = document.getElementById('jenisChart');
+        if (jenisCtx) {
+            const jenisData = @json($jenisSurat);
+            const jenisLabels = @json(\App\Models\Surat::JENIS_LABEL);
+            
+            const labels = Object.keys(jenisData).map(key => jenisLabels[key] || key);
+            const data = Object.values(jenisData);
+            const colors = [
+                'rgba(30, 58, 95, 0.8)', 
+                'rgba(37, 99, 235, 0.8)', 
+                'rgba(34, 197, 94, 0.8)', 
+                'rgba(245, 158, 11, 0.8)', 
+                'rgba(239, 68, 68, 0.8)', 
+                'rgba(139, 92, 246, 0.8)', 
+                'rgba(236, 72, 153, 0.8)'
+            ];
+            
+            new Chart(jenisCtx.getContext('2d'), {
+                type: 'polarArea',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors.slice(0, data.length),
+                        borderWidth: 1,
+                        borderColor: '#ffffff',
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 16,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                font: { size: 12 }
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            ticks: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Bar Chart Tren
+        const barCtx = document.getElementById('barChart');
+        if (barCtx) {
+            new Chart(barCtx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: {!! json_encode($chartLabels) !!},
+                    datasets: [{
+                        label: 'Jumlah Surat',
+                        data: {!! json_encode($chartData) !!},
+                        backgroundColor: 'rgba(30, 58, 95, 0.8)',
+                        borderColor: '#1e3a5f',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1, color: '#64748b' },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        x: {
+                            ticks: { color: '#64748b' },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
     });
 </script>
 @endsection
