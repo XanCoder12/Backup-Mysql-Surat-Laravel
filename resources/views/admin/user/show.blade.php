@@ -3,25 +3,35 @@
 @section('title', 'Detail Pegawai')
 
 @section('content')
-<div class="space-y-24">
+<div style="display: flex; flex-direction: column; gap: 24px;">
 
     {{-- BACK BUTTON & HEADER --}}
     <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <h1>{{ $user->name }}</h1>
-            <p style="color: #6b7280; margin-top: 4px;">
-                <strong>Email:</strong> {{ $user->email }} | 
-                <strong>Role:</strong> {{ ucfirst($user->role) }} |
-                <strong>Daftar:</strong> {{ $user->created_at->format('d M Y') }}
-            </p>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            @if ($user->profile_photo)
+                <img src="{{ Storage::url($user->profile_photo) }}" alt="{{ $user->name }}" 
+                     style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 4px solid white; shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+            @else
+                <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); display: flex; align-items: center; justify-content: center; font-size: 32px; color: white; font-weight: bold; border: 4px solid white; shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                </div>
+            @endif
+            <div>
+                <h1 style="margin: 0; font-size: 32px; letter-spacing: -0.025em;">{{ $user->name }}</h1>
+                <p style="color: #6b7280; margin-top: 4px; font-size: 14px;">
+                    <strong>Email:</strong> {{ $user->email }} | 
+                    <strong>Role:</strong> <span class="badge {{ $user->role === 'admin' ? 'badge-blue' : 'badge-gray' }}" style="font-size: 11px;">{{ ucfirst($user->role) }}</span> |
+                    <strong>Daftar:</strong> {{ $user->created_at->format('d M Y') }}
+                </p>
+            </div>
         </div>
-        <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
+        <a href="{{ route('admin.users.index') }}" class="btn btn-secondary" style="border-radius: 12px; padding: 10px 20px;">
             ← Kembali
         </a>
     </div>
 
     {{-- USER STATISTICS --}}
-    <div class="stat-grid">
+    <div class="stat-grid" style="grid-template-columns: repeat(5, 1fr) !important;">
         <div class="stat-card blue">
             <div class="stat-label">Total Surat</div>
             <div class="stat-value">{{ $stats['total_surats'] }}</div>
@@ -105,7 +115,7 @@
                                     {{ $surat->created_at->format('d M Y') }}
                                 </td>
                                 <td style="text-align: center;">
-                                    <a href="{{ route('admin.surat.show', $surat->id) }}" class="btn btn-sm" title="Lihat detail">
+                                    <a href="{{ route('admin.surat.show', $surat) }}" class="btn btn-sm" title="Lihat detail">
                                         👁️
                                     </a>
                                 </td>
