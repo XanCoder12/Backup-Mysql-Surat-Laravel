@@ -1,53 +1,107 @@
 @extends('layouts.user')
 
 @section('content')
+<style>
+    /* Gradient Text Animation */
+    .animate-gradient-text {
+        background: linear-gradient(to right, #1e3a5f, #3b82f6, #1e3a5f);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shine 3s linear infinite;
+    }
+
+    @keyframes shine {
+        to { background-position: 200% center; }
+    }
+
+    /* Floating Animation */
+    .animate-float {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+
+    /* Typing Effect for Badge */
+    .typing-badge {
+        overflow: hidden;
+        border-right: 2px solid var(--text-primary);
+        white-space: nowrap;
+        animation: typing 2.5s steps(30, end), blink-caret .75s step-end infinite;
+        max-width: fit-content;
+    }
+
+    @keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
+    }
+
+    @keyframes blink-caret {
+        from, to { border-color: transparent }
+        50% { border-color: #3b82f6; }
+    }
+
+    /* List item hover sparkle */
+    .list-fitur li {
+        transition: all 0.3s ease;
+    }
+    .list-fitur li:hover {
+        padding-left: 10px !important;
+        background: rgba(59, 130, 246, 0.05);
+        color: #1e3a5f;
+    }
+</style>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-
-            {{-- Header Instansi --}}
-            <div class="card card-custom mb-4">
+            <div class="card card-custom mb-4 animate-in">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="rounded-2 bg-primary bg-opacity-10 d-flex align-items-center justify-content-center"
+                        <div class="rounded-2 bg-primary bg-opacity-10 d-flex align-items-center justify-content-center animate-float"
                             style="width: 52px; height: 52px; font-size: 24px; flex-shrink: 0;">
-                            <img src="{{ asset('images/metrologi.png') }}" alt="">
+                            <img src="{{ asset('images/metrologi.png') }}" alt="" style="width: 35px;">
                         </div>
                         <div>
-                            <span class="badge bg-primary bg-opacity-10 text-primary fw-normal mb-1" style="font-size: 11px;">
-                                Kementerian Perdagangan RI
-                            </span>
-                            <h5 class="fw-bold mb-0" style="color:#111827;">Balai Pengelolaanan SUML</h5>
+                            <div class="typing-badge">
+                                <span class="badge bg-primary bg-opacity-10 text-primary fw-normal mb-1" style="font-size: 11px;">
+                                    Kementerian Perdagangan RI
+                                </span>
+                            </div>
+                            <h5 class="fw-bold mb-0 animate-gradient-text">Balai Pengelolaanan SUML</h5>
                             <small class="text-muted">Direktorat Metrologi</small>
                         </div>
                     </div>
 
-                    <p class="text-muted" style="font-size: 14px; line-height: 1.7;">
+                    <p class="text-muted animate-in" style="font-size: 14px; line-height: 1.7; animation-delay: 0.1s;">
                         Direktorat Metrologi merupakan unit pelaksana teknis di bawah Kementerian Perdagangan RI yang
                         bertugas melaksanakan standardisasi dan pengawasan di bidang BP SUML legal — memastikan
                         kebenaran pengukuran dalam transaksi perdagangan demi perlindungan konsumen dan kepastian usaha.
                     </p>
 
-                    <p class="text-muted" style="font-size: 14px; line-height: 1.7;">
-                        Aplikasi <strong>Surat Balai Pengelolaan SUML</strong> hadir sebagai solusi digital untuk pengelolaan
+                    <p class="text-muted animate-in" style="font-size: 14px; line-height: 1.7; animation-delay: 0.2s;">
+                        Aplikasi <strong class="text-primary">Surat Balai Pengelolaan SUML</strong> hadir sebagai solusi digital untuk pengelolaan
                         korespondensi kedinasan di lingkungan BP SUML Legal, mempermudah proses administrasi
                         surat-menyurat secara transparan dan efisien.
                     </p>
                 </div>
             </div>
 
-            <div class="row g-3">
+            <div class="row g-3 animate-in" style="animation-delay: 0.3s;">
                 {{-- Informasi Kontak --}}
                 <div class="col-lg-6">
                     <div class="card card-custom h-100">
                         <div class="card-body p-4">
                             <h6 class="fw-semibold mb-3" style="color:#111827;">
-                                <i class="bi bi-geo-alt-fill text-danger me-1"></i> Kontak & Informasi
+                                <i class="bi bi-geo-alt-fill text-danger me-1 animate-float"></i> Kontak & Informasi
                             </h6>
 
                             <div class="row g-2">
                                 <div class="col-12">
-                                    <div class="rounded-2 bg-light p-3" style="background:#f9fafb!important;">
+                                    <div class="rounded-2 bg-light p-3" style="background:#f9fafb!important; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                                         <small class="text-muted d-block mb-1">Alamat</small>
                                         <span style="font-size: 13px; font-weight: 500;color:#111827;">
                                             Jl. Pasteur No.27, RT.02, Pasir Kaliki,<br>
@@ -56,25 +110,25 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="rounded-2 bg-light p-3" style="background:#f9fafb!important;">
+                                    <div class="rounded-2 bg-light p-3" style="background:#f9fafb!important; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                                         <small class="text-muted d-block mb-1">Telepon</small>
                                         <span style="font-size: 13px; font-weight: 500;color:#111827;">(022) 6032720</span>
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="rounded-2 bg-light p-3" style="background:#f9fafb!important;">
+                                    <div class="rounded-2 bg-light p-3" style="background:#f9fafb!important; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                                         <small class="text-muted d-block mb-1">Jam Operasional</small>
                                         <span style="font-size: 13px; font-weight: 500;color:#111827;">Senin – Jumat<br>08.00 – 16.00 WIB</span>
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="rounded-2 bg-light p-3" style="background:#f9fafb!important;">
+                                    <div class="rounded-2 bg-light p-3" style="background:#f9fafb!important; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                                         <small class="text-muted d-block mb-1">Email</small>
                                         <span style="font-size: 13px; font-weight: 500;color:#111827;">metrologi@kemendag.go.id</span>
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="rounded-2 bg-light p-3" style="background:#f9fafb!important;">
+                                    <div class="rounded-2 bg-light p-3" style="background:#f9fafb!important; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                                         <small class="text-muted d-block mb-1">Website</small>
                                         <a href="https://metrologi.kemendag.go.id" target="_blank"
                                            style="font-size: 13px; font-weight: 500;color:#111827;">
@@ -92,9 +146,9 @@
                     <div class="card card-custom h-100">
                         <div class="card-body p-4">
                             <h6 class="fw-semibold mb-3" style="color:#111827;">
-                                <i class="bi bi-stars text-warning me-1"></i> Fitur Utama Aplikasi
+                                <i class="bi bi-stars text-warning me-1 animate-float"></i> Fitur Utama Aplikasi
                             </h6>
-                            <ul class="list-unstyled mb-0">
+                            <ul class="list-unstyled mb-0 list-fitur">
                                 @foreach([
                                     ['icon' => 'bi-send', 'text' => 'Pengajuan surat secara daring tanpa perlu datang langsung'],
                                     ['icon' => 'bi-search', 'text' => 'Pelacakan status surat secara real-time'],
@@ -114,10 +168,10 @@
             </div>
 
             {{-- Google Maps --}}
-            <div class="card card-custom mt-3">
+            <div class="card card-custom mt-3 animate-in" style="animation-delay: 0.4s;">
                 <div class="card-body p-4">
                     <h6 class="fw-semibold mb-3" style="color:#111827;">
-                        <i class="bi bi-map text-success me-1"></i> Lokasi Kami
+                        <i class="bi bi-map text-success me-1 animate-float"></i> Lokasi Kami
                     </h6>
                     <div class="rounded-3 overflow-hidden border" style="height: 320px;border-color:#e5e7eb;">
                         <iframe
@@ -137,6 +191,28 @@
                 </div>
             </div>
 
+            {{-- Developer Info --}}
+            <div class="card card-custom mt-3 mb-2 animate-in" style="animation-delay: 0.5s;">
+                <div class="card-body p-4">
+                    <h6 class="fw-semibold mb-3" style="color:#111827;">
+                        <i class="bi bi-code-slash text-primary me-1 animate-float"></i> Tentang Pengembang
+                    </h6>
+                    <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                        <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 50px; height: 50px; font-size: 24px; color: #2563eb;">
+                            <i class="bi bi-person-workspace"></i>
+                        </div>
+                        <div>
+                            <p class="mb-1 text-muted" style="font-size: 13.5px; line-height: 1.6;">
+                                Aplikasi <strong>Manajemen Surat BP SUML</strong> ini dirancang dan dikembangkan secara independen oleh 1 orang untuk memodernisasi serta mendigitalisasi proses persuratan instansi. Dibuat dengan dedikasi tinggi menggunakan framework modern dan standar UI/UX estetis (berbasis prinsip Glassmorphism) demi memastikan pengalaman pengguna yang cepat, intuitif, dan seamless.
+                            </p>
+                            <span style="font-size: 12px; font-weight: 500; color: #3b82f6;">
+                                <i class="bi bi-laptop me-1"></i> Developed with ❤️ for BP SUML
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </div>
 </div>
