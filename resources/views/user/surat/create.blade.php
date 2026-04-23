@@ -7,7 +7,7 @@
     <div class="col-12 col-lg-8">
 
         {{-- Header --}}
-        <div class="d-flex align-items-center gap-2 mb-4">
+        <div class="d-flex align-items-center gap-2 mb-4 animate-in">
             <a href="{{ route('dashboard') }}" class="btn btn-sm btn-light" style="border-radius:8px;background:#f9fafb;color:#111827;border-color:#e5e7eb;">
                 <i class="bi bi-arrow-left"></i>
             </a>
@@ -18,7 +18,7 @@
         </div>
 
         @if($isLibur)
-            <div class="card shadow-sm border-0 animate-in" style="border-radius:16px; background: white; overflow: hidden;">
+            <div class="card shadow-sm border-0 animate-in" style="border-radius:16px; background: white; overflow: hidden; animation-delay: 0.1s;">
                 <div style="height: 10px; background: #f59e0b;"></div>
                 <div class="card-body p-5 text-center">
                     <div style="font-size:64px; margin-bottom:20px;">⏰</div>
@@ -35,7 +35,7 @@
                 </div>
             </div>
         @else
-            <div class="card card-custom">
+            <div class="card card-custom animate-in" style="animation-delay: 0.1s;">
                 <div class="card-body p-4">
                     <form action="{{ route('user.surat.store') }}" method="POST" enctype="multipart/form-data" id="formAjukan">
                         @csrf
