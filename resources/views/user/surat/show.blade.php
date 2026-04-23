@@ -328,12 +328,6 @@
                 <div style="font-size:11px; color:var(--text-secondary); line-height:1.4;">
                     Ini adalah QR Code unik untuk memverifikasi keaslian surat ini di portal publik.
                 </div>
-                <div class="mt-2">
-                    <a href="{{ route('surat.verifikasi', $surat->uuid) }}" target="_blank" 
-                       style="font-size:12px; color:#4f46e5; font-weight:600; text-decoration:none;">
-                       Buka Halaman Verifikasi ↗
-                    </a>
-                </div>
             </div>
         </div>
 
