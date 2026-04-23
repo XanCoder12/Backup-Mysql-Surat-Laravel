@@ -4,15 +4,15 @@
 @section('content')
 <div class="container py-4">
     {{-- Header Section --}}
-    <div class="text-center mb-5">
+    <div class="text-center mb-5 animate-in">
         <h3 class="fw-bold" style="color: #1e3a5f;">Pusat Bantuan & FAQ</h3>
-        <p class="text-muted">Temukan jawaban untuk pertanyaan yang paling sering diajukan</p>
+        <p class="text-muted">Tempat Dokumentsi & Temukan jawaban untuk pertanyaan yang paling sering diajukan</p>
     </div>
 
     <div class="row justify-content-center">
         <div class="col-lg-9">
             
-            <div class="accordion" id="faqAccordion">
+            <div class="accordion animate-in" id="faqAccordion" style="animation-delay: 0.1s;">
                 
                 <div class="accordion-item mb-3 shadow-sm border" style="border-radius: 12px !important;">
                     <h2 class="accordion-header">
@@ -27,7 +27,10 @@
                         </div>
                     </div>
                 </div>
-
+                
+                {{-- ... and so on ... --}}
+                {{-- (Actually, I should just apply animate-in to the container of the accordion items) --}}
+                
                 <div class="accordion-item mb-3 shadow-sm border" style="border-radius: 12px !important;">
                     <h2 class="accordion-header">
                         <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" 
@@ -238,17 +241,33 @@
                     </div>
                 </div>
 
+                <div class="accordion-item mb-3 shadow-sm border" style="border-radius: 12px !important;">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSixteen" 
+                                style="font-size: 14px; background: #fff; color: #1e3a5f; border-radius: 12px !important;">
+                            Apa Perbedaan "Draft" dan "Terkirim" pada Menu Aspirasi?
+                        </button>
+                    </h2>
+                    <div id="collapseSixteen" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body border-top" style="font-size: 14px; line-height: 1.7; color: #111827 !important; background: #ffffff !important;">
+                            <strong>Draft</strong>: Aspirasi yang masih disimpan sementara di akun Anda tapi belum diajukan resmi ke Admin. Anda bisa mengedit, menambahkan lampiran, atau menghapusnya kapan saja sebelum dikirim.
+                            <br><br>
+                            <strong>Terkirim</strong>: Aspirasi yang sudah Anda klik tombol "Kirim" atau "Ajukan". Status ini berarti data sudah masuk ke sistem dan dalam antrian untuk diverifikasi oleh Admin. Aspirasi yang sudah "Terkirim" tidak bisa diedit lagi, namun Anda tetap bisa melampirkan revisi jika ditolak.
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
              {{-- Contact Support Section --}}
-             <div class="card mt-5 p-4 text-center border-0 shadow-sm" style="background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%); border-radius: 20px;">
+             <div class="card mt-5 p-4 text-center border-0 shadow-sm animate-in" style="background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%); border-radius: 20px; animation-delay: 0.2s;">
                 <h5 class="fw-bold mb-2" style="color: #1e3a5f;">Masih punya pertanyaan lain?</h5>
                 <p class="text-muted mb-4" style="font-size: 14px;">Jika Anda tidak menemukan jawaban yang Anda cari, jangan ragu untuk menghubungi tim IT/Admin kami.</p>
                 <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <a href="#" class="btn btn-success rounded-pill px-4 d-flex align-items-center gap-2" style="font-size: 13px;">
+                    <a href="https://wa.me/6281321098877" class="btn btn-success rounded-pill px-4 d-flex align-items-center gap-2" style="font-size: 13px;">
                         <i class="bi bi-whatsapp"></i> WhatsApp Helpdesk
                     </a>
-                    <a href="#" class="btn btn-outline-primary rounded-pill px-4 d-flex align-items-center gap-2" style="font-size: 13px;">
+                    <a href="mailto:metrologi@kemendag.go.id" class="btn btn-outline-primary rounded-pill px-4 d-flex align-items-center gap-2" style="font-size: 13px;">
                         <i class="bi bi-envelope"></i> Email Support
                     </a>
                 </div>
