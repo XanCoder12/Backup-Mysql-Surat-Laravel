@@ -8,23 +8,68 @@
         --navy:        #1e3a5f;
         --navy-light:  #2d5282;
         --blue:        #3b82f6;
-        --blue-soft:   #dbeafe;
+        --blue-soft:   rgba(59, 130, 246, 0.15);
         --green:       #22c55e;
-        --green-soft:  #dcfce7;
-        --green-dark:  #15803d;
+        --green-soft:  rgba(34, 197, 94, 0.15);
+        --green-dark:  #4ade80;
         --amber:       #f59e0b;
-        --amber-soft:  #fef3c7;
-        --amber-dark:  #d97706;
+        --amber-soft:  rgba(245, 158, 11, 0.15);
+        --amber-dark:  #fbbf24;
         --red:         #ef4444;
-        --red-soft:    #fee2e2;
-        --red-dark:    #b91c1c;
-        --gray-50:     #f9fafb;
-        --gray-100:    #f3f4f6;
-        --gray-200:    #e5e7eb;
-        --gray-400:    #9ca3af;
-        --gray-500:    #6b7280;
-        --gray-700:    #374151;
-        --gray-900:    #111827;
+        --red-soft:    rgba(239, 68, 68, 0.15);
+        --red-dark:    #f87171;
+    }
+
+    /* ─── Dark Mode Overrides ─────────────────────────────────────── */
+    html.dark-mode .admin-chip {
+        color: #93c5fd !important;
+        background: rgba(30, 64, 175, 0.4) !important;
+    }
+    
+    html.dark-mode .admin-chip:hover {
+        background: rgba(30, 64, 175, 0.6) !important;
+    }
+
+    html.dark-mode .badge-selesai { color: #4ade80 !important; background: rgba(21, 128, 61, 0.25) !important; }
+    html.dark-mode .badge-ditolak { color: #f87171 !important; background: rgba(185, 28, 28, 0.25) !important; }
+    html.dark-mode .badge-proses  { color: #fbbf24 !important; background: rgba(180, 83, 9, 0.25) !important; }
+
+    /* Force Table Transparency for Dark Mode */
+    html.dark-mode .table-card .table,
+    html.dark-mode .table-card .table > :not(caption) > * > * {
+        background-color: transparent !important;
+        color: #f3f4f6 !important;
+        border-color: #374151 !important;
+    }
+
+    html.dark-mode .table-card tbody tr:hover td { 
+        background: rgba(255, 255, 255, 0.05) !important; 
+    }
+
+    html.dark-mode .surat-meta { color: #9ca3af !important; }
+    html.dark-mode .surat-title { color: #f3f4f6 !important; }
+    html.dark-mode .user-nip { color: #9ca3af !important; }
+    html.dark-mode .user-name { color: #f3f4f6 !important; }
+    html.dark-mode .user-avatar { background: rgba(59, 130, 246, 0.2) !important; color: #93c5fd !important; }
+    
+    html.dark-mode .empty-state { color: #6b7280 !important; }
+
+    html.dark-mode .btn-detail {
+        border-color: #60a5fa !important;
+        color: #60a5fa !important;
+    }
+
+    html.dark-mode .btn-detail:hover {
+        background: #60a5fa !important;
+        color: #ffffff !important;
+    }
+
+    html.dark-mode .btn-back { border-color: #4b5563 !important; color: #d1d5db !important; background: #1f2937 !important; }
+    html.dark-mode .btn-back:hover { border-color: #60a5fa !important; color: #60a5fa !important; background: #374151 !important; }
+
+    html.dark-mode .table-card {
+        background-color: var(--bg-secondary) !important;
+        border-color: #374151 !important;
     }
 
     /* ─── Page header ──────────────────────────────────────────────── */
@@ -39,26 +84,28 @@
     .page-title {
         font-size: 1.35rem;
         font-weight: 700;
-        color: var(--navy);
+        color: var(--text-primary, var(--navy));
         margin: 0 0 .2rem;
         line-height: 1.3;
+        transition: color 0.3s;
     }
     .page-subtitle {
         font-size: .8rem;
-        color: var(--gray-500);
+        color: var(--text-secondary, var(--gray-500));
         margin: 0;
+        transition: color 0.3s;
     }
 
     /* ─── Stat cards ───────────────────────────────────────────────── */
     .stat-card {
-        background: #fff;
+        background: var(--bg-secondary);
         border-radius: 12px;
-        border: 1px solid var(--gray-200);
+        border: 1px solid var(--border-color);
         padding: 1.1rem 1.25rem;
         display: flex;
         align-items: center;
         gap: 1rem;
-        transition: box-shadow .2s, transform .2s;
+        transition: box-shadow .2s, transform .2s, background 0.3s, border-color 0.3s;
     }
     .stat-card:hover {
         box-shadow: 0 4px 16px rgba(0,0,0,.08);
@@ -79,40 +126,48 @@
         font-weight: 600;
         letter-spacing: .04em;
         text-transform: uppercase;
-        color: var(--gray-500);
+        color: var(--text-secondary, var(--gray-500));
         margin: 0 0 .2rem;
+        transition: color 0.3s;
     }
     .stat-value {
         font-size: 1.6rem;
         font-weight: 700;
         line-height: 1;
         margin: 0;
+        color: var(--text-primary);
+        transition: color 0.3s;
     }
 
     /* ─── Filter card ──────────────────────────────────────────────── */
     .filter-card {
-        background: #fff;
-        border: 1px solid var(--gray-200);
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
         border-radius: 12px;
         padding: 1.1rem 1.25rem;
         margin-bottom: 1.5rem;
+        transition: background 0.3s, border-color 0.3s;
     }
     .filter-card .form-label {
         font-size: .72rem;
         font-weight: 600;
         letter-spacing: .03em;
         text-transform: uppercase;
-        color: var(--gray-500);
+        color: var(--text-secondary, var(--gray-500));
         margin-bottom: .3rem;
+        transition: color 0.3s;
     }
     .filter-card .form-select,
     .filter-card .form-control {
         font-size: .82rem;
-        border-color: var(--gray-200);
+        border-color: var(--border-color, var(--gray-200));
         border-radius: 8px;
         height: 34px;
         padding-top: 0;
         padding-bottom: 0;
+        background: var(--bg-secondary, #fff);
+        color: var(--text-primary);
+        transition: all 0.3s;
     }
     .filter-card .form-select:focus,
     .filter-card .form-control:focus {
@@ -137,51 +192,58 @@
 
     /* ─── Table card ───────────────────────────────────────────────── */
     .table-card {
-        background: #fff;
-        border: 1px solid var(--gray-200);
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
         border-radius: 12px;
         overflow: hidden;
+        transition: background 0.3s, border-color 0.3s;
     }
     .table-card .table {
         margin: 0;
         font-size: .83rem;
+        background-color: transparent;
+        color: var(--text-primary);
     }
     .table-card thead th {
-        background: var(--gray-50);
-        border-bottom: 1px solid var(--gray-200);
+        background: var(--bg-tertiary);
+        border-bottom: 1px solid var(--border-color);
         font-size: .68rem;
         font-weight: 700;
         letter-spacing: .06em;
         text-transform: uppercase;
-        color: var(--gray-500);
+        color: var(--text-secondary, var(--gray-500));
         padding: .75rem 1rem;
         white-space: nowrap;
+        transition: all 0.3s;
     }
     .table-card tbody td {
         padding: .85rem 1rem;
         vertical-align: middle;
-        border-bottom: 1px solid var(--gray-100);
-        color: var(--gray-700);
+        border-bottom: 1px solid var(--border-color, var(--gray-100));
+        color: var(--text-secondary, var(--gray-700));
+        transition: all 0.3s;
     }
     .table-card tbody tr:last-child td { border-bottom: none; }
-    .table-card tbody tr:hover td { background: #fafbff; }
+    .table-card tbody tr:hover td { background: rgba(59, 130, 246, 0.05); }
 
     /* ─── Table: judul cell ────────────────────────────────────────── */
     .surat-title {
         font-weight: 600;
-        color: var(--gray-900);
+        color: var(--text-primary, var(--gray-900));
         max-width: 240px;
         line-height: 1.35;
         margin-bottom: .25rem;
+        transition: color 0.3s;
     }
     .surat-meta {
         font-size: .7rem;
-        color: var(--gray-400);
+        color: var(--text-secondary, var(--gray-400));
         display: flex;
         align-items: center;
         gap: .6rem;
         flex-wrap: wrap;
         margin-top: .2rem;
+        transition: color 0.3s;
     }
     .surat-meta i { font-size: .65rem; }
 
@@ -190,8 +252,8 @@
         width: 34px;
         height: 34px;
         border-radius: 50%;
-        background: #e0e7ff;
-        color: #4338ca;
+        background: var(--blue-soft);
+        color: var(--blue);
         font-weight: 700;
         font-size: .75rem;
         display: flex;
@@ -199,8 +261,8 @@
         justify-content: center;
         flex-shrink: 0;
     }
-    .user-name  { font-size: .83rem; font-weight: 500; color: var(--gray-900); }
-    .user-nip   { font-size: .7rem;  color: var(--gray-400); word-break: break-all; }
+    .user-name  { font-size: .83rem; font-weight: 500; color: var(--text-primary, var(--gray-900)); transition: color 0.3s; }
+    .user-nip   { font-size: .7rem;  color: var(--text-secondary, var(--gray-400)); word-break: break-all; transition: color 0.3s; }
 
     /* ─── Status badges ────────────────────────────────────────────── */
     .badge-status {
@@ -220,10 +282,16 @@
     /* ─── Admin pengolah chips ─────────────────────────────────────── */
     .admin-chips {
         display: flex;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         gap: .3rem;
-        max-width: 220px;
+        overflow-x: auto;
+        max-width: 280px;
+        padding-bottom: 5px;
     }
+    .admin-chips::-webkit-scrollbar { height: 5px; }
+    .admin-chips::-webkit-scrollbar-track { background: transparent; }
+    .admin-chips::-webkit-scrollbar-thumb { background: var(--border-color, var(--gray-200)); border-radius: 10px; transition: background 0.3s; }
+    .admin-chips::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
     .admin-chip {
         background: var(--blue-soft);
         color: #1d4ed8;
@@ -261,7 +329,8 @@
         align-items: center;
         justify-content: center;
         padding: 3.5rem 1rem;
-        color: var(--gray-400);
+        color: var(--text-secondary, var(--gray-400));
+        transition: color 0.3s;
     }
     .empty-state i { font-size: 3rem; margin-bottom: .75rem; }
     .empty-state p { font-size: .85rem; margin: 0; }
@@ -269,15 +338,19 @@
     /* ─── Pagination wrapper ───────────────────────────────────────── */
     .pagination-wrap {
         padding: .85rem 1rem;
-        border-top: 1px solid var(--gray-100);
+        border-top: 1px solid var(--border-color, var(--gray-100));
+        background: var(--bg-secondary, transparent);
+        transition: all 0.3s;
     }
     .pagination-wrap .pagination { margin: 0; }
     .pagination-wrap .page-link {
         font-size: .78rem;
         border-radius: 6px !important;
         margin: 0 2px;
-        border-color: var(--gray-200);
-        color: var(--gray-700);
+        border-color: var(--border-color, var(--gray-200));
+        color: var(--text-secondary, var(--gray-700));
+        background: var(--bg-secondary, transparent);
+        transition: all 0.3s;
     }
     .pagination-wrap .page-item.active .page-link {
         background: var(--navy);
@@ -290,17 +363,17 @@
         font-weight: 600;
         padding: .4rem .9rem;
         border-radius: 8px;
-        border: 1.5px solid var(--gray-200);
-        color: var(--gray-700);
-        background: #fff;
+        border: 1.5px solid var(--border-color, var(--gray-200));
+        color: var(--text-secondary, var(--gray-700));
+        background: var(--bg-secondary, #fff);
         display: inline-flex;
         align-items: center;
         gap: .35rem;
-        transition: border-color .15s, background .15s;
+        transition: border-color .15s, background .15s, color 0.3s;
         white-space: nowrap;
         text-decoration: none;
     }
-    .btn-back:hover { border-color: var(--navy); color: var(--navy); background: var(--gray-50); }
+    .btn-back:hover { border-color: var(--navy); color: var(--navy); background: var(--bg-tertiary, var(--gray-50)); }
 </style>
 @endpush
 
@@ -328,12 +401,12 @@
         {{-- Total --}}
         <div class="col-6 col-md-3">
             <div class="stat-card">
-                <div class="stat-icon" style="background:#eff6ff;">
+                <div class="stat-icon" style="background:var(--blue-soft);">
                     <i class="bi bi-envelope-paper" style="color:var(--blue);"></i>
                 </div>
                 <div>
                     <p class="stat-label">Total Surat</p>
-                    <p class="stat-value" style="color:var(--navy);">{{ $totalSurat }}</p>
+                    <p class="stat-value">{{ $totalSurat }}</p>
                 </div>
             </div>
         </div>
@@ -341,11 +414,11 @@
         <div class="col-6 col-md-3">
             <div class="stat-card">
                 <div class="stat-icon" style="background:var(--green-soft);">
-                    <i class="bi bi-check-circle" style="color:var(--green-dark);"></i>
+                    <i class="bi bi-check-circle" style="color:var(--green);"></i>
                 </div>
                 <div>
                     <p class="stat-label">Selesai</p>
-                    <p class="stat-value" style="color:var(--green-dark);">{{ $totalSelesai }}</p>
+                    <p class="stat-value" style="color:var(--green);">{{ $totalSelesai }}</p>
                 </div>
             </div>
         </div>
@@ -353,11 +426,11 @@
         <div class="col-6 col-md-3">
             <div class="stat-card">
                 <div class="stat-icon" style="background:var(--amber-soft);">
-                    <i class="bi bi-hourglass-split" style="color:var(--amber-dark);"></i>
+                    <i class="bi bi-hourglass-split" style="color:var(--amber);"></i>
                 </div>
                 <div>
                     <p class="stat-label">Dalam Proses</p>
-                    <p class="stat-value" style="color:var(--amber-dark);">{{ $totalProses }}</p>
+                    <p class="stat-value" style="color:var(--amber);">{{ $totalProses }}</p>
                 </div>
             </div>
         </div>
@@ -365,11 +438,11 @@
         <div class="col-6 col-md-3">
             <div class="stat-card">
                 <div class="stat-icon" style="background:var(--red-soft);">
-                    <i class="bi bi-x-circle" style="color:var(--red-dark);"></i>
+                    <i class="bi bi-x-circle" style="color:var(--red);"></i>
                 </div>
                 <div>
                     <p class="stat-label">Ditolak</p>
-                    <p class="stat-value" style="color:var(--red-dark);">{{ $totalDitolak }}</p>
+                    <p class="stat-value" style="color:var(--red);">{{ $totalDitolak }}</p>
                 </div>
             </div>
         </div>
@@ -478,12 +551,15 @@
                             {{-- Pengusul --}}
                             <td>
                                 <div class="d-flex align-items-center gap-2">
-                                    <div class="user-avatar">
-                                        {{ strtoupper(substr($surat->user?->name ?? 'U', 0, 1)) }}
+                                    <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                                        @if($surat->user?->profile_photo)
+                                            <img src="{{ Storage::url($surat->user->profile_photo) }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                                        @else
+                                            {{ strtoupper(substr($surat->user?->name ?? 'U', 0, 1)) }}
+                                        @endif
                                     </div>
                                     <div>
                                         <div class="user-name">{{ $surat->user?->name ?? '—' }}</div>
-                                        
                                     </div>
                                 </div>
                             </td>
@@ -511,7 +587,7 @@
                                     @forelse($surat->tahapans as $tahapan)
                                         <span class="admin-chip"
                                               title="Tahap {{ $tahapan->tahap }}: {{ $tahapan->nama_tahap }}">
-                                            {{ $tahapan->diprosesByUser?->name ?? '—' }}
+                                            {{ $tahapan->diprosesByUser?->getRoleLabel() ?? '—' }}
                                         </span>
                                     @empty
                                         <span style="font-size:.72rem; color:var(--gray-400);">
