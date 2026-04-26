@@ -24,6 +24,7 @@
                 <select name="status" class="form-select form-select-sm" style="font-size:13px;border-radius:7px;width:130px;background:#ffffff;color:#111827;border-color:#e5e7eb;">
                     <option value="">Semua</option>
                     <option value="proses"  {{ request('status')==='proses'  ? 'selected':'' }}>Proses</option>
+                    <option value="revisi"  {{ request('status')==='revisi'  ? 'selected':'' }}>Revisi</option>
                     <option value="selesai" {{ request('status')==='selesai' ? 'selected':'' }}>Selesai</option>
                     <option value="ditolak" {{ request('status')==='ditolak' ? 'selected':'' }}>Ditolak</option>
                     <option value="draft"   {{ request('status')==='draft'   ? 'selected':'' }}>Draf</option>
@@ -70,8 +71,8 @@
                     <div style="
                         width:42px;height:42px;border-radius:10px;flex-shrink:0;
                         display:flex;align-items:center;justify-content:center;font-size:18px;
-                        background:{{ $surat->status==='selesai' ? '#dcfce7' : ($surat->status==='ditolak' ? '#fee2e2' : ($surat->status==='draft' ? '#f1f5f9' : '#dbeafe')) }}">
-                        {{ $surat->status==='selesai' ? '✅' : ($surat->status==='ditolak' ? '❌' : ($surat->status==='draft' ? '📝' : '⏳')) }}
+                        background:{{ $surat->status==='selesai' ? '#dcfce7' : ($surat->status==='ditolak' ? '#fee2e2' : ($surat->status==='draft' ? '#f1f5f9' : ($surat->status==='revisi' ? '#fef3c7' : '#dbeafe'))) }}">
+                        {{ $surat->status==='selesai' ? '✅' : ($surat->status==='ditolak' ? '❌' : ($surat->status==='draft' ? '📝' : ($surat->status==='revisi' ? '✍️' : '⏳'))) }}
                     </div>
 
                     <div class="flex-1 min-w-0" style="flex:1;">
@@ -97,6 +98,8 @@
                                     <span class="badge rounded-pill" style="background:#dcfce7;color:#15803d;font-size:11px;padding:4px 10px;">✓ Selesai</span>
                                 @elseif($surat->status==='ditolak')
                                     <span class="badge rounded-pill" style="background:#fee2e2;color:#b91c1c;font-size:11px;padding:4px 10px;">✗ Ditolak</span>
+                                @elseif($surat->status==='revisi')
+                                    <span class="badge rounded-pill" style="background:#fef3c7;color:#b45309;font-size:11px;padding:4px 10px;">📝 Revisi</span>
                                 @elseif($surat->status==='draft')
                                     <span class="badge rounded-pill" style="background:#f1f5f9;color:#64748b;font-size:11px;padding:4px 10px;">📄 Draf</span>
                                 @elseif($surat->sla_status==='terlambat')
