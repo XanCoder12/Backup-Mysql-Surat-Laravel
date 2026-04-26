@@ -388,16 +388,119 @@
         50% { transform: translateY(3px); }
     }
 
-    .sla-item {
-        transition: all 0.3s ease;
-        border: 1px solid transparent;
-    }
-
     .sla-item:hover {
         background: #f8fafc;
         border-color: #f1f5f9;
         transform: translateX(5px);
         box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+
+    /* DOCUMENT PREVIEW CARD */
+    .template-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .doc-preview-card {
+        background: #ffffff;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #eef2f6;
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+
+    .doc-preview-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        border-color: #dbeafe;
+    }
+
+    .doc-preview-top {
+        height: 160px;
+        background: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .doc-preview-top img {
+        width: 90%;
+        height: 90%;
+        object-fit: cover;
+        object-position: top;
+        border-radius: 4px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: transform 0.5s ease;
+    }
+
+    .doc-preview-card:hover .doc-preview-top img {
+        transform: scale(1.05);
+    }
+
+    .doc-info-section {
+        padding: 15px;
+        background: #0f172a; /* Dark theme as requested */
+        color: white;
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .doc-icon-box {
+        width: 38px;
+        height: 38px;
+        background: #ef4444; /* PDF Red or Word Blue */
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+    }
+
+    .doc-icon-box.docx {
+        background: #2563eb;
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+    }
+
+    .doc-name {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        color: #f8fafc;
+    }
+
+    .doc-footer {
+        padding: 10px 15px;
+        background: #0f172a;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        color: #94a3b8;
+    }
+
+    .doc-preview-card:hover .doc-info-section {
+        background: #1e293b;
+    }
+
+    .doc-preview-card:hover .doc-footer {
+        background: #1e293b;
     }
 
     /* MOBILE RESPONSIVE TWEAKS */
@@ -502,41 +605,59 @@
 @endif
 
 {{-- STAT CARDS --}}
-<div class="row g-4 mb-4">
-    <div class="col-6 col-lg-3 animate-in" style="animation-delay: 0.1s;">
+<div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3 mb-4">
+    <div class="col animate-in" style="animation-delay: 0.1s;">
         <div class="stat-card-modern" style="--accent-color: #1e3a5f; --accent-color-light: #2563eb; --icon-bg: #eff6ff;">
             <div class="stat-icon-wrapper">
-                <i class="bi bi-envelope-paper-fill" style="color: #1e3a5f; font-size: 26px;"></i>
+                <i class="bi bi-envelope-paper-fill" style="color: #1e3a5f; font-size: 20px;"></i>
             </div>
-            <div class="stat-value-modern">{{ $totalSurat }}</div>
-            <div class="stat-label-modern">Total Surat Diajukan</div>
+            <div class="stat-value-modern" style="font-size: 24px;">{{ $totalSurat }}</div>
+            <div class="stat-label-modern" style="font-size: 11px;">Total Surat</div>
         </div>
     </div>
-    <div class="col-6 col-lg-3 animate-in" style="animation-delay: 0.2s;">
+    <div class="col animate-in" style="animation-delay: 0.15s;">
         <div class="stat-card-modern" style="--accent-color: #15803d; --accent-color-light: #22c55e; --icon-bg: #f0fdf4;">
             <div class="stat-icon-wrapper">
-                <i class="bi bi-check-circle-fill" style="color: #15803d; font-size: 26px;"></i>
+                <i class="bi bi-check-circle-fill" style="color: #15803d; font-size: 20px;"></i>
             </div>
-            <div class="stat-value-modern">{{ $suratSelesai }}</div>
-            <div class="stat-label-modern">Surat Selesai</div>
+            <div class="stat-value-modern" style="font-size: 24px;">{{ $suratSelesai }}</div>
+            <div class="stat-label-modern" style="font-size: 11px;">Selesai</div>
         </div>
     </div>
-    <div class="col-6 col-lg-3 animate-in" style="animation-delay: 0.3s;">
+    <div class="col animate-in" style="animation-delay: 0.2s;">
+        <div class="stat-card-modern" style="--accent-color: #2563eb; --accent-color-light: #60a5fa; --icon-bg: #eff6ff;">
+            <div class="stat-icon-wrapper">
+                <i class="bi bi-hourglass-split" style="color: #2563eb; font-size: 20px;"></i>
+            </div>
+            <div class="stat-value-modern" style="font-size: 24px;">{{ $suratProses }}</div>
+            <div class="stat-label-modern" style="font-size: 11px;">Proses</div>
+        </div>
+    </div>
+    <div class="col animate-in" style="animation-delay: 0.25s;">
         <div class="stat-card-modern" style="--accent-color: #b45309; --accent-color-light: #f59e0b; --icon-bg: #fffbeb;">
             <div class="stat-icon-wrapper">
-                <i class="bi bi-hourglass-split" style="color: #b45309; font-size: 26px;"></i>
+                <i class="bi bi-pencil-square" style="color: #b45309; font-size: 20px;"></i>
             </div>
-            <div class="stat-value-modern">{{ $suratProses }}</div>
-            <div class="stat-label-modern">Sedang Diproses</div>
+            <div class="stat-value-modern" style="font-size: 24px;">{{ $suratRevisi }}</div>
+            <div class="stat-label-modern" style="font-size: 11px;">Revisi</div>
         </div>
     </div>
-    <div class="col-6 col-lg-3 animate-in" style="animation-delay: 0.4s;">
+    <div class="col animate-in" style="animation-delay: 0.3s;">
         <div class="stat-card-modern" style="--accent-color: #b91c1c; --accent-color-light: #ef4444; --icon-bg: #fef2f2;">
             <div class="stat-icon-wrapper">
-                <i class="bi bi-x-octagon-fill" style="color: #b91c1c; font-size: 26px;"></i>
+                <i class="bi bi-x-octagon-fill" style="color: #b91c1c; font-size: 20px;"></i>
             </div>
-            <div class="stat-value-modern">{{ $suratDitolak }}</div>
-            <div class="stat-label-modern">Surat Ditolak</div>
+            <div class="stat-value-modern" style="font-size: 24px;">{{ $suratDitolak }}</div>
+            <div class="stat-label-modern" style="font-size: 11px;">Ditolak</div>
+        </div>
+    </div>
+    <div class="col animate-in" style="animation-delay: 0.35s;">
+        <div class="stat-card-modern" style="--accent-color: #64748b; --accent-color-light: #94a3b8; --icon-bg: #f8fafc;">
+            <div class="stat-icon-wrapper">
+                <i class="bi bi-file-earmark-text-fill" style="color: #64748b; font-size: 20px;"></i>
+            </div>
+            <div class="stat-value-modern" style="font-size: 24px;">{{ $suratDraft }}</div>
+            <div class="stat-label-modern" style="font-size: 11px;">Draf</div>
         </div>
     </div>
 </div>
@@ -751,27 +872,48 @@
 
         {{-- TEMPLATE --}}
         <div class="card-modern">
-            <div class="card-header-modern">
+            <div class="card-header-modern d-flex align-items-center justify-content-between">
                 <h6 class="fw-bold mb-0" style="color:#1e293b;">
                     <i class="bi bi-file-earmark-richtext-fill me-2"></i>Template Surat
                 </h6>
+                <a href="{{ route('user.template.index') }}" class="btn btn-sm text-primary p-0 fw-semibold" style="font-size:12px;">Lihat Semua</a>
             </div>
             <div class="card-body-modern">
-                @forelse($templates as $tpl)
-                    <div class="template-card-link d-flex align-items-center gap-3 mb-3 p-2 rounded" style="background:#f8fafc; border: 1px solid #f1f5f9; cursor: pointer;" onclick="window.open('{{ $tpl['url'] }}', '_blank')">
-                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:36px; height:36px; background:#dbeafe;">
-                            <i class="bi bi-file-earmark-word-fill" style="color:#2563eb; font-size:16px;"></i>
+                <div class="template-grid">
+                    @forelse($templates->take(4) as $tpl)
+                        <div class="doc-preview-card" onclick="window.open('{{ $tpl['url'] }}', '_blank')">
+                            <div class="doc-preview-top">
+                                <img src="{{ asset('images/template_preview.png') }}" alt="Preview">
+                                <div style="position:absolute; top:10px; right:10px;">
+                                    <span class="badge bg-white text-dark shadow-sm" style="font-size:9px; border-radius:6px; opacity:0.9;">
+                                        {{ strtoupper($tpl['ext']) }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="doc-info-section">
+                                <div class="doc-icon-box {{ $tpl['ext'] }}">
+                                    @if($tpl['ext'] == 'pdf')
+                                        <i class="bi bi-file-pdf-fill text-white" style="font-size:20px;"></i>
+                                    @else
+                                        <i class="bi bi-file-earmark-word-fill text-white" style="font-size:20px;"></i>
+                                    @endif
+                                </div>
+                                <div class="doc-name">{{ $tpl['nama'] }}</div>
+                            </div>
+                            <div class="doc-footer">
+                                <span>{{ strtoupper($tpl['ext']) }} &bull; {{ $tpl['size'] }}</span>
+                                <div class="d-flex align-items-center gap-1">
+                                    <i class="bi bi-download"></i>
+                                    <span>Unduh</span>
+                                </div>
+                            </div>
                         </div>
-                        <span class="flex-grow-1" style="font-size:13px; color:#1e293b; font-weight:500;">{{ $tpl['nama'] }}</span>
-                        <span class="btn btn-sm" style="font-size:12px; background:#eff6ff; color:#1d4ed8; border:none; padding:6px 12px; border-radius:8px;">
-                            <i class="bi bi-download me-1"></i> Unduh
-                        </span>
-                    </div>
-                @empty
-                    <div class="text-center text-muted py-3">
-                        <p class="mb-0" style="font-size:13px;">Belum ada template tersedia.</p>
-                    </div>
-                @endforelse
+                    @empty
+                        <div class="text-center text-muted py-3 w-100">
+                            <p class="mb-0" style="font-size:13px;">Belum ada template tersedia.</p>
+                        </div>
+                    @endforelse
+                </div>
             </div>
         </div>
 
@@ -787,7 +929,7 @@
                         Butuh bantuan atau mengalami kendala? Tim dukungan kami siap membantu Anda.
                     </p>
                     <div class="d-flex flex-wrap gap-2">
-                        <a href="https://wa.me/6281321098877" target="_blank" class="btn-glass-primary">
+                        <a href="https://wa.me/{{ config('services.whatsapp.number') }}" target="_blank" class="btn-glass-primary">
                             <i class="bi bi-whatsapp"></i> Chat Admin
                         </a>
                         <a href="{{ route('user.faq.index') }}" class="btn-glass-primary" style="background: rgba(255, 255, 255, 0.7); color: #1e3a5f !important; border-color: rgba(30, 58, 95, 0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
