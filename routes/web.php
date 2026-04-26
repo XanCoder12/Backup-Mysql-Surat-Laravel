@@ -41,6 +41,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('surat')->name('user.surat.')->group(function () {
         Route::get('/',          [UserSurat::class, 'index'])->name('index');
+        Route::get('/tabel',     [UserSurat::class, 'table'])->name('table');
         Route::get('/ajukan',    [UserSurat::class, 'create'])->name('create');
         Route::post('/ajukan',   [UserSurat::class, 'store'])->name('store');
         Route::get('/{surat}',   [UserSurat::class, 'show'])->name('show');
@@ -72,6 +73,10 @@ Route::prefix('Admin')->middleware(['auth', 'verified', 'admin'])->name('admin.'
         Route::get('/Dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::get('/Surat', [SuratController::class, 'index'])->name('surat.index');
+        Route::get('/Surat-Masuk', [SuratController::class, 'masuk'])->name('surat.masuk');
+        Route::get('/Surat-Proses', [SuratController::class, 'proses'])->name('surat.proses');
+        Route::get('/Surat-Selesai', [SuratController::class, 'selesai'])->name('surat.selesai');
+        Route::get('/Surat-Revisi', [SuratController::class, 'revisi'])->name('surat.revisi');
         Route::get('/Surat/{surat}', [SuratController::class, 'show'])->name('surat.show');
         Route::post('/Surat/{surat}/setujui', [SuratController::class, 'setujui'])->name('surat.setujui');
         Route::post('/Surat/{surat}/tolak', [SuratController::class, 'tolak'])->name('surat.tolak');
@@ -105,8 +110,15 @@ Route::prefix('Admin')->middleware(['auth', 'verified', 'admin'])->name('admin.'
         Route::delete('/Notifikasi/{id}', [\App\Http\Controllers\Admin\NotifikasiController::class, 'destroy'])->name('notifikasi.delete');
         Route::delete('/Notifikasi', [\App\Http\Controllers\Admin\NotifikasiController::class, 'destroyAll'])->name('notifikasi.deleteAll');
 
-        // Logs
+        // Log System
         Route::get('/Logs', [\App\Http\Controllers\Admin\LogController::class, 'index'])->name('logs.index');
+
+        // Manajemen File Fisik Surat
+        Route::get('/File-Surat', [\App\Http\Controllers\Admin\FileSuratController::class, 'index'])->name('file.index');
+        Route::delete('/File-Surat/{surat}', [\App\Http\Controllers\Admin\FileSuratController::class, 'destroy'])->name('file.destroy');
+        Route::post('/File-Surat/mass-delete', [\App\Http\Controllers\Admin\FileSuratController::class, 'massDelete'])->name('file.massDelete');
+
+        // Logs
         Route::get('/Logs/download/{file}', [\App\Http\Controllers\Admin\LogController::class, 'download'])->name('logs.download');
         Route::post('/Logs/clear/{file}', [\App\Http\Controllers\Admin\LogController::class, 'clear'])->name('logs.clear');
         Route::delete('/Logs/delete/{file}', [\App\Http\Controllers\Admin\LogController::class, 'delete'])->name('logs.delete');
