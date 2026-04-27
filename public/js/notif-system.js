@@ -387,9 +387,7 @@
         .notif-drop-link {
             font-size: 11px; font-weight: 600;
             color: #1d4ed8; text-decoration: none;
-            padding: 2px 6px; border-radius: 5px;
-            border: 1px solid #bfdbfe;
-            white-space: nowrap;
+            padding: 2px 6px; border: 1px solid #bfdbfe; white-space: nowrap; border-radius: 5px;
         }
         .notif-drop-link:hover { background: #dbeafe; }
         .notif-drop-del {
