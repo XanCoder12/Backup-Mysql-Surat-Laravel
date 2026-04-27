@@ -40,4 +40,8 @@ return [
         'secret'   => env('RECAPTCHA_SECRET_KEY'),
     ],
 
+    'whatsapp' => [
+        'number' => env('WA_NUMBER', ''),
+    ],
+
 ];
