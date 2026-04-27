@@ -62,13 +62,12 @@
                 <thead class="bg-light text-muted" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">
                     <tr>
                         <th class="ps-4 py-3">No</th>
-                        <th class="py-3">Judul Surat</th>
-                        <th class="py-3">Jenis</th>
+                        <th class="py-3">Informasi Surat</th>
+                        <th class="py-3">Tujuan & Jenis</th>
                         <th class="py-3">Tgl Pengajuan</th>
-                        <th class="py-3">Tujuan</th>
+                        <th class="py-3">Status & SLA</th>
                         <th class="py-3">No. Surat</th>
-                        <th class="py-3">SLA</th>
-                        <th class="py-3">Tahap</th>
+                        <th class="py-3">Progress Tahap</th>
                         <th class="pe-4 py-3 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -79,58 +78,81 @@
                                 {{ $surats->firstItem() + $index }}
                             </td>
                             <td>
-                                <div class="fw-bold" style="color: #1e3a5f;">{{ $surat->judul }}</div>
-                                <span class="badge badge-{{ $surat->sifat }}" style="font-size: 9px;">{{ ucfirst($surat->sifat) }}</span>
-                            </td>
-                            <td>
-                                <span class="badge rounded-pill" style="background:#ede9fe; color:#6d28d9;">
-                                    {{ $surat->jenis_label }}
-                                </span>
-                            </td>
-                            <td class="text-muted">
-                                {{ $surat->created_at->format('d/m/Y') }}<br>
-                                <small style="font-size: 10px;">{{ $surat->created_at->format('H:i') }} WIB</small>
-                            </td>
-                            <td class="text-muted" style="max-width: 150px;">
-                                <div class="text-truncate" title="{{ $surat->tujuan }}">
-                                    {{ $surat->tujuan ?: '-' }}
+                                <div class="fw-bold" style="color: #1e3a5f; font-size: 14px;">{{ $surat->judul }}</div>
+                                <div class="d-flex gap-1 mt-1">
+                                    <span class="badge badge-{{ $surat->sifat }}" style="font-size: 9px; padding: 3px 6px;">{{ ucfirst($surat->sifat) }}</span>
+                                    @if($surat->status === 'revisi')
+                                        <span class="badge bg-warning text-dark" style="font-size: 9px; padding: 3px 6px;"><i class="bi bi-pencil-square"></i> Perlu Revisi</span>
+                                    @endif
                                 </div>
                             </td>
                             <td>
-                                @if($surat->nomor_surat)
-                                    <code class="fw-bold" style="color: #2563eb;">{{ $surat->nomor_surat }}</code>
+                                <div style="font-weight: 500; color: #374151;">{{ $surat->tujuan ?: '-' }}</div>
+                                <div class="text-muted" style="font-size: 11px; margin-top: 2px;">
+                                    <i class="bi bi-tag me-1"></i>{{ $surat->jenis_label }}
+                                </div>
+                            </td>
+                            <td>
+                                <div style="color: #374151;">{{ $surat->created_at->translatedFormat('d M Y') }}</div>
+                                <small class="text-muted" style="font-size: 10px;">{{ $surat->created_at->format('H:i') }} WIB</small>
+                            </td>
+                            <td>
+                                {{-- Status Badge --}}
+                                <div class="mb-2">
+                                    @if($surat->status === 'selesai')
+                                        <span class="badge rounded-pill" style="background:#dcfce7; color:#15803d; font-size:10px;">✓ Selesai</span>
+                                    @elseif($surat->status === 'ditolak')
+                                        <span class="badge rounded-pill" style="background:#fee2e2; color:#b91c1c; font-size:10px;">✗ Ditolak</span>
+                                    @elseif($surat->status === 'draft')
+                                        <span class="badge rounded-pill" style="background:#f1f5f9; color:#64748b; font-size:10px;">📄 Draf</span>
+                                    @else
+                                        <span class="badge rounded-pill" style="background:#dbeafe; color:#1d4ed8; font-size:10px;">⏱ Proses</span>
+                                    @endif
+                                </div>
+
+                                {{-- SLA --}}
+                                @if($surat->status === 'selesai' || $surat->status === 'ditolak')
+                                    <small class="text-muted" style="font-size: 10px;">Diproses: {{ $surat->updated_at->diffForHumans($surat->created_at, true) }}</small>
+                                @elseif($surat->sla_status === 'terlambat')
+                                    <span class="badge bg-danger" style="font-size: 9px;"><i class="bi bi-exclamation-circle me-1"></i>SLA Terlambat</span>
                                 @else
-                                    <span class="text-muted">-</span>
+                                    <div class="d-flex align-items-center gap-1" style="font-size: 11px; color: #2563eb;">
+                                        <i class="bi bi-clock-history"></i>
+                                        <span>{{ $surat->sisa_jam }}</span>
+                                    </div>
                                 @endif
                             </td>
                             <td>
-                                @if($surat->status === 'selesai' || $surat->status === 'ditolak')
-                                    <span class="text-muted">-</span>
-                                @elseif($surat->sla_status === 'terlambat')
-                                    <span class="badge bg-danger" style="font-size: 10px;">Terlambat</span>
+                                @if($surat->nomor_surat)
+                                    <code class="fw-bold" style="color: #2563eb; font-size: 12px;">{{ $surat->nomor_surat }}</code>
                                 @else
-                                    <span class="text-primary fw-semibold" style="font-size: 11px;">
-                                        <i class="bi bi-clock me-1"></i>{{ $surat->sisa_jam }}
-                                    </span>
+                                    <span class="text-muted" style="font-size: 11px;">Belum Terbit</span>
                                 @endif
                             </td>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
-                                    <div class="progress" style="width: 40px; height: 5px; border-radius: 99px; background: #e5e7eb;">
-                                        <div class="progress-bar" style="width: {{ $surat->proses_persen }}%; background: #1e3a5f;"></div>
+                                    <div class="progress" style="width: 50px; height: 6px; border-radius: 99px; background: #e5e7eb;">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                             style="width: {{ $surat->proses_persen }}%; background: {{ $surat->status==='ditolak' ? '#ef4444' : '#1e3a5f' }};"></div>
                                     </div>
-                                    <span style="font-size: 11px; color: #64748b;">{{ $surat->tahap_sekarang }}/10</span>
+                                    <span class="fw-bold" style="font-size: 11px; color: #1e3a5f;">{{ $surat->proses_persen }}%</span>
                                 </div>
-                                <div style="font-size: 10px; color: #94a3b8; margin-top: 2px;">{{ $surat->nama_tahap }}</div>
+                                <div style="font-size: 10px; color: #64748b; margin-top: 4px; font-weight: 500;">
+                                    Tahap {{ $surat->tahap_sekarang }}: {{ $surat->nama_tahap }}
+                                </div>
                             </td>
                             <td class="pe-4 text-center">
-                                <div class="d-flex justify-content-center gap-1">
-                                    <a href="{{ route('user.surat.show', $surat) }}" class="btn btn-sm btn-light" style="font-size: 11px; border-radius: 6px;" title="Lihat Detail">
-                                        <i class="bi bi-eye"></i>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="{{ route('user.surat.show', $surat) }}" 
+                                       class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center" 
+                                       style="width: 32px; height: 32px; border-radius: 8px;" title="Lihat Detail">
+                                        <i class="bi bi-eye-fill"></i>
                                     </a>
-                                    @if($surat->status === 'draft')
-                                        <a href="{{ route('user.surat.edit', $surat) }}" class="btn btn-sm btn-light" style="font-size: 11px; border-radius: 6px; color: #2563eb;" title="Edit Draf">
-                                            <i class="bi bi-pencil-square"></i>
+                                    @if($surat->status === 'draft' || $surat->status === 'revisi')
+                                        <a href="{{ route('user.surat.edit', $surat) }}" 
+                                           class="btn btn-sm btn-outline-info d-flex align-items-center justify-content-center" 
+                                           style="width: 32px; height: 32px; border-radius: 8px;" title="Edit Surat">
+                                            <i class="bi bi-pencil-fill"></i>
                                         </a>
                                     @endif
                                 </div>
@@ -138,9 +160,12 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="text-center py-5 text-muted">
-                                <i class="bi bi-inbox mb-2" style="font-size: 32px; display: block;"></i>
-                                Belum ada data surat.
+                            <td colspan="8" class="text-center py-5 text-muted">
+                                <div class="animate-in">
+                                    <i class="bi bi-inbox mb-3" style="font-size: 48px; display: block; opacity: 0.5;"></i>
+                                    <h6 class="fw-bold">Belum ada data surat</h6>
+                                    <p class="small mb-0">Silakan ajukan surat baru melalui tombol di atas.</p>
+                                </div>
                             </td>
                         </tr>
                     @endforelse
