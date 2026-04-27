@@ -1,11 +1,11 @@
 @extends('layouts.admin')
-@section('title', 'Antrian Surat')
+@section('title', $title ?? 'Antrian Surat')
 
 @section('content')
 
 {{-- FILTER BAR --}}
 <div class="card" style="margin-bottom:16px;">
-    <form method="GET" action="{{ route('admin.surat.index') }}"
+    <form method="GET" action="{{ url()->current() }}"
           style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
 
         <div style="flex:2; min-width:180px;">
@@ -25,14 +25,16 @@
             </select>
         </div>
 
+        @if(!isset($title) || $title === 'Antrian Surat')
         <div style="flex:1; min-width:120px;">
             <label style="font-size:11px; color:var(--text-secondary); display:block; margin-bottom:4px;">Status</label>
             <select name="status" style="width:100%; padding:7px 10px; border:1px solid var(--border-color); background:var(--bg-tertiary); color:var(--text-primary); border-radius:7px; font-size:13px;">
                 <option value="">Semua</option>
                 <option value="proses"  {{ request('status') === 'proses'  ? 'selected' : '' }}>Proses</option>
+                <option value="revisi"  {{ request('status') === 'revisi'  ? 'selected' : '' }}>Revisi</option>
                 <option value="selesai" {{ request('status') === 'selesai' ? 'selected' : '' }}>Selesai</option>
                 <option value="ditolak" {{ request('status') === 'ditolak' ? 'selected' : '' }}>Ditolak</option>
-                <option value="revisi"  {{ request('status') === 'revisi'  ? 'selected' : '' }}>Revisi</option>
+                <option value="draft"   {{ request('status') === 'draft'   ? 'selected' : '' }}>Draf</option>
             </select>
         </div>
 
@@ -45,10 +47,11 @@
                 @endforeach
             </select>
         </div>
+        @endif
 
         <div style="display:flex; gap:6px;">
             <button type="submit" class="btn btn-primary">🔍 Filter</button>
-            <a href="{{ route('admin.surat.index') }}" class="btn">Reset</a>
+            <a href="{{ url()->current() }}" class="btn">Reset</a>
         </div>
     </form>
 </div>
@@ -57,7 +60,7 @@
 <div class="card">
     <div class="section-header">
         <div>
-            <h2>📬 Semua Antrian Surat</h2>
+            <h2>📬 {{ $title ?? 'Semua Antrian Surat' }}</h2>
             <small>Total {{ $surats->total() }} surat ditemukan</small>
         </div>
     </div>
@@ -124,6 +127,8 @@
                                 <span class="badge badge-red">Ditolak</span>
                             @elseif($surat->status === 'revisi')
                                 <span class="badge badge-amber">📝 Revisi ({{ $surat->revisi_count }}x)</span>
+                            @elseif($surat->status === 'draft')
+                                <span class="badge badge-gray">📄 Draf</span>
                             @else
                                 <span class="badge badge-amber">Proses</span>
                             @endif
