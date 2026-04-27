@@ -53,6 +53,158 @@
         background: rgba(59, 130, 246, 0.05);
         color: #1e3a5f;
     }
+
+    /* Gallery Grid */
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-auto-rows: 150px;
+        grid-gap: 15px;
+        grid-auto-flow: dense;
+    }
+
+    .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all 0.5s ease;
+    }
+
+    .gallery-item:hover img {
+        transform: scale(1.1) rotate(1deg);
+    }
+
+    .gallery-item.large {
+        grid-column: span 2;
+        grid-row: span 2;
+    }
+
+    .gallery-item.tall {
+        grid-row: span 2;
+    }
+
+    .gallery-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(30, 58, 95, 0.8), transparent 70%);
+        color: white;
+        padding: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        opacity: 0;
+        transition: all 0.4s ease;
+        display: flex;
+        align-items: flex-end;
+        backdrop-filter: blur(2px);
+    }
+
+    .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+    }
+
+    .gallery-overlay span {
+        transform: translateY(10px);
+        transition: transform 0.4s ease;
+    }
+
+    .gallery-item:hover .gallery-overlay span {
+        transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+        .gallery-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .gallery-item.large {
+            grid-column: span 2;
+        }
+    }
+
+    /* Tech Stack Marquee */
+    .tech-marquee-container {
+        overflow: hidden;
+        user-select: none;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 10px 0;
+        mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+
+    .tech-marquee {
+        display: flex;
+        overflow: hidden;
+        gap: 15px;
+    }
+
+    .tech-marquee-content {
+        display: flex;
+        flex-shrink: 0;
+        gap: 15px;
+        min-width: 100%;
+    }
+
+    .tech-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(229, 231, 235, 0.5);
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #4b5563;
+        white-space: nowrap;
+        transition: all 0.3s ease;
+    }
+
+    .tech-item:hover {
+        background: white;
+        border-color: #3b82f6;
+        color: #1e3a5f;
+        transform: translateY(-2px);
+    }
+
+    .tech-item i, .tech-item img {
+        font-size: 16px;
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
+    }
+
+
+    .scroll-right {
+        animation: scroll-ltr 30s linear infinite;
+    }
+
+    .scroll-left {
+        animation: scroll-rtl 30s linear infinite;
+    }
+
+    @keyframes scroll-ltr {
+        from { transform: translateX(-50%); }
+        to { transform: translateX(0); }
+    }
+
+    @keyframes scroll-rtl {
+        from { transform: translateX(0); }
+        to { transform: translateX(-50%); }
+    }
+
+    .tech-marquee:hover .tech-marquee-content {
+        animation-play-state: paused;
+    }
 </style>
 
 <div class="container-fluid">
@@ -87,6 +239,45 @@
                         korespondensi kedinasan di lingkungan BP SUML Legal, mempermudah proses administrasi
                         surat-menyurat secara transparan dan efisien.
                     </p>
+                </div>
+            </div>
+
+            {{-- Visi & Misi --}}
+            <div class="row g-3 mt-1 mb-4 animate-in" style="animation-delay: 0.25s;">
+                <div class="col-lg-12">
+                    <div class="card card-custom overflow-hidden">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="{{ asset('images/about/office.png') }}" class="img-fluid h-100 object-fit-cover" alt="Vision" style="min-height: 200px;">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body p-4">
+                                    <h6 class="fw-semibold mb-3" style="color:#111827;">
+                                        <i class="bi bi-eye text-info me-1 animate-float"></i> Visi & Misi Kami
+                                    </h6>
+                                    <p class="text-muted mb-2" style="font-size: 13.5px;">
+                                        Menjadi institusi yang terpercaya dalam menjamin kepastian pengukuran, meningkatkan daya saing produk nasional, serta memberikan perlindungan maksimal bagi konsumen melalui sistem administrasi yang modern dan transparan.
+                                    </p>
+                                    <div class="d-flex gap-4 mt-4">
+                                        <div class="text-center">
+                                            <div class="h4 fw-bold text-primary mb-0">100%</div>
+                                            <small class="text-muted" style="font-size: 11px;">Transparansi</small>
+                                        </div>
+                                        <div class="vr"></div>
+                                        <div class="text-center">
+                                            <div class="h4 fw-bold text-success mb-0">24/7</div>
+                                            <small class="text-muted" style="font-size: 11px;">Akses Digital</small>
+                                        </div>
+                                        <div class="vr"></div>
+                                        <div class="text-center">
+                                            <div class="h4 fw-bold text-warning mb-0">Reliable</div>
+                                            <small class="text-muted" style="font-size: 11px;">Data Akurat</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -172,8 +363,54 @@
                 </div>
             </div>
 
+            {{-- Galeri Visual --}}
+            <div class="row g-3 mt-1 animate-in" style="animation-delay: 0.35s;">
+                <div class="col-12">
+                    <div class="card card-custom">
+                        <div class="card-body p-4">
+                            <h6 class="fw-semibold mb-4" style="color:#111827;">
+                                <i class="bi bi-images text-primary me-1 animate-float"></i> Galeri Visual & Infrastruktur
+                            </h6>
+                            <div class="gallery-grid">
+                                <div class="gallery-item large">
+                                    <img src="{{ asset('images/about/building.png') }}" alt="Building">
+                                    <div class="gallery-overlay">
+                                        <span><i class="bi bi-building-fill me-2"></i>Gedung Direktorat Metrologi</span>
+                                    </div>
+                                </div>
+                                <div class="gallery-item">
+                                    <img src="{{ asset('images/about/office.png') }}" alt="Office">
+                                    <div class="gallery-overlay">
+                                        <span><i class="bi bi-laptop me-2"></i>Ruang Kerja Modern</span>
+                                    </div>
+                                </div>
+                                <div class="gallery-item">
+                                    <img src="{{ asset('images/about/equipment.png') }}" alt="Equipment">
+                                    <div class="gallery-overlay">
+                                        <span><i class="bi bi-tools me-2"></i>Peralatan Presisi</span>
+                                    </div>
+                                </div>
+                                <div class="gallery-item tall">
+                                    <img src="{{ asset('images/about/team.png') }}" alt="Team">
+                                    <div class="gallery-overlay">
+                                        <span><i class="bi bi-people-fill me-2"></i>Kolaborasi Tim</span>
+                                    </div>
+                                </div>
+                                <div class="gallery-item">
+                                    <img src="{{ asset('images/about/digital.png') }}" alt="Digital">
+                                    <div class="gallery-overlay">
+                                        <span><i class="bi bi-cpu me-2"></i>Digitalisasi Sistem</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {{-- Google Maps --}}
             <div class="card card-custom mt-3 animate-in" style="animation-delay: 0.4s;">
+
                 <div class="card-body p-4">
                     <h6 class="fw-semibold mb-3" style="color:#111827;">
                         <i class="bi bi-map text-success me-1 animate-float"></i> Lokasi Kami
@@ -218,6 +455,177 @@
                             </span>
                         </div>
                     </div>
+
+                    {{-- Tech Stack Marquee --}}
+{{-- Tech Stack Marquee --}}
+<style>
+.tm-wrap { display: flex; flex-direction: column; gap: 10px; margin-top: 1.25rem; }
+.tm-label { font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #9ca3af; margin-bottom: 3px; }
+.tm-track {
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    user-select: none;
+}
+.tm-row { display: flex; gap: 10px; width: max-content; }
+.tm-row.go-right  { animation: scrollR 30s linear infinite; }
+.tm-row.go-left   { animation: scrollL 34s linear infinite; }
+.tm-row.go-right2 { animation: scrollR 26s linear infinite; }
+@keyframes scrollR { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+@keyframes scrollL { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.tm-track:hover .tm-row { animation-play-state: paused; }
+
+.tech-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 13px 5px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(229, 231, 235, 0.7);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+    font-size: 12px;
+    font-weight: 600;
+    color: #4b5563;
+    white-space: nowrap;
+    cursor: default;
+    transition: border-color 0.25s, color 0.25s, transform 0.25s, background 0.25s;
+}
+.tech-chip:hover {
+    border-color: #3b82f6;
+    color: #1e3a5f;
+    background: #fff;
+    transform: translateY(-2px);
+}
+.tech-chip img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+.tech-chip .chip-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: inline-block;
+}
+.tm-section-head {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.tm-section-head::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+}
+</style>
+
+<div class="mt-4">
+    <div class="tm-section-head">
+        <i class="bi bi-stack text-primary" style="font-size:14px;"></i> Tech Stack & Tools
+    </div>
+
+    <div class="tm-wrap">
+        <div class="tm-label">⚙ Backend & Database</div>
+        <div class="tm-track">
+            <div class="tm-row go-right" id="tm-row1"></div>
+        </div>
+
+        <div class="tm-label">🎨 Frontend & UI</div>
+        <div class="tm-track">
+            <div class="tm-row go-left" id="tm-row2"></div>
+        </div>
+
+        <div class="tm-label">🚀 DevOps, AI & Tooling</div>
+        <div class="tm-track">
+            <div class="tm-row go-right2" id="tm-row3"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const stacks = {
+        'tm-row1': [
+            { name: 'Laravel 11/12', img: 'https://cdn.simpleicons.org/laravel/FF2D20' },
+            { name: 'PHP 8.3',       img: 'https://cdn.simpleicons.org/php/777BB4' },
+            { name: 'MySQL 8',       img: 'https://cdn.simpleicons.org/mysql/4479A1' },
+            { name: 'Redis',         img: 'https://cdn.simpleicons.org/redis/DC382D' },
+            { name: 'MongoDB',       img: 'https://cdn.simpleicons.org/mongodb/47A248' },
+            { name: 'Eloquent ORM',  dot: '#e11d48' },
+            { name: 'REST API',      dot: '#0ea5e9' },
+            { name: 'Sanctum Auth',  img: 'https://cdn.simpleicons.org/laravel/FF2D20' },
+            { name: 'Composer',      img: 'https://cdn.simpleicons.org/composer/885630' },
+            { name: 'Breeze',        img: 'https://cdn.simpleicons.org/laravel/FF2D20' },
+        ],
+        'tm-row2': [
+            { name: 'Bootstrap 5',    img: 'https://cdn.simpleicons.org/bootstrap/7952B3' },
+            { name: 'TailwindCSS',    img: 'https://cdn.simpleicons.org/tailwindcss/38B2AC' },
+            { name: 'Alpine.js',      img: 'https://cdn.simpleicons.org/alpinedotjs/8BC0D0' },
+            { name: 'JavaScript',     img: 'https://cdn.simpleicons.org/javascript/F7DF1E' },
+            { name: 'Chart.js',       img: 'https://cdn.simpleicons.org/chartdotjs/FF6384' },
+            { name: 'Three.js',       img: 'https://cdn.simpleicons.org/threedotjs/000000' },
+            { name: 'Vite',           img: 'https://cdn.simpleicons.org/vite/646CFF' },
+            { name: 'CSS3',           img: 'https://cdn.simpleicons.org/css3/1572B6' },
+            { name: 'Axios',          img: 'https://cdn.simpleicons.org/axios/5A29E4' },
+            { name: 'SortableJS',     dot: '#6366f1' },
+            { name: 'Blade Template', dot: '#f97316' },
+        ],
+        'tm-row3': [
+            { name: 'Docker',       img: 'https://cdn.simpleicons.org/docker/2496ED' },
+            { name: 'Git',          img: 'https://cdn.simpleicons.org/git/F05032' },
+            { name: 'GitHub',       img: 'https://cdn.simpleicons.org/github/181717' },
+            { name: 'Gemini AI',    img: 'https://cdn.simpleicons.org/googlegemini/4285F4' },
+            { name: 'Google API',   img: 'https://cdn.simpleicons.org/google/4285F4' },
+            { name: 'reCAPTCHA v3', dot: '#4285F4' },
+            { name: 'Mailtrap',     img: 'https://cdn.simpleicons.org/mailtrap/00B9FE' },
+            { name: 'Postman',      img: 'https://cdn.simpleicons.org/postman/FF6C37' },
+            { name: 'Antigravity',  img: 'https://cdn.simpleicons.org/antigravity/000000' },
+            { name: 'npm',          img: 'https://cdn.simpleicons.org/npm/CB3837' },
+            { name: 'Nginx',        img: 'https://cdn.simpleicons.org/nginx/181717' },
+            { name: 'GitHub',       img: 'https://cdn.simpleicons.org/github/181717' },
+            { name: 'Linux',        img: 'https://cdn.simpleicons.org/linux/181717' },
+            { name: 'Ubuntu Server',img: 'https://cdn.simpleicons.org/ubuntu/181717' },
+        ]
+    };
+
+    function makeChip(item) {
+        const chip = document.createElement('div');
+        chip.className = 'tech-chip';
+        if (item.img) {
+            const img = document.createElement('img');
+            img.src = item.img;
+            img.alt = item.name;
+            img.onerror = function() { this.style.display = 'none'; };
+            chip.appendChild(img);
+        } else {
+            const dot = document.createElement('span');
+            dot.className = 'chip-dot';
+            dot.style.background = item.dot;
+            chip.appendChild(dot);
+        }
+        const label = document.createElement('span');
+        label.textContent = item.name;
+        chip.appendChild(label);
+        return chip;
+    }
+
+    Object.entries(stacks).forEach(([id, items]) => {
+        const row = document.getElementById(id);
+        if (!row) return;
+        // duplicate for seamless infinite loop
+        [...items, ...items].forEach(item => row.appendChild(makeChip(item)));
+    });
+})();
+</script>
+
+
                 </div>
             </div>
             
