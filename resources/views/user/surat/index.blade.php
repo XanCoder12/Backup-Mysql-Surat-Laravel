@@ -1,12 +1,14 @@
 @extends('layouts.user')
-@section('title', 'Surat Saya')
+@section('title', $title)
 
 @section('content')
 
 <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2 animate-in">
     <div>
-        <h5 class="fw-bold mb-0" style="color:#1e3a5f;">📬 Surat Saya</h5>
-        <small class="text-muted">Semua surat yang pernah kamu ajukan</small>
+        <h5 class="fw-bold mb-0" style="color:#1e3a5f;">
+            {!! request('status') === 'draft' ? '📝' : '📬' !!} {{ $title }}
+        </h5>
+        <small class="text-muted">{{ request('status') === 'draft' ? 'Daftar surat yang masih dalam bentuk draf' : 'Semua surat yang pernah kamu ajukan' }}</small>
     </div>
     <a href="{{ route('user.surat.create') }}" class="btn btn-primary d-flex align-items-center gap-2"
        style="background:#1e3a5f;border-color:#1e3a5f;border-radius:9px;font-size:13px;font-weight:600;">
@@ -39,6 +41,29 @@
                     @endforeach
                 </select>
             </div>
+            <div>
+                <label class="form-label mb-1" style="font-size:11px;color:#6b7280;font-weight:600;">TAHUN</label>
+                <select name="tahun" class="form-select form-select-sm" style="font-size:13px;border-radius:7px;width:100px;background:#ffffff;color:#111827;border-color:#e5e7eb;">
+                    <option value="">Semua</option>
+                    @php $startYear = 2024; $currentYear = date('Y'); @endphp
+                    @for($y = $currentYear; $y >= $startYear; $y--)
+                        <option value="{{ $y }}" {{ request('tahun') == $y ? 'selected' : '' }}>{{ $y }}</option>
+                    @endfor
+                </select>
+            </div>
+            <div>
+                <label class="form-label mb-1" style="font-size:11px;color:#6b7280;font-weight:600;">CARI JUDUL</label>
+                <div class="input-group input-group-sm" style="width: 250px;">
+                    <span class="input-group-text bg-white border-end-0" style="border-radius: 7px 0 0 7px; border-color: #e5e7eb;">
+                        <i class="bi bi-search" style="color: #6b7280;"></i>
+                    </span>
+                    <input type="text" name="search" id="searchInput" class="form-control border-start-0" 
+                           placeholder="Ketik judul surat..." 
+                           value="{{ request('search') }}"
+                           autocomplete="off"
+                           style="font-size:13px;border-radius:0 7px 7px 0;background:#ffffff;color:#111827;border-color:#e5e7eb;">
+                </div>
+            </div>
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-sm btn-primary" style="background:#1e3a5f;border-color:#1e3a5f;border-radius:7px;font-size:12px;">
                     <i class="bi bi-search me-1"></i>Filter
@@ -48,6 +73,28 @@
         </form>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        let searchTimer;
+
+        if (searchInput) {
+            // Restore focus and cursor position if searched
+            if (searchInput.value.length > 0) {
+                searchInput.focus();
+                searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+            }
+
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(() => {
+                    this.closest('form').submit();
+                }, 600); // Debounce 600ms
+            });
+        }
+    });
+</script>
 
 {{-- LIST SURAT --}}
 @if($surats->isEmpty())
