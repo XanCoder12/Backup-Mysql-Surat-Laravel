@@ -25,6 +25,17 @@
             </select>
         </div>
 
+        <div style="flex:1; min-width:100px;">
+            <label style="font-size:11px; color:var(--text-secondary); display:block; margin-bottom:4px;">Tahun</label>
+            <select name="tahun" style="width:100%; padding:7px 10px; border:1px solid var(--border-color); background:var(--bg-tertiary); color:var(--text-primary); border-radius:7px; font-size:13px;">
+                <option value="">Semua Tahun</option>
+                @php $startYear = 2024; $currentYear = date('Y'); @endphp
+                @for($y = $currentYear; $y >= $startYear; $y--)
+                    <option value="{{ $y }}" {{ request('tahun') == $y ? 'selected' : '' }}>{{ $y }}</option>
+                @endfor
+            </select>
+        </div>
+
         @if(!isset($title) || $title === 'Antrian Surat')
         <div style="flex:1; min-width:120px;">
             <label style="font-size:11px; color:var(--text-secondary); display:block; margin-bottom:4px;">Status</label>
@@ -74,15 +85,15 @@
             <table>
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Judul Surat</th>
-                        <th>Pengusul</th>
-                        <th>Jenis</th>
-                        <th>Sifat</th>
-                        <th>Tahap</th>
-                        <th>Status</th>
-                        <th>SLA</th>
-                        <th>Aksi</th>
+                        <th style="width: 40px;">#</th>
+                        <th style="width: 250px;">Informasi Surat</th>
+                        <th style="width: 150px;">Pengusul</th>
+                        <th style="width: 140px;">Detail Klasifikasi</th>
+                        <th style="width: 150px;">Tujuan</th>
+                        <th style="width: 160px;">Proses Tracking</th>
+                        <th style="width: 100px;">Status</th>
+                        <th style="width: 140px;">SLA (Sisa Waktu)</th>
+                        <th style="width: 90px;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -90,34 +101,50 @@
                     <tr>
                         <td style="color:var(--text-secondary); font-size:12px;">{{ $loop->iteration }}</td>
                         <td>
-                            <div style="font-weight:500; color:var(--text-primary); max-width:200px;">
-                                {{ \Illuminate\Support\Str::limit($surat->judul, 40) }}
+                            <div style="font-weight:700; color:var(--text-primary); max-width:240px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;" title="{{ $surat->judul }}">
+                                {{ $surat->judul }}
                             </div>
-                            <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">
-                                {{ $surat->created_at?->format('d M Y') ?? '—' }}
+                            <div style="font-size:11px; color:#1e3a5f; margin-top:4px; font-weight: 600;">
+                                <i class="bi bi-hash"></i> {{ $surat->nomor_surat ?? 'Belum ada nomor' }}
+                            </div>
+                            <div style="font-size:11px; color:var(--text-secondary); margin-top:2px; display: flex; align-items: center; gap: 4px;">
+                                <i class="bi bi-calendar-event"></i> {{ $surat->created_at?->format('d/m/Y') ?? '—' }} 
+                                <span style="opacity: 0.5;">|</span>
+                                <i class="bi bi-clock"></i> {{ $surat->created_at?->format('H:i') ?? '—' }}
                             </div>
                         </td>
-                        <td style="font-size:13px;">{{ $surat->user?->name ?? '—' }}</td>
-                        <td><span class="badge badge-purple">{{ $surat->jenis_label }}</span></td>
                         <td>
+                            <div style="font-size:13px; font-weight: 600; color: var(--text-primary); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ $surat->user?->name }}">
+                                {{ $surat->user?->name ?? '—' }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mb-1">
+                                <span class="badge badge-purple" style="font-size: 10px;">{{ $surat->jenis_label }}</span>
+                            </div>
                             @if($surat->sifat === 'segera')
-                                <span class="badge badge-red">Segera</span>
+                                <span class="badge badge-red" style="font-size: 10px;">Segera</span>
                             @elseif($surat->sifat === 'rahasia')
-                                <span class="badge badge-amber">Rahasia</span>
+                                <span class="badge badge-amber" style="font-size: 10px;">Rahasia</span>
                             @else
-                                <span class="badge badge-gray">Biasa</span>
+                                <span class="badge badge-gray" style="font-size: 10px;">Biasa</span>
                             @endif
                         </td>
                         <td>
-                            <div style="font-size:12px; font-weight:500; color:#3b82f6;">
-                                Tahap {{ $surat->tahap_sekarang }}/10
+                            <div style="font-size: 12px; color: var(--text-primary); max-width: 140px; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ $surat->tujuan }}">
+                                {{ $surat->tujuan ?? '—' }}
                             </div>
-                            <div style="font-size:11px; color:var(--text-secondary);">{{ $surat->nama_tahap }}</div>
-                            <div class="progress-bar" style="margin-top:4px; width:90px;">
-                                <div
-                                    class="progress-fill"
-                                    @style(['width' => min(100, max(0, (int) $surat->proses_persen)).'%'])
-                                ></div>
+                        </td>
+                        <td>
+                            <div style="font-size:12px; font-weight:700; color:#3b82f6; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                                <span>Tahap {{ $surat->tahap_sekarang }}/10</span>
+                                <span style="font-size: 10px;">{{ $surat->proses_persen }}%</span>
+                            </div>
+                            <div style="width: 100%; height: 6px; background: #e2e8f0; border-radius: 10px; overflow: hidden;">
+                                <div style="width: {{ $surat->proses_persen }}%; height: 100%; background: linear-gradient(90deg, #3b82f6, #2563eb); border-radius: 10px;"></div>
+                            </div>
+                            <div style="font-size:10px; color:var(--text-secondary); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px;" title="{{ $surat->nama_tahap }}">
+                                {{ $surat->nama_tahap }}
                             </div>
                         </td>
                         <td>
@@ -126,25 +153,34 @@
                             @elseif($surat->status === 'ditolak')
                                 <span class="badge badge-red">Ditolak</span>
                             @elseif($surat->status === 'revisi')
-                                <span class="badge badge-amber">📝 Revisi ({{ $surat->revisi_count }}x)</span>
+                                <div class="badge badge-amber" style="text-align: left; padding: 4px 8px;">
+                                    <div>📝 Revisi</div>
+                                    <div style="font-size: 8px; opacity: 0.8; margin-top: 1px;">{{ $surat->revisi_uploaded_at?->format('d/m H:i') ?? '-' }}</div>
+                                </div>
                             @elseif($surat->status === 'draft')
                                 <span class="badge badge-gray">📄 Draf</span>
                             @else
-                                <span class="badge badge-amber">Proses</span>
+                                <span class="badge badge-blue">Proses</span>
                             @endif
                         </td>
                         <td>
                             @if($surat->status === 'selesai')
-                                <span class="badge badge-green">✓ OK</span>
+                                <div class="text-success" style="font-size: 11px; font-weight: 600;">
+                                    <i class="bi bi-check-circle-fill"></i> Selesai
+                                </div>
                             @elseif($surat->sla_status === 'terlambat')
-                                <span class="badge badge-red">⚠ {{ $surat->sisa_jam }}</span>
+                                <div class="text-danger" style="font-size: 11px; font-weight: 700;">
+                                    <i class="bi bi-exclamation-triangle-fill"></i> {{ $surat->sisa_jam }}
+                                </div>
                             @else
-                                <span class="badge badge-blue">⏱ {{ $surat->sisa_jam }}</span>
+                                <div class="text-primary" style="font-size: 11px; font-weight: 600;">
+                                    <i class="bi bi-clock-history"></i> {{ $surat->sisa_jam }}
+                                </div>
                             @endif
                         </td>
                         <td>
                             <a href="{{ route('admin.surat.show', $surat) }}"
-                               class="btn btn-sm btn-primary">Detail →</a>
+                               class="btn btn-sm btn-primary" style="padding: 5px 10px; border-radius: 7px; font-weight: 600; font-size: 11px;">Detail <i class="bi bi-arrow-right"></i></a>
                         </td>
                     </tr>
                 @endforeach
