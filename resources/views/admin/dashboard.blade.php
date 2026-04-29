@@ -124,7 +124,7 @@
                                                          surat.status === 'selesai' ? 'badge-green' :
                                                          surat.status === 'proses' ? 'badge-blue' : 'badge-gray'"
                                                 x-text="surat.status === 'revisi' ? '📝 Revisi' :
-                                                         surat.status === 'ditolak' ? '❌ Ditolak' :
+                                                         surat.status === 'ditolak' ? '❌ Ditolak' : 
                                                          surat.status === 'selesai' ? '✅ Selesai' :
                                                          surat.status === 'proses' ? '⏳ Proses' : 'Draft'"></span>
                                         </td>
