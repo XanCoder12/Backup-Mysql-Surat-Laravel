@@ -150,6 +150,23 @@
             max-width: none !important;
         }
 
+        /* Office Online Viewer Container */
+        #office-online-container {
+            width: 100%;
+            height: 100%;
+            display: none;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--paper-shadow);
+            overflow: hidden;
+        }
+
+        #office-online-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
         /* Container for HTML editor (hidden by default) */
         #editor-container {
             display: none;
@@ -263,7 +280,10 @@
             <div>Menyiapkan dokumen...</div>
         </div>
 
-        <!-- Exact Word Preview Container -->
+        <!-- Microsoft Office Online Viewer (Primary - Most Accurate) -->
+        <div id="office-online-container"></div>
+
+        <!-- Exact Word Preview Container (Fallback) -->
         <div id="docx-container"></div>
 
         <!-- HTML Editor Container (Hidden by default) -->
@@ -278,6 +298,7 @@
 
     <script>
         const docxContainer = document.getElementById('docx-container');
+        const officeOnlineContainer = document.getElementById('office-online-container');
         const editorContainer = document.getElementById('editor-container');
         const loadingOverlay = document.getElementById('loading-overlay');
         const btnEdit = document.getElementById('btn-edit');
@@ -285,40 +306,75 @@
         const editNotice = document.getElementById('edit-notice');
         const modeLabel = document.getElementById('view-mode-label');
 
-        // 1. Render high-fidelity preview using docx-preview
-        const rawUrl = "{{ route('admin.surat.preview', [$surat, $tipe]) }}?raw=1";
-        
-        fetch(rawUrl)
-            .then(response => {
-                if (!response.ok) throw new Error('Gagal mengambil file');
-                return response.arrayBuffer();
-            })
-            .then(buffer => {
-                docx.renderAsync(buffer, docxContainer, null, {
-                    className: "docx",
-                    inWrapper: true,
-                    ignoreLastRenderedPageBreak: false,
-                    experimental: true,
-                    trimXmlDeclaration: true,
-                    useMinifiedXml: false,
-                    renderHeaders: true,
-                    renderFooters: true,
-                    renderFonts: true,
-                    breakPages: true,
-                }).then(() => {
-                    loadingOverlay.style.display = 'none';
+        // Timestamp untuk cache busting
+        const timestamp = new Date().getTime();
+        const rawUrl = "{{ route('admin.surat.preview', [$surat, $tipe]) }}?raw=1&v=" + timestamp;
+        const downloadUrl = "{{ route('admin.surat.download', [$surat, $tipe]) }}";
+
+        // 1. TRY: Microsoft Office Online Viewer (Paling Akurat - 100% sama dengan Word)
+        function loadOfficeOnlineViewer() {
+            try {
+                const officeOnlineUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(window.location.origin + '/Admin/Surat/{{ $surat->uuid }}/download/word')}`;
+                
+                const iframe = document.createElement('iframe');
+                iframe.src = officeOnlineUrl;
+                iframe.setAttribute('frameborder', '0');
+                
+                officeOnlineContainer.appendChild(iframe);
+                officeOnlineContainer.style.display = 'block';
+                loadingOverlay.style.display = 'none';
+                
+                modeLabel.textContent = 'Mode: Microsoft Office Online (100% Akurat)';
+                modeLabel.style.color = '#10b981';
+            } catch (error) {
+                console.warn('Office Online Viewer gagal, fallback ke docx-preview:', error);
+                loadDocxPreview();
+            }
+        }
+
+        // 2. FALLBACK: Gunakan docx-preview library
+        function loadDocxPreview() {
+            fetch(rawUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error('Gagal mengambil file');
+                    return response.arrayBuffer();
+                })
+                .then(buffer => {
+                    docx.renderAsync(buffer, docxContainer, null, {
+                        className: "docx",
+                        inWrapper: true,
+                        ignoreLastRenderedPageBreak: false,
+                        experimental: true,
+                        trimXmlDeclaration: true,
+                        useMinifiedXml: false,
+                        renderHeaders: true,
+                        renderFooters: true,
+                        renderFonts: true,
+                        breakPages: true,
+                    }).then(() => {
+                        officeOnlineContainer.style.display = 'none';
+                        docxContainer.style.display = 'block';
+                        loadingOverlay.style.display = 'none';
+                        modeLabel.textContent = 'Mode: Docx Preview (High-Fidelity)';
+                        modeLabel.style.color = '#3b82f6';
+                    });
+                })
+                .catch(error => {
+                    console.error('Docx preview error:', error);
+                    officeOnlineContainer.style.display = 'none';
+                    loadingOverlay.innerHTML = '<div style="color:#ef4444">❌ Gagal merender dokumen. Silakan gunakan mode edit atau download file.</div>';
+                    setTimeout(() => { loadingOverlay.style.display = 'none'; }, 3000);
                 });
-            })
-            .catch(error => {
-                console.error('Docx preview error:', error);
-                loadingOverlay.innerHTML = '<div style="color:#ef4444">Gagal merender dokumen. Gunakan mode edit untuk melihat konten.</div>';
-                setTimeout(() => { loadingOverlay.style.display = 'none'; }, 2000);
-            });
+        }
+
+        // Load Office Online Viewer dulu
+        loadOfficeOnlineViewer();
 
         // 2. Handle Edit mode switch
         if (btnEdit) {
             btnEdit.addEventListener('click', function() {
-                // Hide exact preview, show HTML editor
+                // Hide preview containers, show HTML editor
+                officeOnlineContainer.style.display = 'none';
                 docxContainer.style.display = 'none';
                 editorContainer.style.display = 'block';
                 editorContainer.contentEditable = "true";
