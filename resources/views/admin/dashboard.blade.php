@@ -91,6 +91,7 @@
                                     <th>Jenis</th>
                                     <th>Sifat</th>
                                     <th>Tahap Sekarang</th>
+                                    <th>Status</th>
                                     <th>SLA</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -111,9 +112,21 @@
                                         <td><span class="badge"
                                                 :class="surat.sifat === 'segera' ? 'badge-red' : 'badge-gray'"
                                                 x-text="surat.sifat || 'Biasa'"></span></td>
+
                                         <td>
                                             <div style="font-size:12px; font-weight:500; color:#3b82f6;"
                                                 x-text="'Tahap ' + surat.tahap_sekarang + '/10'"></div>
+                                        </td>
+                                        <td>
+                                            <span class="badge"
+                                                :class="surat.status === 'revisi' ? 'badge-yellow' : 
+                                                         surat.status === 'ditolak' ? 'badge-red' :
+                                                         surat.status === 'selesai' ? 'badge-green' :
+                                                         surat.status === 'proses' ? 'badge-blue' : 'badge-gray'"
+                                                x-text="surat.status === 'revisi' ? '📝 Revisi' :
+                                                         surat.status === 'ditolak' ? '❌ Ditolak' :
+                                                         surat.status === 'selesai' ? '✅ Selesai' :
+                                                         surat.status === 'proses' ? '⏳ Proses' : 'Draft'"></span>
                                         </td>
                                         <td><span :class="surat.sla_status === 'terlambat' ? 'badge-red' : 'badge-green'"
                                                 class="badge"
