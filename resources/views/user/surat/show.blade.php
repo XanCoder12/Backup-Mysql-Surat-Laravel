@@ -43,6 +43,8 @@
                                 <span class="badge rounded-pill" style="background:#dcfce7;color:#15803d;font-size:11px;">✓ Selesai</span>
                             @elseif($surat->status === 'ditolak')
                                 <span class="badge rounded-pill" style="background:#fee2e2;color:#b91c1c;font-size:11px;">✗ Ditolak</span>
+                            @elseif($surat->status === 'revisi')
+                                <span class="badge rounded-pill" style="background:#fef3c7;color:#b45309;font-size:11px;">📝 Revisi</span>
                             @else
                                 <span class="badge rounded-pill" style="background:#dbeafe;color:#1d4ed8;font-size:11px;">⏱ Diproses</span>
                             @endif
@@ -407,7 +409,7 @@
         </div>
 
         {{-- SLA INFO --}}
-        @if($surat->status === 'proses')
+        @if($surat->status === 'proses' || $surat->status === 'revisi')
         <div class="card card-custom" style="
             background:{{ $surat->sla_status==='terlambat' ? '#fef2f2' : '#eff6ff' }};
             border:1px solid {{ $surat->sla_status === 'terlambat' ? '#fca5a5' : '#bfdbfe' }} !important;">
@@ -457,7 +459,7 @@
                     <span class="text-muted">{{ $surat->jenis_label }} · {{ $surat->created_at?->format('d M Y') ?? '-' }}</span>
                     </div>
                     @php
-                        $bisaLangsungHapus = in_array($surat->status, ['ditolak', 'selesai']) || $surat->sla_status === 'terlambat';
+                        $bisaLangsungHapus = in_array($surat->status, ['draft', 'ditolak', 'selesai']) || $surat->sla_status === 'terlambat';
                         $existingRequest = \App\Models\SuratDeleteRequest::where('surat_id', $surat->id)->where('status', 'pending')->first();
                     @endphp
 
