@@ -465,6 +465,11 @@
             color: #6d28d9;
         }
 
+        .badge-yellow {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
         html.dark-mode .badge-blue {
             background: rgba(29, 78, 216, 0.2);
             color: #93c5fd;
@@ -493,6 +498,11 @@
         html.dark-mode .badge-purple {
             background: rgba(109, 40, 217, 0.2);
             color: #d8b4fe;
+        }
+
+        html.dark-mode .badge-yellow {
+            background: rgba(180, 83, 9, 0.2);
+            color: #fbbf24;
         }
 
         /* BUTTONS */
@@ -958,6 +968,12 @@
             <a href="{{ route('admin.chart.index') }}"
                 class="menu-item {{ request()->routeIs('admin.chart.*') ? 'active' : '' }}">
                 <span class="menu-icon"><i class="bi bi-bar-chart"></i></span> Statistik & Grafik
+            </a>
+
+            <div class="menu-label">Bantuan</div>
+            <a href="{{ route('admin.faq.index') }}"
+                class="menu-item {{ request()->routeIs('admin.faq.*') ? 'active' : '' }}">
+                <span class="menu-icon"><i class="bi bi-question-circle"></i></span> FAQ & Panduan
             </a>
         </nav>
 
