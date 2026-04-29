@@ -41,11 +41,12 @@
             <label style="font-size:11px; color:var(--text-secondary); display:block; margin-bottom:4px;">Status</label>
             <select name="status" style="width:100%; padding:7px 10px; border:1px solid var(--border-color); background:var(--bg-tertiary); color:var(--text-primary); border-radius:7px; font-size:13px;">
                 <option value="">Semua</option>
-                <option value="proses"  {{ request('status') === 'proses'  ? 'selected' : '' }}>Proses</option>
-                <option value="revisi"  {{ request('status') === 'revisi'  ? 'selected' : '' }}>Revisi</option>
-                <option value="selesai" {{ request('status') === 'selesai' ? 'selected' : '' }}>Selesai</option>
-                <option value="ditolak" {{ request('status') === 'ditolak' ? 'selected' : '' }}>Ditolak</option>
-                <option value="draft"   {{ request('status') === 'draft'   ? 'selected' : '' }}>Draf</option>
+                <option value="proses"       {{ request('status') === 'proses'       ? 'selected' : '' }}>Proses</option>
+                <option value="revisi"       {{ request('status') === 'revisi'       ? 'selected' : '' }}>Revisi (User)</option>
+                <option value="revisi_admin" {{ request('status') === 'revisi_admin' ? 'selected' : '' }}>Admin Revisi</option>
+                <option value="selesai"      {{ request('status') === 'selesai'      ? 'selected' : '' }}>Selesai</option>
+                <option value="ditolak"      {{ request('status') === 'ditolak'      ? 'selected' : '' }}>Ditolak</option>
+                <option value="draft"        {{ request('status') === 'draft'        ? 'selected' : '' }}>Draf</option>
             </select>
         </div>
 
@@ -157,6 +158,8 @@
                                     <div>📝 Revisi</div>
                                     <div style="font-size: 8px; opacity: 0.8; margin-top: 1px;">{{ $surat->revisi_uploaded_at?->format('d/m H:i') ?? '-' }}</div>
                                 </div>
+                            @elseif($surat->status === 'revisi_admin')
+                                <span class="badge" style="background:#fef3c7;color:#92400e;border:1.5px solid #fbbf24;font-size:10px;">🔄 Admin Revisi</span>
                             @elseif($surat->status === 'draft')
                                 <span class="badge badge-gray">📄 Draf</span>
                             @else

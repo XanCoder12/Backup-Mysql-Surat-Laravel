@@ -56,6 +56,7 @@
                         @if($surat->sifat === 'segera') <span class="badge badge-red">Segera</span> @endif
                         @if($surat->status === 'selesai') <span class="badge badge-green">Selesai</span> @endif
                         @if($surat->status === 'revisi') <span class="badge badge-amber">📝 File Revisi Baru</span> @endif
+                        @if($surat->status === 'revisi_admin') <span class="badge" style="background:#fef3c7;color:#92400e;border:1.5px solid #fbbf24;">🔄 Admin Revisi</span> @endif
                         <span class="badge {{ $surat->revisi_count > 0 ? 'badge-light text-orange' : 'badge-info text-orange' }}"> Revisi ke: {{ $surat->revisi_count }} </span>                    </div>
                 </div>
                 <a href="{{ route('admin.surat.index') }}" class="btn btn-sm btn-outline-secondary">← Kembali</a>
@@ -200,7 +201,7 @@
 
         {{-- AKSI --}}
         @php $canApprove = Auth::user()->canApproveTahap($surat->tahap_sekarang); @endphp
-        @if(in_array($surat->status, ['proses', 'revisi']) && $canApprove)
+        @if(in_array($surat->status, ['proses', 'revisi', 'revisi_admin']) && $canApprove)
             <div class="card" style="background: var(--bg-secondary); border-color: var(--border-color);">
                 <h6 class="fw-bold text-success mb-3"><i class="bi bi-check-circle-fill me-2"></i>Setujui & Teruskan</h6>
                 <form action="{{ route('admin.surat.setujui', $surat) }}" method="POST">
@@ -221,14 +222,68 @@
 
             <div class="card" style="background: var(--bg-secondary); border-color: var(--border-color);">
                 <h6 class="fw-bold text-danger mb-3"><i class="bi bi-x-circle-fill me-2"></i>Tolak Surat</h6>
-                <form action="{{ route('admin.surat.tolak', $surat) }}" method="POST">
+
+                {{-- Pilihan Jenis Tolak --}}
+                <div style="display:flex; gap:8px; margin-bottom:14px;">
+                    <label id="opt-user" onclick="setJenisTolak('ke_user')"
+                        style="flex:1; cursor:pointer; border:2px solid #fca5a5; border-radius:10px; padding:10px 12px; display:flex; align-items:flex-start; gap:8px; transition:all 0.2s; background:#fef2f2;">
+                        <input type="radio" name="_jenis_tolak_ui" value="ke_user" checked style="margin-top:3px; accent-color:#ef4444;">
+                        <div>
+                            <div style="font-size:12px; font-weight:700; color:#b91c1c;">↩ Kembalikan ke User</div>
+                            <div style="font-size:10px; color:#6b7280; margin-top:2px; line-height:1.3;">User diminta revisi / upload ulang file</div>
+                        </div>
+                    </label>
+                    @if($surat->tahap_sekarang > 2)
+                    <label id="opt-admin" onclick="setJenisTolak('ke_admin_aspirasi')"
+                        style="flex:1; cursor:pointer; border:2px solid var(--border-color); border-radius:10px; padding:10px 12px; display:flex; align-items:flex-start; gap:8px; transition:all 0.2s; background:var(--bg-tertiary);">
+                        <input type="radio" name="_jenis_tolak_ui" value="ke_admin_aspirasi" style="margin-top:3px; accent-color:#f59e0b;">
+                        <div>
+                            <div style="font-size:12px; font-weight:700; color:#b45309;">🔄 Revisi Admin Aspirasi</div>
+                            <div style="font-size:10px; color:#6b7280; margin-top:2px; line-height:1.3;">Dikembalikan ke Admin Aspirasi (Tahap 2)</div>
+                        </div>
+                    </label>
+                    @endif
+                </div>
+
+
+                <form id="form-tolak" action="{{ route('admin.surat.tolak', $surat) }}" method="POST">
                     @csrf
+                    <input type="hidden" name="jenis_tolak" id="input-jenis-tolak" value="ke_user">
                     <div class="mb-3">
-                        <textarea name="catatan" rows="2" required class="form-control form-control-sm" style="background: var(--bg-tertiary); color: var(--text-primary); border-color: var(--border-color);" placeholder="Alasan penolakan..."></textarea>
+                        <label class="small fw-bold" style="color:var(--text-secondary); font-size:11px;" id="label-catatan">Alasan Penolakan *</label>
+                        <textarea name="catatan" rows="2" required class="form-control form-control-sm"
+                            style="background: var(--bg-tertiary); color: var(--text-primary); border-color: var(--border-color);"
+                            id="textarea-catatan"
+                            placeholder="Alasan penolakan / instruksi revisi untuk user..."></textarea>
                     </div>
-                    <button type="submit" class="btn btn-danger w-100 fw-bold py-2 shadow-sm" onclick="return confirm('Tolak surat ini?')">Tolak Surat</button>
+                    <button type="button" id="btn-tolak-submit"
+                        class="btn btn-danger w-100 fw-bold py-2 shadow-sm"
+                        onclick="konfirmasiTolak()">
+                        <i class="bi bi-x-circle me-1"></i> <span id="label-btn-tolak">Tolak & Kembalikan ke User</span>
+                    </button>
                 </form>
             </div>
+
+            {{-- Modal Konfirmasi Tolak --}}
+            <div id="modal-tolak" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.5); align-items:center; justify-content:center;">
+                <div style="background:var(--bg-secondary); border-radius:16px; padding:28px; max-width:420px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.3); border:1px solid var(--border-color);">
+                    <div style="font-size:32px; text-align:center; margin-bottom:12px;" id="modal-tolak-icon">❌</div>
+                    <h5 style="text-align:center; font-weight:700; color:var(--text-primary); margin-bottom:8px;" id="modal-tolak-title">Tolak & Kembalikan ke User?</h5>
+                    <p style="text-align:center; font-size:13px; color:var(--text-secondary); margin-bottom:20px;" id="modal-tolak-desc">
+                        User akan mendapat notifikasi dan diminta untuk merevisi surat.
+                    </p>
+                    <div style="display:flex; gap:10px;">
+                        <button type="button" onclick="tutupModal()" class="btn w-100" style="background:var(--bg-tertiary); border-color:var(--border-color); color:var(--text-primary);">
+                            Batal
+                        </button>
+                        <button type="button" id="modal-btn-konfirmasi" onclick="submitTolak()"
+                            class="btn w-100 fw-bold btn-danger">
+                            Ya, Tolak Surat
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         @elseif($surat->status === 'selesai')
             <div class="card text-center py-4" style="background: var(--bg-secondary); border-color: var(--border-color);">
                 <div class="h2 mb-2">✅</div>
@@ -251,3 +306,102 @@
 @include('admin.surat._delete-requests')
 
 @endsection
+
+@push('scripts')
+<script>
+// ==== LOGIKA TOLAK SURAT ====
+let jenisTolakAktif = 'ke_user';
+
+function setJenisTolak(jenis) {
+    jenisTolakAktif = jenis;
+    document.getElementById('input-jenis-tolak').value = jenis;
+
+    const optUser  = document.getElementById('opt-user');
+    const optAdmin = document.getElementById('opt-admin');
+    const btnLabel = document.getElementById('label-btn-tolak');
+    const textarea = document.getElementById('textarea-catatan');
+    const btnEl    = document.getElementById('btn-tolak-submit');
+
+    if (!optUser || !optAdmin) return;
+
+    if (jenis === 'ke_user') {
+        optUser.style.borderColor  = '#fca5a5';
+        optUser.style.background   = '#fef2f2';
+        optAdmin.style.borderColor = 'var(--border-color)';
+        optAdmin.style.background  = 'var(--bg-tertiary)';
+        btnLabel.textContent       = 'Tolak & Kembalikan ke User';
+        btnEl.className            = 'btn btn-danger w-100 fw-bold py-2 shadow-sm';
+        textarea.placeholder       = 'Alasan penolakan / instruksi revisi untuk user...';
+        optUser.querySelector('input').checked = true;
+    } else {
+        optAdmin.style.borderColor = '#fcd34d';
+        optAdmin.style.background  = '#fffbeb';
+        optUser.style.borderColor  = 'var(--border-color)';
+        optUser.style.background   = 'var(--bg-tertiary)';
+        btnLabel.textContent       = 'Revisi ke Admin Aspirasi';
+        btnEl.className            = 'btn w-100 fw-bold py-2 shadow-sm';
+        btnEl.style.background     = '#f59e0b';
+        btnEl.style.color          = '#fff';
+        btnEl.style.borderColor    = '#f59e0b';
+        textarea.placeholder       = 'Alasan / catatan untuk Admin Aspirasi...';
+        optAdmin.querySelector('input').checked = true;
+    }
+}
+
+function konfirmasiTolak() {
+    const catatan = document.getElementById('textarea-catatan').value.trim();
+    if (!catatan) {
+        document.getElementById('textarea-catatan').focus();
+        alert('Harap isi alasan penolakan terlebih dahulu.');
+        return;
+    }
+
+    const modal       = document.getElementById('modal-tolak');
+    const icon        = document.getElementById('modal-tolak-icon');
+    const title       = document.getElementById('modal-tolak-title');
+    const desc        = document.getElementById('modal-tolak-desc');
+    const btnKonfirm  = document.getElementById('modal-btn-konfirmasi');
+
+    if (jenisTolakAktif === 'ke_admin_aspirasi') {
+        icon.textContent        = '🔄';
+        title.textContent       = 'Kembalikan ke Admin Aspirasi?';
+        desc.textContent        = 'Surat akan dikembalikan ke Tahap 2 (Admin Aspirasi) untuk direvisi. User akan mendapat notifikasi.';
+        btnKonfirm.textContent  = 'Ya, Kembalikan ke Admin Aspirasi';
+        btnKonfirm.className    = 'btn w-100 fw-bold';
+        btnKonfirm.style.background   = '#f59e0b';
+        btnKonfirm.style.color        = '#fff';
+        btnKonfirm.style.borderColor  = '#f59e0b';
+    } else {
+        icon.textContent        = '❌';
+        title.textContent       = 'Tolak & Kembalikan ke User?';
+        desc.textContent        = 'User akan mendapat notifikasi bahwa suratnya ditolak dan diminta untuk merevisi.';
+        btnKonfirm.textContent  = 'Ya, Tolak Surat';
+        btnKonfirm.className    = 'btn w-100 fw-bold btn-danger';
+        btnKonfirm.style.background  = '';
+        btnKonfirm.style.color       = '';
+        btnKonfirm.style.borderColor = '';
+    }
+
+    modal.style.display = 'flex';
+}
+
+function tutupModal() {
+    document.getElementById('modal-tolak').style.display = 'none';
+}
+
+function submitTolak() {
+    tutupModal();
+    document.getElementById('form-tolak').submit();
+}
+
+// Tutup modal jika klik background
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('modal-tolak');
+    if (modal) {
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) tutupModal();
+        });
+    }
+});
+</script>
+@endpush
