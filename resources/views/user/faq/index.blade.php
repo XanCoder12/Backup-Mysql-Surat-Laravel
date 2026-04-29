@@ -681,7 +681,7 @@
                 </button>
                 <div class="faq-answer-wrap">
                     <div class="faq-answer">
-                        Klik tombol <strong>"Ajukan Surat Baru"</strong> di dashboard atau menu Surat. Unggah file dokumen dalam format <strong>.docx</strong> (Word) dan lampiran pendukung jika ada (PDF/Gambar). Isi judul, jenis (Nota Dinas, Surat Dinas, dll), dan sifat surat (Biasa, Segera, Rahasia), lalu klik submit. Pastikan pengajuan dilakukan di jam operasional <strong>08.00 – 16.00 WIB</strong>.
+                        Klik tombol <strong>"Ajukan Surat Baru"</strong> di dashboard atau menu Surat. Unggah file dokumen dalam format <strong>.docx</strong> (Word) dan lampiran pendukung jika ada (PDF/Gambar). Isi judul, jenis (Nota Dinas, Surat Dinas, dll), dan sifat surat (Biasa, Segera, Rahasia), lalu klik submit. Pastikan pengajuan dilakukan di jam operasional: <strong>Senin–Kamis pukul 07.30–16.00 WIB</strong> atau <strong>Jumat pukul 07.30–16.30 WIB</strong>.
                     </div>
                 </div>
             </div>
@@ -796,7 +796,7 @@
                 </button>
                 <div class="faq-answer-wrap">
                     <div class="faq-answer">
-                        Waktu proses maksimal adalah <strong>24 jam kerja</strong> (Hanya dihitung Senin – Jumat pukul 08.00 – 16.00 WIB). Jika proses melebihi 24 jam kerja, sistem akan memberikan indikasi <strong>"Terlambat -0.1 jam"</strong> sebagai tanda bahwa surat telah melewati batas waktu SLA yang ditentukan.
+                        Waktu proses maksimal adalah <strong>24 jam kerja</strong> (Hanya dihitung hari kerja: Senin–Kamis pukul 07.30–16.00 WIB, Jumat pukul 07.30–16.30 WIB). Jika proses melebihi 24 jam kerja, sistem akan memberikan indikasi <strong>"Terlambat -0.1 jam"</strong> sebagai tanda bahwa surat telah melewati batas waktu SLA yang ditentukan.
                     </div>
                 </div>
             </div>
@@ -890,7 +890,7 @@
                 </button>
                 <div class="faq-answer-wrap">
                     <div class="faq-answer">
-                        Layanan administrasi kami hanya beroperasi pada hari kerja <strong>(Senin – Jumat) pukul 08.00 – 16.00 WIB</strong>. Jika Anda mengakses di luar jam tersebut (termasuk hari libur), sistem akan menampilkan indikasi bahwa layanan sedang tidak aktif atau jam kerja berakhir.
+                        Layanan administrasi kami hanya beroperasi pada hari kerja: <strong>Senin–Kamis pukul 07.30–16.00 WIB</strong> dan <strong>Jumat pukul 07.30–16.30 WIB</strong>. Sabtu–Minggu libur. Jika Anda mengakses di luar jam tersebut (termasuk hari libur), sistem akan menampilkan indikasi bahwa layanan sedang tidak aktif atau jam kerja berakhir.
                     </div>
                 </div>
             </div>
@@ -903,7 +903,7 @@
                 </button>
                 <div class="faq-answer-wrap">
                     <div class="faq-answer">
-                        Sistem kami memiliki fitur <strong>Auto-Refresh</strong> setiap jam <strong>08.00 pagi</strong> (awal jam kerja) dan jam <strong>16.00 sore</strong> (akhir jam kerja). Hal ini dilakukan untuk menyinkronkan status sistem, notifikasi, dan data terbaru agar tetap akurat bagi semua pengguna.
+                        Sistem kami memiliki fitur <strong>Auto-Refresh</strong> setiap jam <strong>07.30 pagi</strong> (awal jam kerja) dan pada saat jam kerja berakhir, yaitu jam <strong>16.00</strong> (Senin–Kamis) atau jam <strong>16.30</strong> (Jumat). Hal ini dilakukan untuk menyinkronkan status sistem, notifikasi, dan data terbaru agar tetap akurat bagi semua pengguna.
                     </div>
                 </div>
             </div>
@@ -1022,7 +1022,7 @@
                             </li>
                         </ul>
                     </div>
-                    <a href="mailto:metrologi@kemendag.go.id" class="btn-email">
+                    <a href="mailto:tubpsuml@gmail.com" class="btn-email">
                         <i class="bi bi-envelope"></i> Email Support
                     </a>
                     <a href="{{ route('user.aspirasi.index') }}" class="btn-email">
