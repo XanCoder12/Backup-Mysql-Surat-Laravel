@@ -43,7 +43,7 @@
                                 <span class="badge rounded-pill" style="background:#dcfce7;color:#15803d;font-size:11px;">✓ Selesai</span>
                             @elseif($surat->status === 'ditolak')
                                 <span class="badge rounded-pill" style="background:#fee2e2;color:#b91c1c;font-size:11px;">✗ Ditolak</span>
-                            @elseif($surat->status === 'revisi')
+                            @elseif(in_array($surat->status, ['revisi', 'revisi_admin']))
                                 <span class="badge rounded-pill" style="background:#fef3c7;color:#b45309;font-size:11px;">📝 Revisi</span>
                             @else
                                 <span class="badge rounded-pill" style="background:#dbeafe;color:#1d4ed8;font-size:11px;">⏱ Diproses</span>
@@ -336,28 +336,32 @@
         {{-- STATUS CARD --}}
         @php
             $statusCardBg = match($surat->status) {
-                'selesai' => 'linear-gradient(135deg,#15803d,#22c55e)',
-                'ditolak' => 'linear-gradient(135deg,#b91c1c,#ef4444)',
-                'revisi' => 'linear-gradient(135deg,#f59e0b,#fbbf24)',
-                default => 'linear-gradient(135deg,#1e3a5f,#2563eb)',
+                'selesai'     => 'linear-gradient(135deg,#15803d,#22c55e)',
+                'ditolak'     => 'linear-gradient(135deg,#b91c1c,#ef4444)',
+                'revisi'      => 'linear-gradient(135deg,#f59e0b,#fbbf24)',
+                'revisi_admin' => 'linear-gradient(135deg,#f59e0b,#fbbf24)',
+                default       => 'linear-gradient(135deg,#1e3a5f,#2563eb)',
             };
             $statusIcon = match($surat->status) {
-                'selesai' => '✅',
-                'ditolak' => '❌',
-                'revisi' => '📝',
-                default => '⏳',
+                'selesai'     => '✅',
+                'ditolak'     => '❌',
+                'revisi'      => '📝',
+                'revisi_admin' => '📝',
+                default       => '⏳',
             };
             $statusTitle = match($surat->status) {
-                'selesai' => 'Surat Selesai',
-                'ditolak' => 'Surat Ditolak',
-                'revisi' => 'File Perbaikan Menunggu Review',
-                default => 'Tahap ' . $surat->tahap_sekarang . '/10',
+                'selesai'     => 'Surat Selesai',
+                'ditolak'     => 'Surat Ditolak',
+                'revisi'      => 'File Perbaikan Menunggu Review',
+                'revisi_admin' => 'Sedang Direvisi Admin',
+                default       => 'Tahap ' . $surat->tahap_sekarang . '/10',
             };
             $statusSubtitle = match($surat->status) {
-                'proses' => $surat->nama_tahap,
-                'selesai' => 'Semua tahapan selesai',
-                'revisi' => 'Menunggu admin approve file baru',
-                default => 'Perlu perbaikan',
+                'proses'      => $surat->nama_tahap,
+                'selesai'     => 'Semua tahapan selesai',
+                'revisi'      => 'Menunggu admin approve file baru',
+                'revisi_admin' => 'Admin Aspirasi sedang meninjau ulang',
+                default       => 'Perlu perbaikan',
             };
         @endphp
 
@@ -409,7 +413,7 @@
         </div>
 
         {{-- SLA INFO --}}
-        @if($surat->status === 'proses' || $surat->status === 'revisi')
+        @if(in_array($surat->status, ['proses', 'revisi', 'revisi_admin']))
         <div class="card card-custom" style="
             background:{{ $surat->sla_status==='terlambat' ? '#fef2f2' : '#eff6ff' }};
             border:1px solid {{ $surat->sla_status === 'terlambat' ? '#fca5a5' : '#bfdbfe' }} !important;">
