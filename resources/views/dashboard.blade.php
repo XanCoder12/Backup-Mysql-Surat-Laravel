@@ -692,7 +692,7 @@
                 @foreach($suratTerbaru as $surat)
                     <div class="surat-item">
                         <div class="d-flex align-items-start gap-3">
-                            <div class="status-dot" style="background:{{ $surat->status === 'selesai' ? '#22c55e' : ($surat->status === 'ditolak' ? '#ef4444' : ($surat->status === 'revisi' ? '#f59e0b' : '#f59e0b')) }}; margin-top:6px;"></div>
+                            <div class="status-dot" style="background:{{ $surat->status === 'selesai' ? '#22c55e' : ($surat->status === 'ditolak' ? '#ef4444' : (in_array($surat->status, ['revisi', 'revisi_admin']) ? '#f59e0b' : '#3b82f6')) }}; margin-top:6px;"></div>
                             <div class="flex-grow-1">
                                 <div class="fw-semibold mb-1" style="color:#1e293b; font-size:14px;">
                                     {{ $surat->judul }}
@@ -714,7 +714,7 @@
                                     <span class="badge rounded-pill" style="background:#dcfce7; color:#15803d; font-size:11px; padding:6px 12px;">✓ Selesai</span>
                                 @elseif($surat->status === 'ditolak')
                                     <span class="badge rounded-pill" style="background:#fee2e2; color:#b91c1c; font-size:11px; padding:6px 12px;">✗ Ditolak</span>
-                                @elseif($surat->status === 'revisi')
+                                @elseif(in_array($surat->status, ['revisi', 'revisi_admin']))
                                     <span class="badge rounded-pill" style="background:#fef3c7; color:#b45309; font-size:11px; padding:6px 12px;">📝 Revisi</span>
                                 @elseif($surat->sla_status === 'terlambat')
                                     <span class="badge rounded-pill" style="background:#fee2e2; color:#b91c1c; font-size:11px; padding:6px 12px;">⚠ SLA!</span>
@@ -779,14 +779,26 @@
                 <h6 class="fw-bold mb-0" style="color:#1e293b;">
                     <i class="bi bi-bell-fill me-2"></i>Notifikasi Terbaru
                 </h6>
-                @if(auth()->user()->unreadNotifications->count() > 0)
-                    <span class="badge rounded-pill bg-danger" style="font-size:11px; padding:6px 10px;">
-                        {{ auth()->user()->unreadNotifications->count() }} baru
-                    </span>
-                @endif
+                <div class="d-flex align-items-center gap-2">
+                    @if(auth()->user()->unreadNotifications->count() > 0)
+                        <button onclick="markAllAsRead()" class="btn btn-sm p-0 text-primary fw-semibold" style="font-size:11px; background:none; border:none;">
+                            Tandai semua dibaca
+                        </button>
+                        <span class="badge rounded-pill bg-danger" style="font-size:11px; padding:6px 10px;">
+                            {{ auth()->user()->unreadNotifications->count() }} baru
+                        </span>
+                    @endif
+                </div>
             </div>
-            <div id="dashboard-notif-list" style="max-height:280px; overflow-y:auto;">
-                @forelse(auth()->user()->notifications->take(6) as $notif)
+            <div id="dashboard-notif-list" style="max-height:400px; overflow-y:auto;">
+                @php
+                    // Pastikan kita ambil yang terbaru dan prioritaskan yang belum dibaca
+                    $allNotifications = auth()->user()->notifications()->latest()->limit(20)->get();
+                    $unread = $allNotifications->whereNull('read_at');
+                    $read = $allNotifications->whereNotNull('read_at');
+                    $displayNotifs = $unread->merge($read)->take(10);
+                @endphp
+                @forelse($displayNotifs as $notif)
                     <div class="notification-item-wrapper position-relative">
                         <a href="{{ route('notif.read', $notif->id) }}" class="notification-item d-block text-decoration-none">
                             <div class="d-flex align-items-start gap-3">
@@ -1129,6 +1141,26 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // Mark All as Read
+    window.markAllAsRead = function() {
+        fetch('{{ route("notif.readAll") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            }
+        })
+        .catch(err => console.error('Error marking all as read:', err));
+    };
+
     // Auto-refresh at 08:00 and 16:00
     function scheduleRefresh() {
         const now = new Date();
