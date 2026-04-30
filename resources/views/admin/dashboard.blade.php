@@ -3,10 +3,26 @@
 @section('title', 'Dashboard Admin')
 
 @section('content')
+    <style>
+        .pulse-dot-admin {
+            width: 6px; height: 6px; background: white; border-radius: 50%; display: inline-block;
+            animation: pulseAdmin 1.5s infinite;
+        }
+        @keyframes pulseAdmin {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+    </style>
 
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px;">
         <div>
-            <h1 style="font-size:1.8rem; font-weight:800; color:var(--text-primary); margin:0;">Dashboard Overview</h1>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <h1 style="font-size:1.8rem; font-weight:800; color:var(--text-primary); margin:0;">Dashboard Overview</h1>
+                <div :style="connecting ? 'opacity:1' : 'opacity:0'" style="background:#22c55e; color:white; font-size:10px; padding:3px 8px; border-radius:99px; display:flex; align-items:center; gap:5px; transition:opacity 0.5s;">
+                    <span class="pulse-dot-admin"></span> LIVE
+                </div>
+            </div>
             <p style="font-size:13px; color:var(--text-secondary); margin:4px 0 0 0;">Monitoring aktivitas persuratan {{ \Carbon\Carbon::create()->month($bulanSelected)->translatedFormat('F') }} {{ $tahunSelected }}</p>
         </div>
         <form action="{{ route('admin.dashboard') }}" method="GET" style="display:flex; gap:10px; align-items:center; background:var(--bg-secondary); padding:8px 12px; border-radius:12px; border:1px solid var(--border-color);">
@@ -143,6 +159,21 @@
                     </div>
                 </template>
             </div>
+            {{-- MIXED CHART: TREND PERSURATAN --}}
+            <div class="card" style="grid-column:1/-1;">
+                <div class="section-header">
+                    <div>
+                        <h2 style="display:flex; align-items:center; gap:8px;">
+                            <i class="bi bi-graph-up-arrow" style="color:#3b82f6;"></i> 
+                            Trend Persuratan (6 Bulan Terakhir)
+                        </h2>
+                        <small style="color:var(--text-secondary);">Perbandingan surat masuk (Bar) dan surat selesai (Line)</small>
+                    </div>
+                </div>
+                <div style="height: 320px; width: 100%; margin-top:10px;">
+                    <canvas id="mixedChart"></canvas>
+                </div>
+            </div>
 
             {{-- REKAP PER JENIS --}}
             <div class="card">
@@ -198,6 +229,7 @@
                     </div>
                 @endforelse
             </div>
+            
 
             {{-- RIWAYAT PEMROSESAN SURAT (BULAN INI) --}}
             <div class="card" style="grid-column:1/-1;">
@@ -276,7 +308,91 @@
 @endsection
 
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mixed Chart Initialization
+            const ctx = document.getElementById('mixedChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: {!! json_encode($chartMonths) !!},
+                    datasets: [
+                        {
+                            label: 'Surat Selesai',
+                            type: 'line',
+                            data: {!! json_encode($chartSelesai) !!},
+                            borderColor: '#10b981',
+                            backgroundColor: 'transparent',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            pointBackgroundColor: '#10b981',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            zIndex: 10
+                        },
+                        {
+                            label: 'Total Surat Masuk',
+                            data: {!! json_encode($chartMasuk) !!},
+                            backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1,
+                            borderRadius: 8,
+                            barThickness: 40,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || '#333',
+                                font: { size: 12, weight: '600' }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleFont: { size: 13 },
+                            bodyFont: { size: 12 },
+                            padding: 12,
+                            cornerRadius: 10,
+                            displayColors: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() || '#666',
+                                stepSize: 1,
+                                font: { size: 11 }
+                            },
+                            grid: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim() || '#eee',
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() || '#666',
+                                font: { size: 11 }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
         function dashboardData() {
             return {
                 stats: {
@@ -292,30 +408,46 @@
                 connecting: false,
                 dashboard: null,
 
+                isFetching: false,
+                pollingInterval: 15000, // 15 detik
+
                 initDashboard() {
+                    this.startPolling();
+                },
+
+                startPolling() {
+                    this.updateData();
+                    setInterval(() => this.updateData(), this.pollingInterval);
+                },
+
+                updateData() {
+                    if (this.isFetching || document.hidden) return;
+                    this.isFetching = true;
                     this.connecting = true;
-                    this.dashboard = window.initRealtimeDashboard('admin');
 
-                    if (this.dashboard) {
-                        this.dashboard.on('statsUpdate', (data) => {
-                            this.stats = {
-                                totalBulanIni: data.totalBulanIni,
-                                totalSelesai: data.totalSelesai,
-                                totalProses: data.totalProses,
-                                totalTerlambat: data.totalTerlambat,
-                            };
-                            this.connecting = false;
-                        });
+                    const url = new URL('{{ route("admin.dashboard.liveData") }}', window.location.origin);
+                    url.searchParams.append('bulan', '{{ $bulanSelected }}');
+                    url.searchParams.append('tahun', '{{ $tahunSelected }}');
 
-                        this.dashboard.on('antrianUpdate', (data) => {
-                            this.antrian.items = data.items || [];
-                            this.antrian.count = data.count || 0;
-                        });
-
-                        this.dashboard.on('error', (error) => {
-                            console.error('Dashboard error:', error);
-                        });
-                    }
+                    fetch(url, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.stats = data.stats;
+                        this.antrian.items = data.antrian.items || [];
+                        this.antrian.count = data.antrian.count || 0;
+                    })
+                    .catch(error => {
+                        console.error('Dashboard polling error:', error);
+                    })
+                    .finally(() => {
+                        this.isFetching = false;
+                        this.connecting = false;
+                    });
                 },
 
                 formatDate(date) {
