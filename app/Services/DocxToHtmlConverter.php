@@ -204,8 +204,53 @@ class DocxToHtmlConverter
      */
     private function parseParagraphDom(\DOMNode $p): string
     {
-        $text = '';
+        // Get paragraph properties
+        $pPr = null;
+        $alignment = '';
+        $headingLevel = 0;
+        $indentLeft = '';
         
+        foreach ($p->childNodes as $child) {
+            if ($child->nodeType === XML_ELEMENT_NODE && $child->localName === 'pPr') {
+                $pPr = $child;
+                break;
+            }
+        }
+        
+        // Extract paragraph properties
+        if ($pPr) {
+            foreach ($pPr->childNodes as $prop) {
+                if ($prop->nodeType === XML_ELEMENT_NODE) {
+                    if ($prop->localName === 'jc') {
+                        $val = $prop->getAttribute('val');
+                        $alignment = match ($val) {
+                            'center' => 'text-align: center;',
+                            'right' => 'text-align: right;',
+                            'both' => 'text-align: justify;',
+                            'distribute' => 'text-align: justify;',
+                            default => ''
+                        };
+                    } elseif ($prop->localName === 'pStyle') {
+                        $styleName = $prop->getAttribute('val');
+                        if (preg_match('/Heading(\d+)/', $styleName, $matches)) {
+                            $headingLevel = min(intval($matches[1]), 6);
+                        }
+                    } elseif ($prop->localName === 'ind') {
+                        // Handle indentation
+                        $left = $prop->getAttribute('left');
+                        $firstLine = $prop->getAttribute('firstLine');
+                        if ($left) {
+                            $twips = intval($left);
+                            $pixels = round($twips / 20 * 1.333);
+                            $indentLeft = "margin-left: {$pixels}px; ";
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Build text content
+        $text = '';
         foreach ($p->childNodes as $child) {
             if ($child->nodeType === XML_ELEMENT_NODE && $child->localName === 'r') {
                 $text .= $this->parseRunDom($child);
@@ -215,12 +260,22 @@ class DocxToHtmlConverter
                 $text .= '<br>';
             }
         }
-        
+
         if (trim($text) === '') {
             return '<br>';
         }
+
+        // Combine styles
+        $styleAttr = '';
+        if ($alignment || $indentLeft) {
+            $styleAttr = ' style="' . $alignment . $indentLeft . '"';
+        }
         
-        return '<p>' . $text . '</p>';
+        if ($headingLevel > 0) {
+            return "<h$headingLevel$styleAttr>$text</h$headingLevel>";
+        }
+        
+        return "<p$styleAttr>$text</p>";
     }
 
     /**
@@ -229,11 +284,97 @@ class DocxToHtmlConverter
     private function parseRunDom(\DOMNode $run): string
     {
         $text = '';
+        $rPr = null;
         
+        // Extract run properties (rPr)
+        foreach ($run->childNodes as $child) {
+            if ($child->nodeType === XML_ELEMENT_NODE && $child->localName === 'rPr') {
+                $rPr = $child;
+                break;
+            }
+        }
+        
+        // Build formatting styles
+        $styles = [];
+        $beforeTags = [];
+        $afterTags = [];
+        
+        if ($rPr) {
+            foreach ($rPr->childNodes as $prop) {
+                if ($prop->nodeType === XML_ELEMENT_NODE) {
+                    // Bold
+                    if ($prop->localName === 'b') {
+                        $beforeTags[] = '<strong>';
+                        $afterTags[] = '</strong>';
+                    }
+                    // Italic
+                    elseif ($prop->localName === 'i') {
+                        $beforeTags[] = '<em>';
+                        $afterTags[] = '</em>';
+                    }
+                    // Underline
+                    elseif ($prop->localName === 'u') {
+                        $styles[] = 'text-decoration: underline;';
+                    }
+                    // Strike-through
+                    elseif ($prop->localName === 'strike') {
+                        $styles[] = 'text-decoration: line-through;';
+                    }
+                    // Font size
+                    elseif ($prop->localName === 'sz') {
+                        $halfPts = intval($prop->getAttribute('val'));
+                        // Skip invalid font sizes (0 or negative)
+                        if ($halfPts > 0) {
+                            $pts = $halfPts / 2;
+                            $styles[] = "font-size: {$pts}pt;";
+                        }
+                    }
+                    // Color
+                    elseif ($prop->localName === 'color') {
+                        $color = $prop->getAttribute('val');
+                        $styles[] = "color: #{$color};";
+                    }
+                    // Highlight/background
+                    elseif ($prop->localName === 'highlight') {
+                        $color = $prop->getAttribute('val');
+                        // Map Word color names to hex
+                        $colorMap = [
+                            'yellow' => '#ffff00',
+                            'green' => '#00ff00',
+                            'cyan' => '#00ffff',
+                            'magenta' => '#ff00ff',
+                            'blue' => '#0000ff',
+                            'red' => '#ff0000',
+                            'darkBlue' => '#00008b',
+                            'darkCyan' => '#008b8b',
+                            'darkGreen' => '#006400',
+                            'darkMagenta' => '#8b008b',
+                            'darkRed' => '#8b0000',
+                            'darkYellow' => '#808000',
+                            'darkGray' => '#808080',
+                            'lightGray' => '#d3d3d3',
+                            'black' => '#000000',
+                            'white' => '#ffffff',
+                        ];
+                        $hexColor = $colorMap[strtolower($color)] ?? $color;
+                        $styles[] = "background-color: {$hexColor};";
+                    }
+                    // Font family
+                    elseif ($prop->localName === 'rFonts') {
+                        $ascii = $prop->getAttribute('ascii');
+                        if ($ascii) {
+                            $styles[] = "font-family: '{$ascii}', sans-serif;";
+                        }
+                    }
+                }
+            }
+        }
+
+        // Parse text content and other elements
         foreach ($run->childNodes as $child) {
             if ($child->nodeType === XML_ELEMENT_NODE) {
                 $localName = $child->localName;
-                
+
                 // Handle text
                 if ($localName === 't') {
                     $textContent = '';
@@ -262,8 +403,31 @@ class DocxToHtmlConverter
                 }
             }
         }
+
+        if ($text === '') {
+            return '';
+        }
+
+        // Apply inline styles
+        $styleAttr = '';
+        if (!empty($styles)) {
+            $styleAttr = ' style="' . implode(' ', $styles) . '"';
+        }
         
-        return $text;
+        $wrappedText = $text;
+        if ($styleAttr) {
+            $wrappedText = "<span{$styleAttr}>$wrappedText</span>";
+        }
+
+        // Apply before/after tags (bold, italic, etc.)
+        foreach ($beforeTags as $tag) {
+            $wrappedText = $tag . $wrappedText;
+        }
+        foreach (array_reverse($afterTags) as $tag) {
+            $wrappedText .= $tag;
+        }
+
+        return $wrappedText;
     }
 
     /**
@@ -326,23 +490,153 @@ class DocxToHtmlConverter
      */
     private function parseTableDom(\DOMNode $tbl): string
     {
-        $html = '<table style="border-collapse: collapse; width: 100%; margin: 10px 0;">';
-
+        // Get table style from table properties
+        $tableStyle = 'border-collapse: collapse; margin: 10px 0;';
+        $hasBorders = true;
+        $tableWidth = '100%';
+        
         foreach ($tbl->childNodes as $child) {
-            if ($child->nodeType === XML_ELEMENT_NODE && $child->localName === 'tr') {
-                $html .= '<tr>';
-                foreach ($child->childNodes as $cell) {
-                    if ($cell->nodeType === XML_ELEMENT_NODE && $cell->localName === 'tc') {
-                        $cellText = '';
-                        foreach ($cell->childNodes as $p) {
-                            if ($p->nodeType === XML_ELEMENT_NODE && $p->localName === 'p') {
-                                $cellText .= $this->parseParagraphDom($p);
+            if ($child->nodeType === XML_ELEMENT_NODE && $child->localName === 'tblPr') {
+                foreach ($child->childNodes as $prop) {
+                    if ($prop->nodeType === XML_ELEMENT_NODE && $prop->localName === 'tblBorders') {
+                        // Check if table has borders defined
+                        $hasBordersCheck = false;
+                        foreach ($prop->childNodes as $border) {
+                            if ($border->nodeType === XML_ELEMENT_NODE && $border->getAttribute('val') !== 'nil') {
+                                $hasBordersCheck = true;
+                                break;
                             }
                         }
-                        $html .= '<td style="border: 1px solid #ddd; padding: 8px;">' . $cellText . '</td>';
+                        if (!$hasBordersCheck) {
+                            $hasBorders = false;
+                        }
+                    }
+                    // Check for table width setting
+                    elseif ($prop->nodeType === XML_ELEMENT_NODE && $prop->localName === 'tblW') {
+                        $wType = $prop->getAttribute('type');
+                        $wValue = $prop->getAttribute('w');
+                        if ($wType === 'auto') {
+                            $tableWidth = 'auto';
+                            $tableStyle .= ' width: auto;';
+                        } elseif ($wType === 'pct') {
+                            // Percentage (in 50ths of percent, so 5000 = 100%)
+                            $pct = intval($wValue) / 50;
+                            $tableWidth = $pct . '%';
+                            $tableStyle .= " width: {$pct}%;";
+                        } elseif ($wType === 'dxa') {
+                            // Twips (1/20 of point)
+                            $points = intval($wValue) / 20;
+                            $pixels = round($points * 1.333);
+                            $tableStyle .= " width: {$pixels}px;";
+                        }
+                    }
+                }
+            }
+        }
+        
+        if ($tableWidth === '100%') {
+            $tableStyle .= ' width: 100%;';
+        }
+        
+        $html = '<table style="' . $tableStyle . '">';
+
+        $rowIndex = 0;
+        foreach ($tbl->childNodes as $child) {
+            if ($child->nodeType === XML_ELEMENT_NODE && $child->localName === 'tr') {
+                // First row could be header
+                $isHeader = ($rowIndex === 0);
+                
+                // Get row properties
+                $rowPr = null;
+                foreach ($child->childNodes as $rowChild) {
+                    if ($rowChild->nodeType === XML_ELEMENT_NODE && $rowChild->localName === 'trPr') {
+                        $rowPr = $rowChild;
+                        foreach ($rowChild->childNodes as $prop) {
+                            if ($prop->nodeType === XML_ELEMENT_NODE && $prop->localName === 'cnfStyle' && $prop->getAttribute('val') === '100000000000') {
+                                $isHeader = true;
+                            }
+                        }
+                    }
+                }
+                
+                $html .= '<tr>';
+                $colIndex = 0;
+                foreach ($child->childNodes as $cell) {
+                    if ($cell->nodeType === XML_ELEMENT_NODE && $cell->localName === 'tc') {
+                        // Get cell properties
+                        $cellStyle = '';
+                        $cellWidth = '';
+                        
+                        // Add borders if table has them
+                        if ($hasBorders) {
+                            $cellStyle .= 'border: 1px solid #d1d5db; ';
+                        }
+                        $cellStyle .= 'padding: 6px 10px; ';
+                        
+                        $cellTag = $isHeader ? 'th' : 'td';
+                        
+                        foreach ($cell->childNodes as $cellChild) {
+                            if ($cellChild->nodeType === XML_ELEMENT_NODE && $cellChild->localName === 'tcPr') {
+                                foreach ($cellChild->childNodes as $prop) {
+                                    if ($prop->nodeType === XML_ELEMENT_NODE) {
+                                        // Cell width
+                                        if ($prop->localName === 'tcW') {
+                                            $wType = $prop->getAttribute('type');
+                                            $wValue = $prop->getAttribute('w');
+                                            if ($wType === 'pct') {
+                                                $pct = intval($wValue) / 50;
+                                                $cellWidth = "width: {$pct}%; ";
+                                            } elseif ($wType === 'dxa') {
+                                                $points = intval($wValue) / 20;
+                                                $pixels = round($points * 1.333);
+                                                $cellWidth = "width: {$pixels}px; ";
+                                            }
+                                        }
+                                        // Background color/shading
+                                        elseif ($prop->localName === 'shd') {
+                                            $color = $prop->getAttribute('fill');
+                                            if ($color && $color !== 'auto') {
+                                                // Handle 3-char hex codes
+                                                if (strlen($color) === 3) {
+                                                    $color = $color[0].$color[0].$color[1].$color[1].$color[2].$color[2];
+                                                }
+                                                if (strlen($color) === 6) {
+                                                    $cellStyle .= "background-color: #{$color}; ";
+                                                    // If header has dark background, set white text
+                                                    $brightness = $this->getColorBrightness($color);
+                                                    if ($brightness < 128) {
+                                                        $cellStyle .= 'color: #ffffff; font-weight: bold; ';
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        // Vertical alignment
+                                        elseif ($prop->localName === 'vAlign') {
+                                            $valign = $prop->getAttribute('val');
+                                            if ($valign) {
+                                                $cellStyle .= "vertical-align: {$valign}; ";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Build cell content
+                        $cellContent = '';
+                        foreach ($cell->childNodes as $p) {
+                            if ($p->nodeType === XML_ELEMENT_NODE && $p->localName === 'p') {
+                                $cellContent .= $this->parseParagraphDom($p);
+                            }
+                        }
+                        
+                        $widthAttr = $cellWidth ? " style=\"{$cellWidth}{$cellStyle}\"" : ($cellStyle ? " style=\"{$cellStyle}\"" : '');
+                        $html .= "<{$cellTag}{$widthAttr}>{$cellContent}</{$cellTag}>";
+                        $colIndex++;
                     }
                 }
                 $html .= '</tr>';
+                $rowIndex++;
             }
         }
 
@@ -502,5 +796,20 @@ class DocxToHtmlConverter
 
         $html .= '</table>';
         return $html;
+    }
+
+    /**
+     * Calculate brightness of hex color to determine if text should be white or black
+     * Returns value 0-255 (0=black, 255=white)
+     */
+    private function getColorBrightness(string $hexColor): int
+    {
+        // Convert hex to RGB
+        $r = hexdec(substr($hexColor, 0, 2));
+        $g = hexdec(substr($hexColor, 2, 2));
+        $b = hexdec(substr($hexColor, 4, 2));
+
+        // Calculate brightness using perceived luminance formula
+        return (int) (($r * 299 + $g * 587 + $b * 114) / 1000);
     }
 }
