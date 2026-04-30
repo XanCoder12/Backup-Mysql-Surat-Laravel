@@ -173,7 +173,7 @@
             --border-color: #e5e7eb;
         }
 
-        html.dark {
+        .dark {
             --bg-primary: #020617; /* slate-950 */
             --bg-secondary: #0f172a; /* slate-900 */
             --bg-tertiary: #1e293b; /* slate-800 */
@@ -286,6 +286,14 @@
             border-bottom: none;
         }
 
+        /* Ensure table background follows theme */
+        .dark table, .dark tr, .dark td {
+            background-color: transparent !important;
+        }
+        .dark .card table {
+            background-color: var(--bg-secondary);
+        }
+
         /* BADGES */
         .badge {
             display: inline-block;
@@ -386,7 +394,7 @@
     @stack('styles')
 </head>
 
-<body class="h-full bg-slate-100 dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-200 flex transition-colors duration-300">
+<body class="h-screen overflow-hidden bg-slate-100 dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-200 flex transition-colors duration-300">
 
 {{-- ============================================================
      SIDEBAR
@@ -422,9 +430,11 @@
                   {{ request()->routeIs('admin.surat.index') ? 'nav-active' : '' }}">
             <i class="bi bi-envelope text-base w-5 text-center shrink-0"></i>
             <span class="flex-1">Antrian Surat</span>
-            @if($antrianCount ?? 0)
-                <span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none min-w-[18px] text-center">{{ $antrianCount }}</span>
-            @endif
+            <span id="sidebar-antrian-badge-container">
+                @if($antrianCount ?? 0)
+                    <span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none min-w-[18px] text-center">{{ $antrianCount }}</span>
+                @endif
+            </span>
         </a>
 
         {{-- DATA SURAT --}}
@@ -501,10 +511,12 @@
                   {{ request()->routeIs('admin.notifikasi.*') ? 'nav-active' : '' }}">
             <i class="bi bi-bell text-base w-5 text-center shrink-0"></i>
             <span class="flex-1">Notifikasi</span>
-            @php $notifCount = Auth::user()->unreadNotifications()->count(); @endphp
-            @if($notifCount > 0)
-                <span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none min-w-[18px] text-center animate-pulse">{{ $notifCount }}</span>
-            @endif
+            <span id="sidebar-notif-badge-container">
+                @php $notifCount = Auth::user()->unreadNotifications()->count(); @endphp
+                @if($notifCount > 0)
+                    <span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none min-w-[18px] text-center animate-pulse">{{ $notifCount }}</span>
+                @endif
+            </span>
         </a>
 
         <a href="{{ route('admin.aspirasi.index') }}"
@@ -603,7 +615,7 @@
 {{-- ============================================================
      MAIN AREA
 ============================================================ --}}
-<div class="flex-1 flex flex-col min-w-0">
+<div class="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
 
     {{-- ===== TOPBAR ===== --}}
     <header id="topbar"
@@ -639,10 +651,12 @@
                 class="relative w-9 h-9 rounded-xl flex items-center justify-center text-slate-500 dark:text-slate-400
                        hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                 <i class="bi bi-bell text-[15px]"></i>
-                @php $notifCount = Auth::user()->unreadNotifications()->count(); @endphp
-                @if($notifCount > 0)
-                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-slate-900 animate-pulse"></span>
-                @endif
+                <span id="topbar-notif-badge-container">
+                    @php $notifCount = Auth::user()->unreadNotifications()->count(); @endphp
+                    @if($notifCount > 0)
+                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-slate-900 animate-pulse"></span>
+                    @endif
+                </span>
             </a>
 
             {{-- Divider --}}
@@ -665,16 +679,18 @@
 
                 {{-- Dropdown Panel --}}
                 <div id="user-dropdown"
-                    class="hidden absolute right-0 top-[calc(100%+8px)] w-[230px] bg-white dark:bg-slate-900
-                           border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl overflow-hidden z-50
+                    style="background: var(--bg-secondary); border-color: var(--border-color);"
+                    class="hidden absolute right-0 top-[calc(100%+8px)] w-[230px]
+                           border rounded-2xl shadow-xl overflow-hidden z-50
                            animate-fade-in">
-                    <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
-                        <div class="text-[13px] font-semibold text-slate-800 dark:text-slate-100 truncate">{{ Auth::user()->name }}</div>
-                        <div class="text-[11px] text-slate-400 mt-0.5 truncate">{{ Auth::user()->email ?? 'Admin' }}</div>
+                    <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-800" style="border-color: var(--border-color);">
+                        <div class="text-[13px] font-semibold text-slate-800 dark:text-slate-100 truncate" style="color: var(--text-primary);">{{ Auth::user()->name }}</div>
+                        <div class="text-[11px] text-slate-400 mt-0.5 truncate" style="color: var(--text-secondary);">{{ Auth::user()->email ?? 'Admin' }}</div>
                     </div>
                     <div class="py-1.5">
                         <a href="{{ route('profile.edit') }}"
-                            class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-slate-700 dark:text-slate-300
+                            style="color: var(--text-primary);"
+                            class="flex items-center gap-3 px-4 py-2.5 text-[13px]
                                    hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                             <i class="bi bi-person-circle text-slate-400 text-base w-4 text-center"></i>
                             Profil Saya
@@ -715,13 +731,13 @@
     @endif
 
     {{-- ===== CONTENT ===== --}}
-    <main class="flex-1 p-4 lg:p-6 overflow-x-hidden">
+    <main class="flex-1 p-4 lg:p-6">
         @yield('content')
     </main>
 
     {{-- ===== FOOTER ===== --}}
     <footer class="border-t border-slate-200/60 dark:border-slate-800/60 py-4 px-6">
-        <p class="text-center text-[12px] text-slate-400 dark:text-slate-600">
+        <p class="text-center text-[12px] text-slate-500 dark:text-slate-400">
             &copy; {{ date('Y') }} Balai Pengelolaan SUML &mdash; RI. All rights reserved.
         </p>
     </footer>
@@ -793,6 +809,59 @@
             setTimeout(() => el.remove(), 400);
         });
     }, 4500);
+
+    // ===== REAL-TIME SIDEBAR COUNTS =====
+    let isFetchingSidebar = false;
+    function updateSidebarCounts() {
+        if (isFetchingSidebar || document.hidden) return;
+        isFetchingSidebar = true;
+
+        fetch('{{ route("admin.sidebar.counts") }}', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // 1. Antrian Badge
+            const antrianContainer = document.getElementById('sidebar-antrian-badge-container');
+            if (antrianContainer) {
+                if (data.antrianCount > 0) {
+                    antrianContainer.innerHTML = `<span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none min-w-[18px] text-center">${data.antrianCount}</span>`;
+                } else {
+                    antrianContainer.innerHTML = '';
+                }
+            }
+
+            // 2. Notification Badge (Sidebar)
+            const notifContainer = document.getElementById('sidebar-notif-badge-container');
+            if (notifContainer) {
+                if (data.notifCount > 0) {
+                    notifContainer.innerHTML = `<span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none min-w-[18px] text-center animate-pulse">${data.notifCount}</span>`;
+                } else {
+                    notifContainer.innerHTML = '';
+                }
+            }
+
+            // 3. Notification Badge (Topbar)
+            const topbarNotifContainer = document.getElementById('topbar-notif-badge-container');
+            if (topbarNotifContainer) {
+                if (data.notifCount > 0) {
+                    topbarNotifContainer.innerHTML = `<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-slate-900 animate-pulse"></span>`;
+                } else {
+                    topbarNotifContainer.innerHTML = '';
+                }
+            }
+        })
+        .catch(err => console.error('Sidebar Polling Error:', err))
+        .finally(() => {
+            isFetchingSidebar = false;
+        });
+    }
+
+    setInterval(updateSidebarCounts, 20000); // Setiap 20 detik
+    setTimeout(updateSidebarCounts, 5000);   // Jalankan pertama kali setelah 5 detik
 </script>
 
 @stack('scripts')
