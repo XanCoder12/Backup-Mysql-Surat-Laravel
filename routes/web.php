@@ -14,7 +14,11 @@ use App\Http\Controllers\NotificationApiController;
 
 Route::get('/', function () {
     if (auth()->check()) {
-        if (auth()->user()->isAdmin()) {
+        $user = auth()->user();
+        if ($user->isITSupport()) {
+            return redirect()->route('itsupport.dashboard');
+        }
+        if ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
         return redirect()->route('dashboard');
@@ -93,6 +97,10 @@ Route::prefix('Admin')->middleware(['auth', 'verified', 'admin'])->name('admin.'
         Route::get('/Chart', [\App\Http\Controllers\Admin\ChartController::class, 'index'])->name('chart.index');
         Route::get('/Chart/data', [\App\Http\Controllers\Admin\ChartController::class, 'data'])->name('chart.data');
 
+        Route::get('/FAQ', function () {
+            return view('admin.faq.index', ['title' => 'FAQ & Bantuan']);
+        })->name('faq.index');
+
         // Riwayat Pemrosesan Surat
         Route::get('/Riwayat', [\App\Http\Controllers\Admin\RiwayatController::class, 'index'])->name('riwayat.index');
 
@@ -132,13 +140,23 @@ Route::prefix('Admin')->middleware(['auth', 'verified', 'admin'])->name('admin.'
         Route::post('/Notifikasi/read-all', [\App\Http\Controllers\Admin\NotifikasiController::class, 'markAllAsRead'])->name('notifikasi.readAll');
         Route::delete('/Notifikasi/{id}', [\App\Http\Controllers\Admin\NotifikasiController::class, 'destroy'])->name('notifikasi.delete');
         Route::delete('/Notifikasi', [\App\Http\Controllers\Admin\NotifikasiController::class, 'destroyAll'])->name('notifikasi.deleteAll');
+    });
+});
 
+// ===== IT SUPPORT =====
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Secret route to become IT Support
+    Route::get('/become-it-support', [\App\Http\Controllers\ITSupportController::class, 'becomeITSupport'])->name('itsupport.become');
+    
+    Route::middleware(['it_support'])->prefix('IT-Support')->name('itsupport.')->group(function () {
+        Route::get('/Dashboard', [\App\Http\Controllers\ITSupportController::class, 'dashboard'])->name('dashboard');
     });
 });
 
 Route::middleware(['auth', 'verified'])->prefix('notif')->name('notif.')->group(function () {
     Route::get('/read/{id}',      [\App\Http\Controllers\User\NotifikasiController::class, 'read'])->name('read');
     Route::post('/read-all',      [\App\Http\Controllers\User\NotifikasiController::class, 'readAll'])->name('readAll');
+    Route::post('/mark-read/{id}',[\App\Http\Controllers\User\NotifikasiController::class, 'markRead'])->name('markRead');
     Route::post('/delete/{id}',   [NotificationApiController::class, 'destroy'])->name('delete');
     Route::post('/delete-all',    [NotificationApiController::class, 'destroyAll'])->name('deleteAll');
 });
