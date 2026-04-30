@@ -33,6 +33,7 @@ Route::get('/v/{uuid}', [\App\Http\Controllers\VerifikasiSuratController::class,
 // ===== USER =====
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [UserDashboard::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/live-data', [UserDashboard::class, 'liveData'])->name('dashboard.liveData');
 
     Route::get('/template', [UserTemplateController::class, 'index'])->name('user.template.index');
     Route::get('/template/download/{nama}', [UserSurat::class, 'templateDownload'])->name('user.template.download');
@@ -78,6 +79,8 @@ Route::prefix('Admin')->middleware(['auth', 'verified', 'admin'])->name('admin.'
     // Dashboard & other routes (dengan middleware admin.role.check)
     Route::middleware(['admin.role.check'])->group(function () {
         Route::get('/Dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/Dashboard/live-data', [DashboardController::class, 'liveData'])->name('dashboard.liveData');
+        Route::get('/Sidebar/counts', [\App\Http\Controllers\Admin\SidebarController::class, 'counts'])->name('sidebar.counts');
 
         Route::get('/Surat', [SuratController::class, 'index'])->name('surat.index');
         Route::get('/Surat-Masuk', [SuratController::class, 'masuk'])->name('surat.masuk');
