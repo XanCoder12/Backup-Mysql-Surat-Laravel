@@ -10,7 +10,16 @@
 
 .chart-top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; color: var(--text-primary); }
 .chart-top-title { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
-.chart-top-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; font-family: 'DM Mono', monospace; }
+.chart-top-sub { font-size: 11px; color: var(--text-secondary); margin-top: 2px; font-family: 'DM Mono', monospace; display: flex; align-items: center; gap: 6px; }
+
+.live-indicator { display: flex; align-items: center; gap: 5px; color: #16a34a; font-weight: 600; letter-spacing: 0.5px; }
+.live-dot { width: 6px; height: 6px; background: #16a34a; border-radius: 50%; position: relative; }
+.live-dot::after { content: ''; position: absolute; width: 100%; height: 100%; background: inherit; border-radius: 50%; animation: pulse-live 2s infinite; }
+
+@keyframes pulse-live {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(3); opacity: 0; }
+}
 
 .chart-filter-row { display: flex; align-items: center; gap: 10px; }
 .chart-filter-row label { font-size: 12px; color: var(--text-secondary); }
@@ -85,9 +94,23 @@ table.ringkasan .num-cell { text-align: right; font-family: 'DM Mono', monospace
   <div class="chart-top-bar">
     <div>
       <div class="chart-top-title">Statistik & Grafik</div>
-      <div class="chart-top-sub">real-time · database</div>
+      <div class="chart-top-sub">
+        <span class="live-indicator">
+          <span class="live-dot"></span>
+          REAL-TIME
+        </span>
+        · DATABASE
+      </div>
     </div>
     <div class="chart-filter-row">
+      <label>Bulan</label>
+      <select id="filter-bulan">
+        @foreach(range(1, 12) as $m)
+          <option value="{{ $m }}" {{ $m == now()->month ? 'selected' : '' }}>
+            {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+          </option>
+        @endforeach
+      </select>
       <label>Tahun</label>
       <select id="filter-tahun">
         @foreach(range(now()->year, now()->year - 3) as $y)
@@ -142,6 +165,7 @@ table.ringkasan .num-cell { text-align: right; font-family: 'DM Mono', monospace
             <span class="legend-item"><span class="legend-dot" style="background:#16a34a"></span>Selesai</span>
             <span class="legend-item"><span class="legend-dot" style="background:#d97706"></span>Proses</span>
             <span class="legend-item"><span class="legend-dot" style="background:#dc2626"></span>Ditolak</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#7c3aed"></span>Revisi</span>
           </div>
         </div>
         <div class="toggle-grp">
@@ -227,9 +251,62 @@ table.ringkasan .num-cell { text-align: right; font-family: 'DM Mono', monospace
   <div class="ch-card" style="margin-bottom: 20px;">
     <div class="ch-card-header">
       <div class="ch-card-title"><span class="ch-dot teal"></span>Top 10 Admin Pengurus Surat</div>
-      <div class="ch-sub">admin dengan pemrosesan tahap terbanyak</div>
+      <div class="ch-sub">admin dengan pemrosesan tahap terbanyak tahun ini</div>
     </div>
     <div class="chart-wrap" style="height:250px;"><canvas id="chart-top-admin"></canvas></div>
+  </div>
+
+  {{-- ROW 6: Revisi per Bulan + Distribusi Hari --}}
+  <div class="charts-row4" style="margin-bottom: 20px;">
+    <div class="ch-card">
+      <div class="ch-card-header">
+        <div class="ch-card-title"><span class="ch-dot amber"></span>Frekuensi Revisi per Bulan</div>
+        <div class="ch-sub">revisi oleh user vs revisi oleh admin aspirasi</div>
+        <div class="legend-row" style="margin-top:10px;margin-left:0;">
+          <span class="legend-item"><span class="legend-dot" style="background:#d97706"></span>Revisi User</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#7c3aed"></span>Revisi Admin Aspirasi</span>
+        </div>
+      </div>
+      <div class="chart-wrap" style="height:220px;"><canvas id="chart-revisi-bulan"></canvas></div>
+    </div>
+    <div class="ch-card">
+      <div class="ch-card-header">
+        <div class="ch-card-title"><span class="ch-dot green"></span>Distribusi Hari Pengajuan</div>
+        <div class="ch-sub">pengajuan surat per hari dalam seminggu</div>
+      </div>
+      <div class="chart-wrap" style="height:220px;"><canvas id="chart-hari"></canvas></div>
+    </div>
+  </div>
+
+  {{-- ROW 7: Completion Rate per Tahap + Rata-rata Waktu Proses --}}
+  <div class="charts-row" style="margin-bottom: 20px;">
+    <div class="ch-card">
+      <div class="ch-card-header">
+        <div class="ch-card-title"><span class="ch-dot red"></span>Tingkat Lolos & Tolak per Tahap</div>
+        <div class="ch-sub">jumlah surat selesai vs ditolak di setiap tahap</div>
+        <div class="legend-row" style="margin-top:10px;margin-left:0;">
+          <span class="legend-item"><span class="legend-dot" style="background:#16a34a"></span>Lolos / Selesai</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#dc2626"></span>Ditolak</span>
+        </div>
+      </div>
+      <div class="chart-wrap" style="height:240px;"><canvas id="chart-completion"></canvas></div>
+    </div>
+    <div class="ch-card">
+      <div class="ch-card-header">
+        <div class="ch-card-title"><span class="ch-dot purple"></span>Sifat & Prioritas Surat</div>
+        <div class="ch-sub">distribusi surat biasa, segera, dan rahasia</div>
+      </div>
+      <div class="chart-wrap" style="height:220px;"><canvas id="chart-sifat"></canvas></div>
+    </div>
+  </div>
+
+  {{-- ROW 8: Rata-rata Waktu Proses per Jenis (full-width) --}}
+  <div class="ch-card" style="margin-bottom:20px;">
+    <div class="ch-card-header">
+      <div class="ch-card-title"><span class="ch-dot blue"></span>Rata-rata Waktu Penyelesaian per Jenis Surat</div>
+      <div class="ch-sub">dalam jam — hanya untuk surat yang sudah selesai</div>
+    </div>
+    <div class="chart-wrap" style="height:220px;"><canvas id="chart-avg-proses"></canvas></div>
   </div>
 
 </div>{{-- .chart-page --}}
@@ -238,25 +315,34 @@ table.ringkasan .num-cell { text-align: right; font-family: 'DM Mono', monospace
 <script>
 const CHART_DATA_URL = "{{ route('admin.chart.data') }}";
 
-// Warna disesuaikan dengan tema light (cocok dengan admin layout)
 const C = {
   blue:   '#3b82f6', blueA:  'rgba(59,130,246,0.12)',
   green:  '#16a34a', greenA: 'rgba(22,163,74,0.12)',
   amber:  '#d97706', amberA: 'rgba(217,119,6,0.12)',
   red:    '#dc2626', redA:   'rgba(220,38,38,0.12)',
-  purple: '#7c3aed', teal:   '#0891b2', pink: '#db2777',
+  purple: '#7c3aed', purpleA:'rgba(124,58,237,0.12)',
+  teal:   '#0891b2', pink:   '#db2777',
+  orange: '#ea580c', cyan:   '#0e7490',
   grid:   '#f3f4f6', text:   '#9ca3af',
 };
 
 const charts = {};
 function destroyChart(id) { if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
 
+let isFetching = false;
 function loadCharts() {
+  if (isFetching) return;
+  isFetching = true;
+
   const tahun = document.getElementById('filter-tahun').value;
+  const bulan = document.getElementById('filter-bulan').value;
   const debug = document.getElementById('debug-alert');
+  const refreshBtn = document.querySelector('.chart-refresh-btn');
+  
+  if (refreshBtn) refreshBtn.style.opacity = '0.5';
   debug.style.display = 'none';
 
-  fetch(CHART_DATA_URL + '?tahun=' + tahun, {
+  fetch(CHART_DATA_URL + '?tahun=' + tahun + '&bulan=' + bulan, {
     headers: { 'X-Requested-With': 'XMLHttpRequest' }
   })
     .then(r => {
@@ -274,13 +360,34 @@ function loadCharts() {
       buildPengusulChart(d.topPengusul);
       buildTopAdminChart(d.topAdmin);
       buildTableRingkasan(d.suratPerJenis);
+      // ── Chart baru ──────────────────────────────────────────────
+      buildRevisiChart(d.revisiPerBulan);
+      buildHariChart(d.hariPengajuan);
+      buildCompletionChart(d.completionTahap);
+      buildSifatChart(d.sifatSurat);
+      buildAvgProsesChart(d.avgWaktuProses);
+      console.log('Charts auto-updated at:', new Date().toLocaleTimeString());
     })
     .catch(err => {
       console.error('Chart error:', err);
       debug.textContent = '⚠ Gagal load data: ' + err.message + '. Buka DevTools → Network untuk detail.';
       debug.style.display = 'block';
+    })
+    .finally(() => {
+      isFetching = false;
+      if (refreshBtn) refreshBtn.style.opacity = '1';
     });
 }
+
+// Simple Polling: Refresh data tiap 30 detik secara otomatis
+setInterval(() => {
+    // Hanya refresh kalau tab sedang dibuka (biar hemat resource)
+    if (!document.hidden) {
+        loadCharts();
+    }
+}, 30000);
+
+document.addEventListener('DOMContentLoaded', loadCharts);
 
 function updateStatCards(d) {
   const b = d.suratPerBulan;
@@ -315,6 +422,7 @@ function buildBulanChart(data) {
         ds('Selesai', data.selesai, C.green, C.greenA),
         ds('Proses',  data.proses,  C.amber, C.amberA),
         ds('Ditolak', data.ditolak, C.red,   C.redA),
+        ds('Revisi',  data.revisi,  C.purple, C.purpleA),
       ]
     },
     options: {
@@ -338,14 +446,14 @@ function toggleBulanChart(type) {
 function buildStatusChart(data) {
   destroyChart('status');
   const ctx   = document.getElementById('chart-status').getContext('2d');
-  const total = data.proses + data.selesai + data.ditolak;
+  const total = (data.proses || 0) + (data.selesai || 0) + (data.ditolak || 0) + (data.revisi || 0) + (data.revisi_admin || 0);
   charts['status'] = new Chart(ctx, {
     type: 'doughnut',
     data: {
-      labels: ['Proses', 'Selesai', 'Ditolak'],
+      labels: ['Proses', 'Selesai', 'Ditolak', 'Revisi', 'Revisi Admin'],
       datasets: [{
-        data: total > 0 ? [data.proses, data.selesai, data.ditolak] : [1, 0, 0],
-        backgroundColor: total > 0 ? [C.amber, C.green, C.red] : ['#e5e7eb', '#e5e7eb', '#e5e7eb'],
+        data: total > 0 ? [data.proses, data.selesai, data.ditolak, data.revisi, data.revisi_admin] : [1, 0, 0, 0, 0],
+        backgroundColor: total > 0 ? [C.amber, C.green, C.red, C.purple, '#a78bfa'] : ['#e5e7eb', '#e5e7eb', '#e5e7eb', '#e5e7eb', '#e5e7eb'],
         borderColor: '#fff', borderWidth: 3, hoverOffset: 6
       }]
     },
@@ -362,21 +470,37 @@ function buildStatusChart(data) {
 function buildJenisChart(data) {
   destroyChart('jenis');
   const ctx     = document.getElementById('chart-jenis').getContext('2d');
-  const palette = [C.blue, C.green, C.amber, C.purple, C.teal, C.pink];
   const hasData = data.labels.length > 0;
   charts['jenis'] = new Chart(ctx, {
-    type: 'doughnut',
+    type: 'radar',
     data: {
       labels: hasData ? data.labels : ['Belum ada data'],
       datasets: [{
-        data: hasData ? data.data : [1],
-        backgroundColor: hasData ? palette.slice(0, data.labels.length) : ['#e5e7eb'],
-        borderColor: '#fff', borderWidth: 3, hoverOffset: 6
+        label: 'Jumlah Surat',
+        data: hasData ? data.data : [0],
+        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+        borderColor: '#3b82f6',
+        borderWidth: 2,
+        pointBackgroundColor: '#3b82f6',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: '#3b82f6'
       }]
     },
     options: {
-      responsive: true, maintainAspectRatio: false, cutout: '65%',
-      plugins: { legend: { position: 'right', labels: { font: { size: 10 }, boxWidth: 10, padding: 10, color: '#6b7280' } } }
+      responsive: true, maintainAspectRatio: false,
+      plugins: { 
+        legend: { display: false } 
+      },
+      scales: {
+        r: {
+          angleLines: { color: C.grid },
+          grid: { color: C.grid },
+          pointLabels: { font: { size: 10 }, color: C.text },
+          ticks: { display: false, stepSize: 1 },
+          suggestedMin: 0
+        }
+      }
     }
   });
 }
@@ -500,7 +624,6 @@ function buildTopAdminChart(data) {
   const ctx = document.getElementById('chart-top-admin').getContext('2d');
   const palette = [C.blue, C.green, C.amber, C.purple, C.teal, C.pink, C.red, '#4ade80', '#fbbf24', '#a78bfa'];
   const hasData = data.labels.length > 0;
-  
   charts['topAdmin'] = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -518,6 +641,194 @@ function buildTopAdminChart(data) {
       scales: {
         x: { grid: { display: false }, ticks: { font: { size: 10 }, color: C.text }, border: { color: C.grid } },
         y: { beginAtZero: true, grid: { color: C.grid }, ticks: { font: { size: 11 }, precision: 0, color: C.text }, border: { color: C.grid } }
+      }
+    }
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════
+// CHART BARU
+// ════════════════════════════════════════════════════════════════════
+
+// 1. Revisi per Bulan (grouped bar)
+function buildRevisiChart(data) {
+  destroyChart('revisi-bulan');
+  const ctx = document.getElementById('chart-revisi-bulan').getContext('2d');
+  charts['revisi-bulan'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: data.labels,
+      datasets: [
+        {
+          label: 'Revisi User',
+          data: data.revisiUser,
+          backgroundColor: C.amber + 'cc',
+          borderRadius: 4, borderSkipped: false,
+        },
+        {
+          label: 'Revisi Admin Aspirasi',
+          data: data.revisiAdmin,
+          backgroundColor: C.purple + 'cc',
+          borderRadius: 4, borderSkipped: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: C.grid }, ticks: { font: { size: 10 }, color: C.text }, border: { color: C.grid } },
+        y: { beginAtZero: true, grid: { color: C.grid }, ticks: { font: { size: 10 }, precision: 0, color: C.text }, border: { color: C.grid } }
+      }
+    }
+  });
+}
+
+// 2. Distribusi Hari Pengajuan (polar area)
+function buildHariChart(data) {
+  destroyChart('hari');
+  const ctx = document.getElementById('chart-hari').getContext('2d');
+  const palette = [C.red, C.blue, C.green, C.amber, C.teal, C.orange, C.purple];
+  const hasData = data.data.some(v => v > 0);
+  charts['hari'] = new Chart(ctx, {
+    type: 'polarArea',
+    data: {
+      labels: data.labels,
+      datasets: [{
+        data: hasData ? data.data : data.labels.map(() => 1),
+        backgroundColor: palette.map(c => c + '99'),
+        borderColor: palette.map(c => c),
+        borderWidth: 1.5,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: { font: { size: 10 }, boxWidth: 10, padding: 8, color: '#6b7280' }
+        },
+        tooltip: {
+          callbacks: {
+            label: c => hasData ? ` ${c.label}: ${c.raw} surat` : ' Belum ada data'
+          }
+        }
+      },
+      scales: { r: { ticks: { display: false }, grid: { color: C.grid } } }
+    }
+  });
+}
+
+// 3. Completion Rate per Tahap (grouped bar)
+function buildCompletionChart(data) {
+  destroyChart('completion');
+  const ctx = document.getElementById('chart-completion').getContext('2d');
+  const hasData = data.labels.length > 0;
+  charts['completion'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: hasData ? data.labels : ['Belum ada data'],
+      datasets: [
+        {
+          label: 'Lolos / Selesai',
+          data: hasData ? data.selesai : [0],
+          backgroundColor: C.green + 'cc',
+          borderRadius: 4, borderSkipped: false, stack: 's',
+        },
+        {
+          label: 'Ditolak',
+          data: hasData ? data.ditolak : [0],
+          backgroundColor: C.red + 'cc',
+          borderRadius: 4, borderSkipped: false, stack: 's',
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { font: { size: 10 }, color: C.text }, border: { color: C.grid } },
+        y: { stacked: true, beginAtZero: true, grid: { color: C.grid }, ticks: { font: { size: 10 }, precision: 0, color: C.text }, border: { color: C.grid } }
+      }
+    }
+  });
+}
+
+// 4. Sifat Surat (doughnut)
+function buildSifatChart(data) {
+  destroyChart('sifat');
+  const ctx = document.getElementById('chart-sifat').getContext('2d');
+  const palette = [C.blue, C.red, C.purple];
+  const total = data.data.reduce((a, v) => a + v, 0);
+  charts['sifat'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: data.labels,
+      datasets: [{
+        data: total > 0 ? data.data : [1, 1, 1],
+        backgroundColor: total > 0 ? palette : ['#e5e7eb', '#e5e7eb', '#e5e7eb'],
+        borderColor: '#fff', borderWidth: 3, hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '68%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { font: { size: 11 }, boxWidth: 10, padding: 14, color: '#6b7280' }
+        },
+        tooltip: {
+          callbacks: {
+            label: c => total > 0
+              ? ` ${c.label}: ${c.raw} (${Math.round(c.raw / total * 100)}%)`
+              : ' Belum ada data'
+          }
+        }
+      }
+    }
+  });
+}
+
+// 5. Rata-rata Waktu Proses per Jenis (horizontal bar)
+function buildAvgProsesChart(data) {
+  destroyChart('avg-proses');
+  const ctx = document.getElementById('chart-avg-proses').getContext('2d');
+  const hasData = data.labels.length > 0;
+  const palette = [C.blue, C.teal, C.green, C.amber, C.orange, C.purple, C.pink];
+  charts['avg-proses'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: hasData ? data.labels : ['Belum ada surat selesai'],
+      datasets: [{
+        label: 'Rata-rata Jam',
+        data: hasData ? data.data : [0],
+        backgroundColor: hasData
+          ? data.labels.map((_, i) => palette[i % palette.length] + 'cc')
+          : ['#e5e7eb'],
+        borderRadius: 6, borderSkipped: false
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: { label: c => ` ${c.raw} jam rata-rata` }
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          grid: { color: C.grid },
+          ticks: { font: { size: 10 }, color: C.text, callback: v => v + ' jam' },
+          border: { color: C.grid }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { font: { size: 11 }, color: C.text },
+          border: { color: C.grid }
+        }
       }
     }
   });
