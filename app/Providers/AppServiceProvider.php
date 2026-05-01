@@ -16,6 +16,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        if (str_contains(request()->getHost(), 'ngrok-free.dev')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
         RateLimiter::for('search', function (Request $request) {
             return Limit::perMinute(30)->by($request->user()?->id ?: $request->ip());
         });
@@ -25,5 +28,7 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('upload', function (Request $request) {
             return Limit::perMinute(20)->by($request->user()?->id ?: $request->ip());
         });
+
+        \Illuminate\Pagination\Paginator::defaultView('vendor.pagination.modern');
     }
 }
