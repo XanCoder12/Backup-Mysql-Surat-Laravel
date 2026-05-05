@@ -179,8 +179,8 @@
 
 ```bash
 # Clone repo
-git clone https://github.com/username/persuratan-bp-suml.git
-cd persuratan-bp-suml
+git clone https://github.com/Ye-Shaiyoe/Surat-Laravel
+cd Surat-Laravel
 
 # Install dependencies
 composer install
@@ -200,7 +200,7 @@ php artisan migrate --seed
 
 # Jalankan server
 php artisan serve
-npm run dev
+npm run build -> npm run dev
 ```
 
 > **Requirement:** PHP 8.2+, Composer, Node.js, MySQL/MariaDB, Redis (opsional untuk queue)
@@ -210,7 +210,7 @@ npm run dev
 ## 📄 Format Surat yang Didukung
 
 - **Upload:** `.docx` (Word), maks. 10MB
-- **Lampiran:** Opsional, maks. 10MB
+- **Lampiran:** Opsional, maks. 20MB
 - **Jenis Surat:** Nota Dinas, Surat Dinas, Surat Keputusan, Surat Pernyataan, Surat Keterangan, Undangan, Lainnya
 - **Sifat Surat:** Biasa, Penting/Segera, Rahasia
 
