@@ -1,453 +1,231 @@
-# Archive-Surat BP SUML
+# 📬 Persuratan BP Suml
 
-
-
-<img width="832" height="300" alt="White_SUML" src="https://github.com/user-attachments/assets/78b6958d-42ce-4c73-97f3-22b93f136dcc" />
-
-<hr>
-
-Sistem Manajemen Surat Digital untuk Kantor Metrologi dengan alur approval multi-tahap, tracking SLA real-time, dan dashboard komprehensif.
-
-
-### 🔐 Autentikasi & Keamanan
-- Login & Register dengan email verification
-- Reset password via email
-- Konfirmasi password untuk aksi sensitif
-- Role-based access control (Admin & User)
-- veRECAPTCHA V2 google api
-  
-### 👥 Fitur User (Staff/Pegawai)
-- **Ajukan Surat** - Upload dokumen Word (.docx/.doc) + lampiran (PDF/JPG/PNG). dan jika udah selesai user bisa hapus surat nya aja tanpa menghapus tracking nya
-- **Tracking Real-time** - Pantau progres surat di 10 tahapan approval samppe followup
-- **Monitoring SLA** - Deadline 24 jam kerja dengan countdown & indikator overdue  jika terlambat ada peringatan dan contoh terlambat -1.1j
-- **Template Surat** - Download template surat resmi
-- **Notifikasi** - Notifikasi real-time untuk setiap update status surat(perlu di refresh). 
-- **Dashboard** - Statistik surat, surat aktif, notifikasi dan template tersedia
-- **FAQ** - Untuk bantuan atau apapun itu
-- **Qrcode** - Untuk memverifikasi apakah itu suratnya beneran terdaftar atau palsu. dan bisa di liha lewat hp 
-
-### 👨‍💼 Fitur Admin
-- **Dashboard Admin** - Statistik lengkap, antrian surat, tracking SLA
-- **Approval System** - Approve/Reject surat dengan alasan
-- **Preview Dokumen** - Preview PDF inline, Word via Microsoft Online Viewer
-- **Download File** - Download dokumen surat & lampiran
-- **Laporan** - Filter berdasarkan bulan/tipe surat, export CSV
-- **Grafik & Statistik** - 7 jenis chart (tren bulanan, distribusi tipe, kepatuhan SLA, dll)
-- **Manajemen Template** - Upload & hapus template surat
-- **Manajemen User** - Lihat statistik user, filter, dan hapus user
-
-### ⚙️ Fitur Sistem
-- **10 Tahapan Approval** - Alur kerja berurutan dengan tracking processor
-- **SLA Tracking** - Perhitungan deadline 24 jam kerja (skip weekend)
-- **File Expiration** - Auto-hapus file 3 hari setelah approval
-- **Notifikasi Real-time** - Polling setiap 3 detik + Server-Sent Events (SSE)
-- **Scheduled Tasks** - Cleanup expired files otomatis setiap hari
+> Sistem manajemen surat digital berbasis web untuk **Balai Pengujian / BP Suml**, dikembangkan sebagai proyek PKL oleh siswa SMK Al-Falah.
 
 ---
 
-<img width="1362" height="734" alt="Screenshot 2026-04-14 110447" src="https://github.com/user-attachments/assets/6daa3f14-117d-417d-9a3b-96e7c1ed144e" />
+## 🌐 Demo & Akses
 
-<img width="1365" height="767" alt="Screenshot 2026-04-14 110923" src="https://github.com/user-attachments/assets/ddea5fd4-685d-4c65-97f0-4a1111d65e90" />
-
-## 🛠 Teknologi yang Digunakan
-
-| Kategori | Teknologi |
-|----------|-----------|
-| **Framework** | Laravel 12 |
-| **Authentication** | Laravel Breeze |
-| **Frontend** | Tailwind CSS, Alpine.js, Vite |
-| **Database** | MySQL |
-| **Testing** | Pest PHP |
-| **Charts** | JavaScript Charting (via JSON API) |
-| **Notifications** | Database driver dengan polling & SSE |
-| **Web Server** | Apache (XAMPP) |
+| Lingkungan | URL |
+|---|---|
+| Production | [persuratan.bp.suml.com](https://persuratan.bp.suml.com) |
+| Local Dev | `http://127.0.0.1:8000` |
 
 ---
 
-## 💻 Persyaratan Sistem
+## 🛠️ Tech Stack
 
-- **PHP** >= 8.2
-- **Composer** >= 2.0
-- **Node.js** >= 18.x
-- **NPM** >= 9.x
-- **MySQL** >= 8.0 (via XAMPP)
-- **Laravel** >= 12
-- **Git**
+### Backend
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.x-777BB4?style=flat&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat&logo=mysql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-Cache-DC382D?style=flat&logo=redis&logoColor=white)
+
+- **Framework:** Laravel 12 + Breeze (Auth)
+- **Database:** MySQL
+- **Cache/Queue:** Redis
+- **API:** REST API
+- **Document:** PhpOffice (Word/Excel)
+- **Runtime:** Node.js
+
+### Frontend
+- Bootstrap 5
+- Tailwind CSS
+- Alpine.js
+- Chart.js
+- GSAP + Anime.js
+- Three.js
+
+### Infrastructure & Security
+- **Web Server:** Nginx
+- **OS:** Linux
+- **CDN:** Cloudflare CDN, jsDelivr, CDNJS
+- **Security:** Cloudflare WAF, Google reCAPTCHA v2, HSTS, SSL/TLS, Rate Limiting, CSRF & XSS Protection
+
+### Tools Dev
+- XAMPP, Cursor IDE, Bash, Postman, Git & GitHub, SSH, Antigravity
 
 ---
 
-## 📦 Instalasi
+## 👥 Role Pengguna
 
-### 1. Clone Repository
-```bash
-git clone https://github.com/Ye-Shaiyoe/Surat-Laravel.git
-cd Surat-Metrologi
+| Role | Akses |
+|---|---|
+| **User** | Mengajukan surat (tahap 1), revisi surat |
+| **Admin Aspirasi** | Mengelola surat di tahap 2, 5–10 |
+| **Admin Kassubagtu** | Mengelola surat di tahap 3 |
+| **Admin Kaplai** | Mengelola surat di tahap 4 |
+| **IT Support** | Mengirim notifikasi penting |
+
+---
+
+## 🔄 Alur Pemrosesan Surat (10 Tahap)
+
+```
+1. Pengajuan           → User
+2. Verifikasi Aspirasi → Admin Aspirasi
+3. Verifikasi Kassubagtu → Admin Kassubagtu
+4. Verifikasi Kepala Balai → Admin Kaplai
+5. Penomoran Surat     → Admin Aspirasi
+6. Tanda Tangan (DS)   → Admin Aspirasi
+7. Pengiriman via TNDe → Admin Aspirasi
+8. Pengiriman via Srikandi → Admin Aspirasi
+9. Pengarsipan         → Admin Aspirasi
+10. ✅ Selesai
 ```
 
-### 2. Install Dependencies
+---
+
+## ✨ Fitur Unggulan
+
+### 🔁 Beralih Akun (Switch Account)
+- Ganti akun tanpa perlu logout terlebih dahulu
+- Mendukung multi-akun dalam satu browser
+- Keamanan via `switch_token` (hash, expired 30 hari)
+
+### 📊 Dashboard Realtime
+- Update otomatis setiap 15–20 detik(contoh jika user berada di dashoard. itu akan berjalan tapi jika ganti misal ke template maka fitur update otomatis gk bekerja) untuk mngurangi beban server
+- Chart statistik persuratan (Line, Bar, Pie, Donut, Mixed Chart)
+- Kartu ringkasan: Total Surat, Draft, Disetujui, Ditolak, Diproses, Revisi
+
+### 🔔 Notifikasi Lengkap
+- Trigger otomatis: surat baru, disetujui, ditolak, revisi, SLA
+- Mark as read, mark all, hapus per item atau semua
+- Notifikasi lama (>1 minggu) dihapus otomatis setiap Senin pukul 01.00
+
+### ⏱️ SLA (Service Level Agreement)
+- Durasi 24 jam per surat masuk
+- Notifikasi otomatis jika SLA terlampaui
+- Tampilan waktu terlambat: contoh `-1.4 jam`
+- SLA dibekukan saat akhir pekan (contoh: surat Jumat 15.00 → deadline Senin 15.00)
+
+### ♻️ Manajemen Revisi & Penghapusan
+- Revisi surat bisa diarahkan ke User atau kembali ke Admin Aspirasi
+- Surat selesai >3 hari → file fisik otomatis dihapus (tracking tetap ada)
+- Surat ditolak yang tidak direvisi >5 hari → dihapus otomatis termasuk tracking
+
+### 🔐 UUID-Based Verification
+- Setiap surat memiliki URL unik berbasis UUID
+- Bisa diverifikasi publik tanpa login
+- Dilengkapi QR Code verifikasi
+
+### 📝 Template Surat
+- Admin dapat mengunggah template custom
+- User bisa memilih template saat mengajukan surat
+
+### 🕐 Jam Operasional
+| Hari | Jam Operasional |
+|---|---|
+| Senin – Kamis | 07.30 – 16.00 |
+| Jumat | 07.30 – 16.30 |
+| Sabtu – Minggu | ❌ Libur |
+
+---
+
+## 📁 Struktur Halaman
+
+### User (`/`)
+| Path | Halaman |
+|---|---|
+| `/dashboard` | Dashboard & statistik |
+| `/surat` | Daftar surat (card & tabel) |
+| `/surat/ajukan` | Form pengajuan surat |
+| `/surat/{uuid}` | Detail & tracking surat |
+| `/statistik` | Grafik statistik |
+| `/notifikasi` | Pusat notifikasi |
+| `/aspirasi` | Kotak aspirasi |
+| `/faq` | Bantuan & dokumentasi |
+| `/about` | Tentang website |
+
+### Admin (`/Admin/`)
+| Path | Halaman |
+|---|---|
+| `/Admin/Dashboard` | Dashboard admin realtime |
+| `/Admin/surat` | Antrian & kelola surat |
+| `/Admin/Surat-Masuk` | Surat baru masuk |
+| `/Admin/Surat-Proses` | Surat sedang diproses |
+| `/Admin/Surat-Selesai` | Surat selesai |
+| `/Admin/Surat-Ditolak` | Surat ditolak/revisi |
+| `/Admin/Laporan` | Rekap bulanan (export Excel/PDF) |
+| `/Admin/Riwayat` | Riwayat pemrosesan (export CSV/Excel) |
+| `/Admin/Chart` | Statistik & chart lengkap |
+| `/Admin/Aspirasi` | Kelola aspirasi user |
+| `/Admin/Template` | Kelola template surat |
+| `/Admin/Settings/Users` | Data pegawai |
+| `/Admin/Settings/File-Surat` | Kelola file fisik surat |
+| `/Admin/Settings/Logs` | Log aktivitas sistem |
+| `/Admin/faq` | Pengelolaan FAQ |
+
+---
+
+## 🔒 Keamanan
+
+- ✅ Hashing password & NIP (bcrypt)
+- ✅ Google reCAPTCHA v2
+- ✅ Email verifikasi saat registrasi
+- ✅ CSRF Protection (Laravel built-in)
+- ✅ XSS Protection
+- ✅ SQL Injection Prevention
+- ✅ Rate Limit login: 5x/menit per IP
+- ✅ RBAC (Role Based Access Control)
+- ✅ Anti-Enumeration via UUID
+- ✅ Validasi MIME & ukuran file upload
+- ✅ HSTS (HTTP Strict Transport Security)
+- ✅ Cloudflare WAF
+
+---
+
+## 📦 Instalasi Lokal
+
 ```bash
+# Clone repo
+git clone https://github.com/Ye-Shaiyoe/Surat-Laravel
+cd Surat-Laravel
+
+# Install dependencies
 composer install
 npm install
-```
-
-### 3. Setup Environment
-```bash
-copy .env.example .env
-php artisan key:generate
-```
-
-### 4. Konfigurasi Database
-Edit file `.env` sesuai konfigurasi database Anda:
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=surat_metrologi
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-### 5. Buat Database
-Buat database `surat_metrologi` melalui phpMyAdmin atau MySQL CLI:
-```sql
-CREATE DATABASE surat_metrologi;
-```
-
-### 6. Run Migration & Seeder
-```bash
-php artisan migrate --seed
-```
-
-Seeder akan membuat:
-- **Admin default**: admin@metrologi.com / password
-- **Test user** untuk development
-
-### 7. Buat Storage Link
-```bash
-php artisan storage:link
-```
-
-### 8. Build Assets
-```bash
-npm run build
-```
-
-### 9. Setup Data Pegawai (Opsional)
-```bash
-php artisan tinker < setup_data_pegawai.php
-```
-
----
-
-## ⚙️ Konfigurasi
-
-### Konfigurasi Queue (Opsional)
-Untuk notifikasi real-time, jalankan queue worker:
-```bash
-php artisan queue:work
-```
-
-### Konfigurasi Schedule
-Untuk fitur auto-cleanup expired files:
-```bash
-php artisan schedule:work
-```
-
-Di production, tambahkan ke crontab:
-```bash
-* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
-```
-
-### Konfigurasi Email
-Edit `.env` untuk notifikasi via email:
-```env
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-password
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS="noreply@metrologi.com"
-MAIL_FROM_NAME="${APP_NAME}"
-```
-
----
-
-## 🚀 Menjalankan Aplikasi
-
-### Development Mode
-Jalankan server dan file watcher secara bersamaan:
-```bash
-composer run dev
-```
-
-Atau jalankan terpisah:
-```bash
-# Terminal 1 - Laravel Server
-php artisan serve
-
-# Terminal 2 - Vite (Hot Reload)
-npm run dev
-
-# Terminal 3 - Queue Worker (Opsional)
-php artisan queue:work
-
-# Terminal 4 - Schedule (Opsional)
-php artisan schedule:work
-```
-
-### Production Mode
-```bash
-# Build assets untuk production
-npm run build
-
-# Optimize Laravel
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-
-# Jalankan server (jika tanpa web server)
-php artisan serve --host=0.0.0.0 --port=8000
-```
-
-Akses aplikasi di: **http://localhost:8000**
-
----
-
-## 👥 Struktur Role
-
-### User (Staff/Pegawai)
-- Mengajukan surat baru
-- Melihat status & progres surat
-- Menerima notifikasi update
-- Download template surat
-
-### Admin
-- Melihat semua surat masuk
-- Approve/Reject surat
-- Upload template surat
-- Generate laporan
-- Melihat grafik & statistik
-- Manajemen user
-
----
-
-## 🔄 Alur Kerja Surat
-
-Surat melewati **10 tahapan approval** berurutan:
-
-| Tahap | Nama | Deskripsi |
-|-------|------|-----------|
-| 1 | Usulan Diajukan | User mengajukan surat |
-| 2 | Verifikasi Arsiparis | Verifikasi oleh arsiparis |
-| 3 | Verifikasi Kasubbag TU | Verifikasi oleh Kepala Sub Bagian TU |
-| 4 | Persetujuan Kepala Balai | Approval oleh Kepala Balai |
-| 5 | Penomoran Surat | Assignment nomor surat resmi |
-| 6 | Tanda Tangan (DS) | Penandatanganan dokumen |
-| 7 | Pengiriman via TNDe | Kirim melalui sistem TNDe |
-| 8 | Pengiriman via Srikandi | Kirim melalui sistem Srikandi |
-| 9 | Pengarsipan | Dokumen diarsipkan |
-| 10 | Follow Up / Selesai | Proses selesai |
-
-Setiap tahap mencatat:
-- ✅ Status (menunggu/proses/selesai/ditolak)
-- 👤 Processor (siapa yang memproses)
-- 📝 Notes (catatan dari processor)
-- ⏰ Timestamp (waktu selesai)
-
----
-
-## 📄 Jenis Surat
-
-Sistem mendukung **7 jenis surat**:
-
-1. **Nota Dinas** - Surat internal untuk keperluan dinas
-2. **Surat Dinas** - Surat resmi kedinasan
-3. **Surat Keputusan** - SK pejabat berwenang
-4. **Surat Pernyataan** - Surat pernyataan resmi
-5. **Surat Keterangan** - Surat keterangan suatu status/fakta
-6. **Surat Undangan** - Undangan rapat/kegiatan
-7. **Surat/Note Lainnya** - Jenis surat lainnya
-
----
-
-## ⏱ Tracking SLA
-
-**Service Level Agreement (SLA)** diterapkan untuk memastikan ketepatan waktu:
-
-- **Deadline**: 24 jam kerja per tahap
-- **Perhitungan**: Hanya menghitung jam kerja (Senin-Jumat, 08:00-16:00)
-- **Skip Weekend**: Sabtu & Minggu tidak dihitung
-- **Status**: OK (tepat waktu) atau Terlambat (overdue)
-- **Tracking**: Menampilkan sisa waktu atau jumlah jam overdue
-
-### Dashboard SLA
-- Total surat overdue bulan ini
-- Distribusi SLA OK vs Terlambat
-- Chart kepatuhan SLA per bulan
-
----
-
-## 🔔 Notifikasi
-
-Sistem notifikasi **real-time** untuk update status surat:
-
-### Jenis Notifikasi
-1. **Surat Masuk** - Dikirim ke admin saat user mengajukan surat
-2. **Surat Diproses** - Dikirim ke admin lain saat surat diproses
-3. **Surat Status Update** - Dikirim ke user saat surat diapprove/reject/selesai
-4. **Surat Dihapus** - admin bisa tau kalo user telah menghapus surat
-
-### Metode Delivery
-- **Polling**: Cek notifikasi setiap 3 detik
-- **Server-Sent Events (SSE)**: Streaming real-time (alternatif polling)
-- **Database**: apa weh
-
-### Fitur Notifikasi
-- 🎨 Color-coded by severity (success/info/warning/danger)
-- ⏱ Auto-dismiss (8 detik untuk non-critical)
-- 🔴 Badge counter untuk unread notifications
-- 🔗 Click to navigate ke detail surat
-- ✅ Mark as read / delete notification
-
----
-
-## 🗃 Struktur Database
-
-### Tabel Utama
-
-#### `users`
-- id, name, email, password, role, nip, email_verified_at
-
-#### `surat`
-- id, user_id, jenis_surat, prioritas, status, tujuan, perihal
-- file_word, file_lampiran, nomor_surat
-- deadline_sla, status_sla, jam_terlambat
-- created_at, updated_at
-
-#### `surat_tahapan`
-- id, surat_id, tahapan_ke, nama_tahapan
-- status, processor_id, notes, completed_at
-- created_at, updated_at
-
-#### `notifications`
-- id, type, notifiable_id, notifiable_type, data
-- read_at, created_at, updated_at
-
-#### `template_surat`
-- id, nama, file_path, file_size
-- created_at, updated_at
-
----
-
-## 🧪 Testing
-
-Jalankan test suite menggunakan Pest:
-
-```bash
-# Run all tests
-composer run test
-
-# Run with coverage
-php artisan test --coverage
-
-# Run specific test
-php artisan test tests/Feature/ExampleTest.php
-```
-
----
-
-## 🚀 Deployment
-
-### Pre-deployment Checklist
-- [ ] Set `APP_ENV=production`
-- [ ] Set `APP_DEBUG=false`
-- [ ] Generate app key: `php artisan key:generate`
-- [ ] Configure database production
-- [ ] Configure mail settings
-- [ ] Set proper file permissions
-- [ ] Setup SSL certificate (HTTPS)
-
-### Deployment Steps
-```bash
-# Install dependencies (production)
-composer install --optimize-autoloader --no-dev
-npm ci --production
-
-# Build assets
-npm run build
 
 # Setup environment
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+cp .env.example .env
+php artisan key:generate
 
-# Run migrations
-php artisan migrate --force
+# Konfigurasi database di .env
+# DB_DATABASE=persuratan
+# DB_USERNAME=root
+# DB_PASSWORD=
 
-# Setup storage
-php artisan storage:link
+# Migrasi & seeder
+php artisan migrate --seed
 
-# Start queue worker (supervisor recommended)
-php artisan queue:work --daemon
+# Jalankan server
+php artisan serve
+npm run build -> npm run dev
 ```
 
-### Supervisor Configuration (Queue Worker)
-```ini
-[program:laravel-worker]
-process_name=%(program_name)s_%(process_num)02d
-command=php /path-to-your-project/artisan queue:work --sleep=3 --tries=3
-autostart=true
-autorestart=true
-user=www-data
-numprocs=8
-redirect_stderr=true
-stdout_logfile=/path-to-your-project/worker.log
-```
+> **Requirement:** PHP 8.2+, Composer, Node.js, MySQL/MariaDB, Redis (opsional untuk queue)
 
 ---
 
-## 📁 Struktur Folder Penting
+## 📄 Format Surat yang Didukung
 
-```
-Surat-Metrologi/
-├── app/
-│   ├── Http/Controllers/
-│   │   ├── Admin/          # Controller admin
-│   │   ├── User/           # Controller user
-│   │   └── Auth/           # Controller autentikasi
-│   ├── Models/             # Eloquent models
-│   ├── Notifications/      # Notification classes
-│   └── Console/Commands/   # Artisan commands
-├── resources/
-│   ├── views/
-│   │   ├── admin/          # Views admin
-│   │   ├── user/           # Views user
-│   │   └── auth/           # Views autentikasi
-│   └── js/                 # JavaScript assets
-├── routes/
-│   ├── web.php             # Web routes
-│   └── console.php         # Console/artisan routes
-├── database/
-│   ├── migrations/         # Database migrations
-│   └── seeders/            # Database seeders
-└── storage/
-    └── app/public/         # Public file storage
-```
+- **Upload:** `.docx` (Word), maks. 10MB
+- **Lampiran:** Opsional, maks. 20MB
+- **Jenis Surat:** Nota Dinas, Surat Dinas, Surat Keputusan, Surat Pernyataan, Surat Keterangan, Undangan, Lainnya
+- **Sifat Surat:** Biasa, Penting/Segera, Rahasia
 
 ---
 
-## 📝 License
+## 👨‍💻 Tim Pengembang
 
-Sistem ini menggunakan [Apache 2.0]
-
-Copyright © 2026 Akrom. All rights reserved.
----
-
-## 📞 Support
-
-Untuk pertanyaan atau bantuan teknis, hubungi tim developer atau administrator sistem.
+Dikembangkan oleh siswa PKL **SMK Al-Falah** sebagai proyek full stack development.
 
 ---
 
-**WWeb ini dibikin oleh Saya Sendiri Full stack Developer**
+## 📜 Lisensi
+
+Proyek ini dibuat untuk keperluan **pendidikan dan PKL**. Hak cipta sepenuhnya milik tim pengembang dan instansi terkait.
+
+---
+
+<p align="center">Made with ❤️ by PKL SMK Al-Falah | Yusuf Akram | BP Suml</p>
