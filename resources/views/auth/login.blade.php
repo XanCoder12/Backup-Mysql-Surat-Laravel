@@ -42,8 +42,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow-x: hidden;
             position: relative;
+            padding: 20px 0;
         }
 
         /* ── Background layers ── */
@@ -581,6 +582,84 @@
             .panel-right { padding: 28px 24px 50px; }
             .form-heading { font-size: 22px; }
         }
+
+        /* ── Saved Accounts Panel ── */
+        .saved-accounts-section {
+            margin-bottom: 18px;
+            animation: fadeSlideIn 0.35s ease-out;
+        }
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .saved-accounts-label {
+            color: rgba(255,255,255,0.45);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+        .saved-account-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s, border-color 0.2s, transform 0.15s;
+            margin-bottom: 6px;
+        }
+        .saved-account-card:hover {
+            background: rgba(255,255,255,0.11);
+            border-color: rgba(99,179,237,0.35);
+            transform: translateX(3px);
+        }
+        .saved-account-card.is-target {
+            border-color: rgba(56,189,248,0.55);
+            background: rgba(56,189,248,0.09);
+        }
+        .account-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700;
+            flex-shrink: 0;
+        }
+        .account-info { flex: 1; min-width: 0; }
+        .account-name {
+            color: white;
+            font-size: 13px; font-weight: 600;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .account-email {
+            color: rgba(255,255,255,0.45);
+            font-size: 11px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .account-arrow { color: rgba(99,179,237,0.7); font-size: 14px; flex-shrink: 0; }
+        .sa-divider {
+            display: flex; align-items: center; gap: 10px;
+            margin: 14px 0 10px;
+        }
+        .sa-divider hr { flex:1; border:none; border-top:1px solid rgba(255,255,255,0.1); }
+        .sa-divider span { color:rgba(255,255,255,0.3); font-size:10px; }
+        .switch-hint {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(56,189,248,0.1);
+            border: 1px solid rgba(56,189,248,0.22);
+            border-radius: 999px;
+            padding: 4px 12px;
+            font-size: 11px;
+            color: #7dd3fc;
+            margin-bottom: 14px;
+            width: fit-content;
+        }
     </style>
 </head>
 <body>
@@ -626,15 +705,34 @@
         <!-- ══ Right: Login Form ══ -->
         <div class="panel-right">
 
-            <div class="greeting-chip">
+            {{-- Chip: berubah tergantung mode --}}
+            <div class="greeting-chip" id="greeting-chip-normal">
                 <i class="bi bi-shield-check" style="font-size:11px;"></i>
                 Portal resmi pemerintah
             </div>
+            <div class="switch-hint" id="greeting-chip-switch" style="display:none;">
+                <i class="bi bi-arrow-left-right" style="font-size:11px;"></i>
+                Beralih Akun
+            </div>
 
-            <div class="form-heading">
+            {{-- Heading --}}
+            <div class="form-heading" id="heading-normal">
                 Selamat <span>Datang</span>
             </div>
-            <div class="form-sub">Masukkan kredensial Anda untuk mengakses sistem</div>
+            <div class="form-heading" id="heading-switch" style="display:none;">
+                Pilih <span>Akun</span>
+            </div>
+            <div class="form-sub" id="sub-normal">Masukkan kredensial Anda untuk mengakses sistem</div>
+            <div class="form-sub" id="sub-switch" style="display:none;">Klik akun atau masukkan email lain</div>
+
+            {{-- Saved Accounts Section (diisi JS) --}}
+            <div id="saved-accounts-section" class="saved-accounts-section" style="display:none;">
+                <div class="saved-accounts-label"><i class="bi bi-people me-1"></i>Akun Tersimpan</div>
+                <div id="saved-accounts-cards"></div>
+                <div class="sa-divider">
+                    <hr><span>atau masuk dengan akun lain</span><hr>
+                </div>
+            </div>
 
             @if ($errors->any())
             <div class="alert-glass">
@@ -723,8 +821,9 @@
         </div>
     </div>
 
-    <!-- Password toggle script -->
+    <!-- Password toggle + Account Switcher script -->
     <script>
+        // ── Password toggle ──
         const toggle = document.getElementById('pwToggle');
         const pwInput = document.getElementById('password');
         const pwIcon = document.getElementById('pwIcon');
@@ -737,7 +836,6 @@
         // Mencegah double click login
         const loginForm = document.querySelector('form');
         const submitBtn = document.querySelector('.btn-submit');
-
         loginForm.addEventListener('submit', function() {
             submitBtn.disabled = true;
             submitBtn.style.cursor = 'not-allowed';
@@ -747,6 +845,78 @@
                 Mohon Tunggu...
             `;
         });
+
+        // ── Account Switcher ──
+        const STORAGE_KEY   = 'bpsuml_saved_accounts';
+        const SESSION_KEY   = 'bpsuml_switch_to_email';
+        const switchTarget  = sessionStorage.getItem(SESSION_KEY);
+
+        function getSavedAccounts() {
+            try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { return []; }
+        }
+
+        function selectAccount(email, name) {
+            // Pre-fill email field
+            const emailInput = document.getElementById('email');
+            emailInput.value = email;
+            // Highlight the selected card
+            document.querySelectorAll('.saved-account-card').forEach(c => c.classList.remove('is-target'));
+            const target = document.querySelector(`[data-email="${email}"]`);
+            if (target) target.classList.add('is-target');
+            // Focus password
+            setTimeout(() => document.getElementById('password').focus(), 50);
+        }
+
+        function renderSwitchMode() {
+            const accounts = getSavedAccounts();
+            if (accounts.length === 0 && !switchTarget) return;
+
+            // Show switch-mode UI
+            const section = document.getElementById('saved-accounts-section');
+            const cardsContainer = document.getElementById('saved-accounts-cards');
+
+            if (accounts.length > 0) {
+                section.style.display = 'block';
+
+                // Render cards
+                cardsContainer.innerHTML = accounts.map(acc => `
+                    <a href="#" class="saved-account-card ${switchTarget === acc.email ? 'is-target' : ''}"
+                       data-email="${acc.email}"
+                       onclick="event.preventDefault(); selectAccount('${acc.email}', '${acc.name}')">
+                        <div class="account-avatar">${acc.initials}</div>
+                        <div class="account-info">
+                            <div class="account-name">${acc.name}</div>
+                            <div class="account-email">${acc.email}</div>
+                        </div>
+                        <i class="bi bi-arrow-right-circle account-arrow"></i>
+                    </a>
+                `).join('');
+            }
+
+            // If coming from account switch: show switch UI & pre-fill
+            if (switchTarget) {
+                // Switch headings
+                document.getElementById('greeting-chip-normal').style.display = 'none';
+                document.getElementById('greeting-chip-switch').style.display  = 'inline-flex';
+                document.getElementById('heading-normal').style.display  = 'none';
+                document.getElementById('heading-switch').style.display   = 'block';
+                document.getElementById('sub-normal').style.display       = 'none';
+                document.getElementById('sub-switch').style.display       = 'block';
+
+                // Pre-fill email field
+                const emailInput = document.getElementById('email');
+                emailInput.value = switchTarget;
+
+                // Focus password
+                setTimeout(() => document.getElementById('password').focus(), 100);
+
+                // Clear sessionStorage so next visit is normal
+                sessionStorage.removeItem(SESSION_KEY);
+            }
+        }
+
+        // Run on load
+        document.addEventListener('DOMContentLoaded', renderSwitchMode);
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

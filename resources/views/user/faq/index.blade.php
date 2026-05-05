@@ -620,7 +620,7 @@
             {{-- Stats --}}
             <div class="faq-stats fade-up fade-up-3">
                 <div class="faq-stat">
-                    <div class="faq-stat-num">20</div>
+                    <div class="faq-stat-num">27</div>
                     <div class="faq-stat-label">Artikel FAQ</div>
                 </div>
                 <div class="faq-stat-divider"></div>
@@ -653,6 +653,9 @@
         </button>
         <button class="faq-tab" data-cat="teknis">
             <span class="tab-dot"></span> Teknis & Fitur
+        </button>
+        <button class="faq-tab" data-cat="tentang">
+            <span class="tab-dot"></span> Tentang Website
         </button>
     </div>
 
@@ -773,6 +776,19 @@
                         <strong>Draft</strong>: Aspirasi yang masih disimpan sementara di akun Anda tapi belum diajukan resmi ke Admin. Anda bisa mengedit, menambahkan lampiran, atau menghapusnya kapan saja sebelum dikirim.
                         <br><br>
                         <strong>Terkirim</strong>: Aspirasi yang sudah Anda klik tombol "Kirim" atau "Ajukan". Data sudah masuk ke sistem dan dalam antrian verifikasi Admin. Aspirasi yang sudah "Terkirim" tidak bisa diedit lagi, namun tetap bisa dilampirkan revisi jika ditolak.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-cat="pengajuan">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-q-icon">⏳</div>
+                    <span class="faq-q-text">Berapa lama batas waktu saya bisa mengedit surat?</span>
+                    <div class="faq-q-arrow"><i class="bi bi-chevron-down"></i></div>
+                </button>
+                <div class="faq-answer-wrap">
+                    <div class="faq-answer">
+                        Anda dapat mengedit data surat (Judul, Jenis, dan Tujuan) selama <strong>15 menit</strong> terhitung sejak surat pertama kali diajukan. Setelah melewati 15 menit, fitur edit akan terkunci otomatis demi menjaga integritas data selama proses verifikasi oleh Admin.
                     </div>
                 </div>
             </div>
@@ -947,6 +963,32 @@
                 </div>
             </div>
 
+            <div class="faq-item" data-cat="teknis">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-q-icon">❄️</div>
+                    <span class="faq-q-text">Bagaimana perhitungan SLA jika saya mengajukan surat di hari Jumat sore?</span>
+                    <div class="faq-q-arrow"><i class="bi bi-chevron-down"></i></div>
+                </button>
+                <div class="faq-answer-wrap">
+                    <div class="faq-answer">
+                        Jika Anda mengajukan surat di luar jam kerja (misal: Jumat jam 15.00), maka perhitungan **SLA akan dibekukan (frozen)** selama hari Sabtu dan Minggu. SLA 24 jam Anda akan dilanjutkan kembali pada hari Senin pukul 07.30 pagi. Contoh: Deadline pengajuan Jumat jam 15.00 adalah Senin jam 15.00.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-cat="teknis">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-q-icon">🔗</div>
+                    <span class="faq-q-text">Apa itu UUID-Based Verification?</span>
+                    <div class="faq-q-arrow"><i class="bi bi-chevron-down"></i></div>
+                </button>
+                <div class="faq-answer-wrap">
+                    <div class="faq-answer">
+                        Sistem menggunakan <strong>UUID (Universally Unique Identifier)</strong> untuk setiap surat. Ini adalah kode unik yang sangat panjang dan acak, sehingga tidak mungkin ditebak oleh orang lain. UUID ini memungkinkan verifikasi surat secara publik dengan aman melalui URL khusus.
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         {{-- SECTION: Akun --}}
@@ -993,6 +1035,75 @@
                 <div class="faq-answer-wrap">
                     <div class="faq-answer">
                         Ya. Sistem dirancang dengan keamanan berlapis — setiap akun hanya dapat mengakses surat miliknya sendiri. Seluruh aksi tercatat dalam riwayat untuk keperluan audit. Dokumen yang Anda unggah hanya dapat diakses oleh pihak yang terlibat dalam alur persetujuan surat tersebut. <strong>Jangan berbagi akun dengan siapapun.</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-cat="akun">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-q-icon">👥</div>
+                    <span class="faq-q-text">Bagaimana cara beralih akun tanpa harus login ulang?</span>
+                    <div class="faq-q-arrow"><i class="bi bi-chevron-down"></i></div>
+                </button>
+                <div class="faq-answer-wrap">
+                    <div class="faq-answer">
+                        Anda dapat menggunakan fitur <strong>"Beralih Akun"</strong> pada dropdown profil (klik foto profil Anda). Fitur ini memungkinkan Anda berpindah antar akun yang sudah pernah login di perangkat tersebut secara instan. Keamanan dijamin dengan <em>switch_token</em> yang di-hash di database dan masa berlaku token selama 30 hari.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        {{-- SECTION: Tentang Website --}}
+        <div class="section-label" data-section="tentang">
+            <div class="section-label-line"></div>
+            <span class="section-label-text">Tentang Website</span>
+            <div class="section-label-line"></div>
+        </div>
+
+        <div class="faq-list">
+
+            <div class="faq-item" data-cat="tentang">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-q-icon">🏢</div>
+                    <span class="faq-q-text">Apa itu Website Persuratan BP Suml?</span>
+                    <div class="faq-q-arrow"><i class="bi bi-chevron-down"></i></div>
+                </button>
+                <div class="faq-answer-wrap">
+                    <div class="faq-answer">
+                        <strong>Website Persuratan BP Suml</strong> adalah sistem berbasis web yang dirancang untuk mengelola seluruh ekosistem persuratan (pengajuan, verifikasi, penomoran, hingga pengarsipan) secara digital. Proyek ini dikembangkan untuk meningkatkan efisiensi, transparansi, dan kecepatan layanan administrasi di Balai Pengelolaan SUML.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-cat="tentang">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-q-icon">🚀</div>
+                    <span class="faq-q-text">Teknologi apa yang digunakan dalam website ini?</span>
+                    <div class="faq-q-arrow"><i class="bi bi-chevron-down"></i></div>
+                </button>
+                <div class="faq-answer-wrap">
+                    <div class="faq-answer">
+                        Sistem ini dibangun menggunakan teknologi mutakhir:
+                        <ul>
+                            <li><strong>Backend</strong>: Laravel 12 (PHP Framework) & MySQL Database.</li>
+                            <li><strong>Frontend</strong>: Bootstrap & Tailwind CSS untuk tata letak yang responsif.</li>
+                            <li><strong>Animasi</strong>: GSAP, Anime.js, dan Three.js untuk pengalaman visual premium.</li>
+                            <li><strong>Keamanan</strong>: Cloudflare WAF, Google reCAPTCHA V2, dan Enkripsi Password tingkat tinggi.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-cat="tentang">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-q-icon">👨‍💻</div>
+                    <span class="faq-q-text">Siapa yang mengembangkan sistem ini?</span>
+                    <div class="faq-q-arrow"><i class="bi bi-chevron-down"></i></div>
+                </button>
+                <div class="faq-answer-wrap">
+                    <div class="faq-answer">
+                        Website ini dirancang dan dikembangkan sebagai bagian dari <strong>Proyek PKL (Praktik Kerja Lapangan)</strong> oleh siswa <strong>SMK Alfalah</strong> dengan peran Fullstack Developer. Pengembangan dibantu oleh AI untuk memastikan kode yang bersih, efisien, dan mengikuti standar industri modern.
                     </div>
                 </div>
             </div>

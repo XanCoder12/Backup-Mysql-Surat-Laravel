@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use App\Models\User;
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -23,24 +24,27 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
-{
-    $request->authenticate();
-    $request->session()->regenerate();
+    {
+        $request->authenticate();
+        $request->session()->regenerate();
 
-    /** @var User $user */
-    $user = Auth::user();
+        /** @var User $user */
+        $user = Auth::user();
 
-    // Jika admin, cek apakah sudah pilih role
-    if ($user->isAdmin()) {
-        if (!$user->hasSelectedRole()) {
-            return redirect()->intended(route('admin.role.select'));
+        // Generate switch token & simpan raw token di session
+        $rawToken = SwitchAccountController::generateToken($user);
+        $request->session()->put('switch_token_raw', $rawToken);
+
+        // Jika admin, cek apakah sudah pilih role
+        if ($user->isAdmin()) {
+            if (!$user->hasSelectedRole()) {
+                return redirect()->intended(route('admin.role.select'));
+            }
+            return redirect()->intended(route('admin.dashboard'));
         }
-        return redirect()->intended(route('admin.dashboard'));
-    }
 
-    return redirect()->intended(route('dashboard'));
-}
-        
+        return redirect()->intended(route('dashboard'));
+    }
 
     /**
      * Destroy an authenticated session.

@@ -738,9 +738,24 @@
                     <i class="bi bi-pencil-square me-2"></i> Draft Saya
                 </a></li>
                 <li><hr class="dropdown-divider"></li>
+                {{-- Switch Account Section --}}
+                <li>
+                    <div class="px-3 py-1.5" style="font-size:10px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.08em;">
+                        <i class="bi bi-arrow-left-right me-1"></i> Beralih Akun
+                    </div>
+                </li>
+                <li id="user-saved-accounts-list">
+                    {{-- Diisi oleh JS --}}
+                </li>
+                <li>
+                    <a class="dropdown-item py-2" href="#" onclick="switchToNewAccount(event)" style="color:#2563eb;">
+                        <i class="bi bi-plus-circle me-2"></i> Tambah Akun Lain
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
                 <li>
                     <a class="dropdown-item py-2 text-danger" href="#"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                       onclick="event.preventDefault(); logoutCurrentUser();">
                         <i class="bi bi-box-arrow-right me-2"></i> Logout
                     </a>
                 </li>
@@ -881,6 +896,29 @@
 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
 <form id="readall-form" action="{{ route('notif.readAll') }}" method="POST" class="d-none">@csrf</form>
 
+{{-- Switch Account Modal --}}
+<div class="modal fade" id="switchAccountModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:360px;">
+        <div class="modal-content" style="border-radius:20px; border:1px solid rgba(255,255,255,0.7); background:rgba(255,255,255,0.85); backdrop-filter:blur(20px);">
+            <div class="modal-header border-0 pb-0">
+                <div>
+                    <h6 class="modal-title fw-bold" style="font-size:15px; color:var(--text-primary);"><i class="bi bi-arrow-left-right me-2 text-primary"></i>Beralih Akun</h6>
+                    <p class="mb-0" style="font-size:11px; color:var(--text-secondary); margin-top:2px;">Pilih akun untuk masuk</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pt-3" id="switchAccountModalBody">
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-sm w-100" onclick="switchToNewAccount(event)" 
+                        style="background:rgba(37,99,235,0.1); color:#2563eb; border:1px solid rgba(37,99,235,0.2); border-radius:10px; font-size:13px; padding:10px;">
+                    <i class="bi bi-plus-circle me-2"></i>Tambah Akun Baru
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -906,6 +944,126 @@
         } else {
             nav.classList.remove('scrolled');
         }
+    });
+
+    // ===== ACCOUNT SWITCHER (Token-Based Instant Switch) =====
+    const CURRENT_USER = {
+        id:          {{ Auth::id() }},
+        name:        '{{ addslashes(Auth::user()->name) }}',
+        email:       '{{ addslashes(Auth::user()->email) }}',
+        initials:    '{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}',
+        role:        'user',
+        switch_token: '{{ session("switch_token_raw", "") }}'
+    };
+    const SWITCH_URL  = '{{ route("auth.switch") }}';
+    const CSRF_TOKEN  = '{{ csrf_token() }}';
+    const STORAGE_KEY = 'bpsuml_saved_accounts';
+
+    function getSavedAccounts() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { return []; }
+    }
+
+    function saveCurrentAccount() {
+        if (!CURRENT_USER.switch_token) return; // Jangan simpan jika token kosong
+        let accounts = getSavedAccounts();
+        const idx = accounts.findIndex(a => a.id === CURRENT_USER.id);
+        const entry = { ...CURRENT_USER, savedAt: Date.now() };
+        if (idx >= 0) { accounts[idx] = entry; } else { accounts.push(entry); }
+        if (accounts.length > 5) accounts = accounts.slice(-5);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(accounts));
+    }
+
+    function renderSavedAccounts() {
+        const accounts = getSavedAccounts().filter(a => a.id !== CURRENT_USER.id);
+        const container = document.getElementById('user-saved-accounts-list');
+        if (!container) return;
+
+        if (accounts.length === 0) {
+            container.innerHTML = `<div style="padding:4px 16px 2px; font-size:11px; color:var(--text-secondary); font-style:italic;">Belum ada akun tersimpan lain</div>`;
+            return;
+        }
+        container.innerHTML = accounts.map(acc => `
+            <div>
+                <a class="dropdown-item py-2" href="#" id="switch-btn-${acc.id}"
+                   onclick="doSwitchAccount(event, ${acc.id}, '${acc.switch_token}')"
+                   style="display:flex; align-items:center; gap:10px; padding:8px 16px;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${acc.initials}</div>
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-size:12px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${acc.name}</div>
+                        <div style="font-size:10px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${acc.email}</div>
+                    </div>
+                    <i class="bi bi-arrow-right-circle" style="color:#2563eb;font-size:14px;flex-shrink:0;"></i>
+                </a>
+            </div>
+        `).join('');
+    }
+
+    function doSwitchAccount(e, userId, token) {
+        e.preventDefault();
+        if (!token) {
+            // Token kosong — fallback ke login manual
+            sessionStorage.setItem('bpsuml_switch_to_email',
+                getSavedAccounts().find(a => a.id === userId)?.email || '');
+            document.getElementById('logout-form').submit();
+            return;
+        }
+
+        const btn = document.getElementById('switch-btn-' + userId);
+        if (btn) {
+            btn.style.opacity = '0.6';
+            btn.style.pointerEvents = 'none';
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" style="width:16px;height:16px;"></span> Beralih...`;
+        }
+
+        fetch(SWITCH_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': CSRF_TOKEN,
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ user_id: userId, switch_token: token }),
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                // Update token baru di localStorage
+                let accounts = getSavedAccounts();
+                const idx = accounts.findIndex(a => a.id === data.user_id);
+                if (idx >= 0) accounts[idx].switch_token = data.new_token;
+                else accounts.push({ id: data.user_id, name: data.name, email: data.email,
+                                     initials: data.initials, role: data.role, switch_token: data.new_token });
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(accounts));
+                // Redirect ke dashboard akun target
+                window.location.href = data.redirect;
+            } else {
+                alert('Gagal beralih akun: ' + data.message);
+                if (btn) { btn.style.opacity = ''; btn.style.pointerEvents = ''; }
+                renderSavedAccounts();
+            }
+        })
+        .catch(() => {
+            alert('Terjadi kesalahan jaringan. Coba lagi.');
+            if (btn) { btn.style.opacity = ''; btn.style.pointerEvents = ''; }
+            renderSavedAccounts();
+        });
+    }
+
+    function switchToNewAccount(e) {
+        e.preventDefault();
+        document.getElementById('logout-form').submit();
+    }
+
+    function logoutCurrentUser() {
+        let accounts = getSavedAccounts().filter(a => a.id !== CURRENT_USER.id);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(accounts));
+        document.getElementById('logout-form').submit();
+    }
+
+    // Jalankan saat halaman load
+    document.addEventListener('DOMContentLoaded', function() {
+        saveCurrentAccount();
+        renderSavedAccounts();
     });
 </script>
 @stack('scripts')

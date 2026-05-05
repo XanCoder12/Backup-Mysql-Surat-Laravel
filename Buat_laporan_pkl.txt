@@ -3,7 +3,7 @@ Ini adalah website persuratan BP Suml yang dibuat untuk memenuhi tugas PKL SMK A
 Website ini menggunakan tools:
 Framework utama: Laravel 12
 Database: MySQL
-Frontend: Bootstrap, TailwindCss, ChartJs, AlpineJs, GSAP, AnimeJS, ThreeJS.
+Frontend: Bootstrap, TailwindCss, ChartJs, AlpineJs, GSAP, AnimeJS.
 Backend: Laravel 12, Breeze, Node, Redis, Rest API, Phpoffice.
 CDN: Cloudflare CDN, JSDelivr, CDNJS.(nanti Next klo di deploy)
 Web Security: Cloudflare WAF, Google reCAPTCHA V2, HSTS, SSL/TLS, Scanning, Encrypted Password, Rate Limiting, XSS Protection, CSRF Protection, dll.
@@ -16,7 +16,13 @@ Berikut fitur-fitur yang ada pada website persuratan BP Suml buatan anak PKL ful
 
 {
     Fitur Unggulan:
-    A. Multi Role/Role Based
+    1. Beralih Akun
+        - Fitur beralih akun disini user atau admin dapat beralih akun tanpa logout. dan langsung berubah sesuai Akun yang di pilih. 
+        - Saat beralih akun tidak perlu logout terlebih dahulu, hanya cukup pilih akun yang sudah anda daftar
+            Contoh: Admin ingin mengajukan surat. dia bisa bikin akun user dan mengajukan surat. atau user ingin ganti akun juga bisa.
+            Keamaan switch_token (hash) dan expired seelah 30 hari.  
+
+    A. Multi Role/Role Based keren
     User:
         1. Admin Aspirasi (Hanya dapat Mengerjakan Surat di tahap 2 dan 5-10)
         2. Admin Kassubagtu (Hanya dapat Mengerjakan Surat di tahap 3)

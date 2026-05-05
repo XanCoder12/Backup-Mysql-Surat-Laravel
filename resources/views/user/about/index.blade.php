@@ -420,7 +420,14 @@
                         </div>
                         <div>
                             <p class="mb-1 text-muted" style="font-size: 13.5px; line-height: 1.6;">
-                                Aplikasi Tugas PKL <strong>Manajemen persuratan BP SUML</strong> ini dirancang dan dikembangkan oleh 1 Developer dan dibantu oleh AI agar pengerjaan lebih cepat, efisien, dan rapi. Dibuat dengan dedikasi tinggi menggunakan framework modern dan standar UI/UX estetis (berbasis prinsip Glassmorphism) demi memastikan pengalaman pengguna yang cepat, intuitif, dan seamless.
+                                <br>
+                                <strong>Website Persuratan BP Suml</strong> adalah sistem berbasis web yang dirancang untuk mengelola proses pengajuan, verifikasi, hingga pengarsipan surat secara digital dan terstruktur. 
+                                Sistem ini dikembangkan sebagai proyek PKL oleh siswa <strong>SMK Alfalah</strong> dengan pendekatan <em>Fullstack Development</em> yang mengintegrasikan keamanan tinggi, real-time monitoring, serta alur kerja administratif multi-role.
+                                <br>
+                                <br>
+                                Aplikasi ini dirancang dengan standar UI/UX modern berbasis prinsip <strong>Glassmorphism</strong> untuk memastikan pengalaman pengguna yang intuitif dan elegan. Didukung oleh teknologi framework terkini, sistem ini mengutamakan kecepatan dan keandalan dalam setiap prosesnya.
+                                <br>
+                                Untuk informasi selengkapnya mengenai fitur dan cara kerja, Anda dapat mengunjungi halaman <a href="{{ route('user.faq.index') }}" style="color: #2563eb; font-weight: 600;">FAQ</a>.
                             </p>
                             <span style="font-size: 12px; font-weight: 500; color: #3b82f6;">
                                 <i class="bi bi-github me-1"></i> <a href="https://github.com/Ye-Shaiyoe/Surat-Laravel" target="_blank">GitHub Repository - Ye-Shaiyoe </a> <br>

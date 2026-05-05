@@ -59,3 +59,8 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });
+
+// ===== SWITCH ACCOUNT (token-based, tanpa password) =====
+Route::post('auth/switch-account', [App\Http\Controllers\Auth\SwitchAccountController::class, 'switch'])
+    ->name('auth.switch')
+    ->middleware('throttle:10,1');

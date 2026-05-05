@@ -767,8 +767,22 @@
                             Profil Saya
                         </a>
                     </div>
+                    {{-- Switch Account Section --}}
+                    <div class="border-t border-slate-100 dark:border-slate-800 pt-1.5 pb-0.5">
+                        <div class="px-4 py-1" style="font-size:9px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.1em;">
+                            <i class="bi bi-arrow-left-right mr-1"></i> Beralih Akun
+                        </div>
+                        <div id="admin-saved-accounts-list">{{-- Diisi oleh JS --}}</div>
+                        <a href="#" onclick="switchToNewAccount(event)"
+                            class="flex items-center gap-3 px-4 py-2 text-[12px] font-medium
+                                   hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
+                            style="color:#2563eb;">
+                            <i class="bi bi-plus-circle text-base w-4 text-center"></i>
+                            Tambah Akun Lain
+                        </a>
+                    </div>
                     <div class="border-t border-slate-100 dark:border-slate-800 py-1.5">
-                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); logoutCurrentUser();"
                             class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-red-600 dark:text-red-400
                                    hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
                             <i class="bi bi-box-arrow-right text-base w-4 text-center"></i>
@@ -851,18 +865,125 @@
         if (menu) menu.classList.toggle('hidden');
     }
 
+    // ===== ACCOUNT SWITCHER (Admin - Token-Based Instant Switch) =====
+    const CURRENT_USER = {
+        id:           {{ Auth::id() }},
+        name:         '{{ addslashes(Auth::user()->name) }}',
+        email:        '{{ addslashes(Auth::user()->email) }}',
+        initials:     '{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}',
+        role:         '{{ Auth::user()->getRoleLabel() }}',
+        switch_token: '{{ session("switch_token_raw", "") }}'
+    };
+    const SWITCH_URL  = '{{ route("auth.switch") }}';
+    const CSRF_TOKEN  = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const STORAGE_KEY = 'bpsuml_saved_accounts';
+
+    function getSavedAccounts() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { return []; }
+    }
+
+    function saveCurrentAccount() {
+        if (!CURRENT_USER.switch_token) return;
+        let accounts = getSavedAccounts();
+        const idx = accounts.findIndex(a => a.id === CURRENT_USER.id);
+        const entry = { ...CURRENT_USER, savedAt: Date.now() };
+        if (idx >= 0) { accounts[idx] = entry; } else { accounts.push(entry); }
+        if (accounts.length > 5) accounts = accounts.slice(-5);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(accounts));
+    }
+
+    function renderSavedAccounts() {
+        const accounts = getSavedAccounts().filter(a => a.id !== CURRENT_USER.id);
+        const container = document.getElementById('admin-saved-accounts-list');
+        if (!container) return;
+
+        if (accounts.length === 0) {
+            container.innerHTML = `<div style="padding:2px 16px 4px; font-size:11px; color:var(--text-secondary); font-style:italic;">Belum ada akun tersimpan lain</div>`;
+            return;
+        }
+        container.innerHTML = accounts.map(acc => `
+            <a href="#" id="switch-btn-${acc.id}"
+               onclick="doSwitchAccount(event, ${acc.id}, '${acc.switch_token}')"
+               class="flex items-center gap-2 px-4 py-2 text-[12px] hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+               style="text-decoration:none;">
+                <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">${acc.initials}</div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:12px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${acc.name}</div>
+                    <div style="font-size:10px;color:var(--text-secondary);">${acc.role || acc.email}</div>
+                </div>
+                <i class="bi bi-arrow-right-circle" style="color:#2563eb;font-size:13px;flex-shrink:0;"></i>
+            </a>
+        `).join('');
+    }
+
+    function doSwitchAccount(e, userId, token) {
+        e.preventDefault();
+        if (!token) {
+            sessionStorage.setItem('bpsuml_switch_to_email',
+                getSavedAccounts().find(a => a.id === userId)?.email || '');
+            document.getElementById('logout-form').submit();
+            return;
+        }
+
+        const btn = document.getElementById('switch-btn-' + userId);
+        if (btn) {
+            btn.style.opacity = '0.6';
+            btn.style.pointerEvents = 'none';
+            btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:8px;padding:0 16px;font-size:12px;color:var(--text-secondary);"><svg style="width:14px;height:14px;animation:spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Beralih...</span>`;
+        }
+
+        fetch(SWITCH_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': CSRF_TOKEN,
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ user_id: userId, switch_token: token }),
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                let accounts = getSavedAccounts();
+                const idx = accounts.findIndex(a => a.id === data.user_id);
+                if (idx >= 0) accounts[idx].switch_token = data.new_token;
+                else accounts.push({ id: data.user_id, name: data.name, email: data.email,
+                                     initials: data.initials, role: data.role, switch_token: data.new_token });
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(accounts));
+                window.location.href = data.redirect;
+            } else {
+                alert('Gagal beralih akun: ' + data.message);
+                renderSavedAccounts();
+            }
+        })
+        .catch(() => {
+            alert('Terjadi kesalahan jaringan. Coba lagi.');
+            renderSavedAccounts();
+        });
+    }
+
+    function switchToNewAccount(e) {
+        e.preventDefault();
+        document.getElementById('logout-form').submit();
+    }
+
+    function logoutCurrentUser() {
+        let accounts = getSavedAccounts().filter(a => a.id !== CURRENT_USER.id);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(accounts));
+        document.getElementById('logout-form').submit();
+    }
+
     // ===== INISIALISASI SAAT LOAD =====
     (function() {
         // Dark Mode Init
         const isDark = localStorage.getItem('darkMode') === 'true';
         if (isDark) document.documentElement.classList.add('dark');
-        
-        // Jalankan update icon setelah DOM siap
+
         document.addEventListener('DOMContentLoaded', () => {
             updateDarkIcon();
-            
+
             // Close dropdown on outside click
-            document.addEventListener('click', function (e) {
+            document.addEventListener('click', function(e) {
                 const wrap = document.getElementById('user-dropdown-wrap');
                 const menu = document.getElementById('user-dropdown');
                 if (wrap && menu && !wrap.contains(e.target)) {
@@ -879,6 +1000,10 @@
                     setTimeout(() => el.remove(), 400);
                 });
             }, 4500);
+
+            // Account switcher init
+            saveCurrentAccount();
+            renderSavedAccounts();
         });
 
         // Keydown listener
