@@ -92,8 +92,8 @@ class DashboardController extends Controller
             $timeInMinutes = $now->hour * 60 + $now->minute;
 
             if ($dayOfWeek >= 1 && $dayOfWeek <= 4) {
-                // Senin-Kamis: 07:00 - 16:00
-                if ($timeInMinutes < 7 * 60 || $timeInMinutes >= 16 * 60) {
+                // Senin-Kamis: 07:30 - 16:00
+                if ($timeInMinutes < 7 * 60 + 30 || $timeInMinutes >= 16 * 60) {
                     $isLibur = true;
                 }
             } elseif ($dayOfWeek === 5) {

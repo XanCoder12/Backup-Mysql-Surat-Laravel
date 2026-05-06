@@ -296,9 +296,9 @@
                                 <div class="col-6">
                                     <div class="rounded-2 bg-light p-3" style="background:#f9fafb!important; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                                         <small class="text-muted d-block mb-1">Website</small>
-                                        <a href="https://metrologi.kemendag.go.id" target="_blank"
+                                        <a href="https://tu.persuratan.bp.suml.com" target="_blank"
                                            style="font-size: 13px; font-weight: 500;color:#111827;">
-                                            metrologi.kemendag.go.id 
+                                            tu.persuratan.bp.suml.com 
                                         </a>
                                     </div>
                                 </div>

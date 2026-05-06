@@ -32,7 +32,7 @@
         border-radius: 20px;
         padding: 24px;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: background-color 0.4s, transform 0.4s, box-shadow 0.4s, border-color 0.4s;
         border: 1px solid rgba(255, 255, 255, 0.8);
         position: relative;
         overflow: hidden;
@@ -93,7 +93,7 @@
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
         border: 1px solid rgba(241, 245, 249, 0.8);
         overflow: hidden;
-        transition: all 0.4s ease;
+        transition: background-color 0.4s, box-shadow 0.4s, transform 0.4s;
     }
     
     .card-modern:hover {
@@ -114,7 +114,8 @@
     .surat-item, .notification-item {
         padding: 16px 24px;
         border-bottom: 1px solid #f1f5f9;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        outline: none !important;
         cursor: pointer;
         position: relative;
         background: transparent;
@@ -158,7 +159,7 @@
         padding: 14px 28px;
         border-radius: 14px;
         font-weight: 600;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: background-color 0.4s, transform 0.4s, box-shadow 0.4s;
         box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
         position: relative;
         overflow: hidden;
@@ -229,7 +230,7 @@
         position: relative;
         overflow: hidden;
         z-index: 1;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: background-color 0.4s, transform 0.4s, box-shadow 0.4s;
     }
 
     @keyframes wiggle {
@@ -254,7 +255,7 @@
         border-radius: 12px;
         font-weight: 600;
         font-size: 13px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
         display: inline-flex;
         align-items: center;
         gap: 8px;
@@ -493,7 +494,7 @@
         </div>
         <a href="{{ $isLibur ? 'javascript:void(0)' : route('user.surat.create') }}" 
            class="btn btn-primary-modern d-flex align-items-center gap-2 {{ $isLibur ? 'disabled' : '' }}"
-           @if($isLibur) onclick="Swal.fire({icon: 'info', title: 'Layanan Tutup', text: 'Pengajuan surat baru hanya tersedia pada hari kerja. Senin–Kamis pukul 07.00–16.00 WIB, Jumat pukul 07.30–16.30 WIB.', confirmButtonColor: '#1e3a5f'})" @endif>
+           @if($isLibur) onclick="Swal.fire({icon: 'info', title: 'Layanan Tutup', text: 'Pengajuan surat baru hanya tersedia pada hari kerja. Senin–Kamis pukul 07.30–16.00 WIB, Jumat pukul 07.30–16.30 WIB.', confirmButtonColor: '#1e3a5f'})" @endif>
             <i class="bi bi-plus-circle-fill"></i> Ajukan Surat Baru
         </a>
     </div>
@@ -507,7 +508,7 @@
             <h6 class="fw-bold mb-1">Layanan Sedang Tutup</h6>
             <p class="mb-0" style="font-size:13px; opacity:0.9;">
                 Saat ini pukul <strong>{{ now()->format('H:i') }} WIB</strong>. Pengajuan surat baru & draf hanya tersedia pada hari kerja:<br>
-                <strong>Senin–Kamis</strong> pukul <strong>07.00–16.00 WIB</strong> &nbsp;|&nbsp; <strong>Jumat</strong> pukul <strong>07.30–16.30 WIB</strong>.
+                <strong>Senin–Kamis</strong> pukul <strong>07.30–16.00 WIB</strong> &nbsp;|&nbsp; <strong>Jumat</strong> pukul <strong>07.30–16.30 WIB</strong>.
             </p>
         </div>
     </div>

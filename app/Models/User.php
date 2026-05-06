@@ -111,10 +111,10 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at'        => 'datetime',
-            'switch_token_expires_at'   => 'datetime',
-            'password'                  => 'hashed',
-            'nip'                       => 'encrypted',
+            'email_verified_at' => 'datetime',
+            'switch_token_expires_at' => 'datetime',
+            'password' => 'hashed',
+            'nip' => 'encrypted',
         ];
     }
 }

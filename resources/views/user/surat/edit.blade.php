@@ -27,7 +27,7 @@
                         Mohon maaf, layanan pengajuan dan edit draf surat dinonaktifkan sementara.<br>
                         Saat ini pukul <strong>{{ now()->format('H:i') }} WIB</strong>.<br>
                         Silakan kembali lagi pada jam operasional layanan.<br>
-                        <span class="badge bg-light text-dark mt-2 p-2">Senin–Kamis: 07.00–16.00 WIB &nbsp;|&nbsp; Jumat: 07.30–16.30 WIB</span>
+                        <span class="badge bg-light text-dark mt-2 p-2">Senin–Kamis: 07.30–16.00 WIB &nbsp;|&nbsp; Jumat: 07.30–16.30 WIB</span>
                     </p>
                     <a href="{{ route('dashboard') }}" class="btn btn-primary-modern px-4">
                         <i class="bi bi-house-door-fill me-2"></i>Kembali ke Dashboard

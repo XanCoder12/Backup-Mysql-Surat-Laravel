@@ -15,6 +15,9 @@
 
     <div class="py-12 bg-gray-50/50">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+            <!-- Header Stats -->
+            @include('profile.partials.user-statistics')
+
             <!-- Profile Info -->
             <div class="p-4 sm:p-10 bg-white shadow-xl shadow-gray-200/50 sm:rounded-2xl border border-gray-100 transition-all duration-300 hover:shadow-2xl hover:shadow-gray-200/50 overflow-hidden relative">
                 <div class="absolute top-0 right-0 p-10 opacity-5 pointer-events-none">
@@ -36,6 +39,18 @@
                 </div>
                 <div class="max-w-xl relative z-10">
                     @include('profile.partials.update-password-form')
+                </div>
+            </div>
+
+            <!-- Manage Switchable Accounts -->
+            <div class="p-4 sm:p-10 bg-white shadow-xl shadow-gray-200/50 sm:rounded-2xl border border-gray-100 transition-all duration-300 hover:shadow-2xl hover:shadow-gray-200/50 overflow-hidden relative">
+                <div class="absolute top-0 right-0 p-10 opacity-5 pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                </div>
+                <div class="max-w-xl relative z-10">
+                    @include('profile.partials.switch-accounts-management')
                 </div>
             </div>
 

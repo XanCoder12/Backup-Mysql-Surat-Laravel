@@ -706,9 +706,9 @@ class SuratController extends Controller
         $dayOfWeek = $now->dayOfWeek; // 1 (Mon) - 7 (Sun)
         $timeInMinutes = $now->hour * 60 + $now->minute;
 
-        // Senin–Kamis: 07:00 – 16:00
+        // Senin–Kamis: 07:30 – 16:00
         if ($dayOfWeek >= 1 && $dayOfWeek <= 4) {
-            $start = 7 * 60; // 07:00
+            $start = 7 * 60 + 30; // 07:30
             $end   = 16 * 60; // 16:00
             return $timeInMinutes < $start || $timeInMinutes >= $end;
         }

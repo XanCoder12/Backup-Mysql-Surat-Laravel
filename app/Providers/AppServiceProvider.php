@@ -29,6 +29,10 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(20)->by($request->user()?->id ?: $request->ip());
         });
 
+        RateLimiter::for('registration', function (Request $request) {
+            return Limit::perMinute(3)->by($request->ip());
+        });
+
         \Illuminate\Pagination\Paginator::defaultView('vendor.pagination.modern');
     }
 }

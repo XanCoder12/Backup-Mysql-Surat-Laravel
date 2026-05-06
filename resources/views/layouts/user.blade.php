@@ -608,12 +608,31 @@
             background: white;
             box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
+        /* Prevent Transition Flicker on Load */
+        .no-transition * {
+            transition: none !important;
+        }
+
+        /* Suppress Focus Ring Flicker */
+        .surat-item:focus, .notification-item:focus, .stat-card-modern:focus, .nav-link-item:focus, a:focus, button:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
     </style>
+    <script>
+        // Disable transitions until page is fully loaded to prevent flicker
+        document.documentElement.classList.add('no-transition');
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.documentElement.classList.remove('no-transition');
+            }, 100);
+        });
+    </script>
 </head>
 <body>
 
 
-{{-- ===== NAVBAR ===== --}}
+{{-- ===== NAVBAR ===== --}} 
 <nav class="navbar navbar-main d-flex align-items-center justify-content-between">
     {{-- Brand --}}
     <a class="navbar-brand-text text-decoration-none d-flex align-items-center" href="{{ route('dashboard') }}">
