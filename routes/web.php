@@ -152,7 +152,9 @@ Route::prefix('Admin')->middleware(['auth', 'verified', 'admin'])->name('admin.'
 // ===== IT SUPPORT =====
 Route::middleware(['auth', 'verified'])->group(function () {
     // Secret route to become IT Support
-    Route::get('/become-it-support', [\App\Http\Controllers\ITSupportController::class, 'becomeITSupport'])->name('itsupport.become');
+    Route::get('/become-it-support', [\App\Http\Controllers\ITSupportController::class, 'becomeITSupport'])
+        ->name('itsupport.become')
+        ->middleware('throttle:3,1');
     
     Route::middleware(['it_support'])->prefix('IT-Support')->name('itsupport.')->group(function () {
         Route::get('/Dashboard', [\App\Http\Controllers\ITSupportController::class, 'dashboard'])->name('dashboard');
