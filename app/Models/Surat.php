@@ -24,6 +24,7 @@ class Surat extends Model
         'perlu_follow_up',
         'catatan_follow_up',
         'deadline_sla',
+        'alasan_keterlambatan',
         'disetujui_pada',
         'file_dihapus_pada',
         'file_expires_at',
@@ -80,6 +81,16 @@ class Surat extends Model
         8 => 'Pengiriman via Srikandi',
         9 => 'Pengarsipan',
         10 => 'Follow Up / Selesai',
+    ];
+
+    const ALASAN_KETERLAMBATAN = [
+        'Volume surat tinggi',
+        'Pejabat sedang dinas luar',
+        'Kendala teknis sistem',
+        'Menunggu konfirmasi pihak terkait',
+        'Hari Libur/Tanggal Merah.',
+        'Banyak data masuk',
+        'Lainnya',
     ];
 
     // Relasi

@@ -110,6 +110,7 @@ class SuratController extends Controller
         $request->validate([
             'catatan'     => 'nullable|string|max:500',
             'nomor_surat' => 'nullable|string|max:100',
+            'alasan_keterlambatan' => ($surat->sla_status === 'terlambat' && !$surat->alasan_keterlambatan) ? 'required|string' : 'nullable',
         ]);
 
         // Validasi: apakah admin punya hak approve tahap ini?
@@ -119,8 +120,18 @@ class SuratController extends Controller
         }
 
         // Jika status revisi (dari user atau admin), set jadi 'proses' lagi
+        $updateSurat = [];
         if (in_array($surat->status, ['revisi', 'revisi_admin'])) {
-            $surat->update(['status' => 'proses']);
+            $updateSurat['status'] = 'proses';
+        }
+
+        // Simpan alasan keterlambatan jika ada
+        if ($request->filled('alasan_keterlambatan')) {
+            $updateSurat['alasan_keterlambatan'] = $request->alasan_keterlambatan;
+        }
+
+        if (!empty($updateSurat)) {
+            $surat->update($updateSurat);
         }
 
         // Tandai tahap sekarang selesai
@@ -189,6 +200,7 @@ class SuratController extends Controller
         $request->validate([
             'catatan'     => 'required|string|max:500',
             'jenis_tolak' => 'nullable|string|in:ke_user,ke_admin_aspirasi',
+            'alasan_keterlambatan' => ($surat->sla_status === 'terlambat' && !$surat->alasan_keterlambatan) ? 'required|string' : 'nullable',
         ]);
 
         $statusSebelumnya = $surat->status;
@@ -222,6 +234,7 @@ class SuratController extends Controller
             $surat->update([
                 'status'         => 'revisi_admin',
                 'tahap_sekarang' => 2,
+                'alasan_keterlambatan' => $request->alasan_keterlambatan ?? $surat->alasan_keterlambatan,
             ]);
 
             // Notif ke pengusul (User): Surat sedang direvisi internal
@@ -250,7 +263,10 @@ class SuratController extends Controller
                     'selesai_pada'  => now(),
                 ]);
 
-            $surat->update(['status' => 'ditolak']);
+            $surat->update([
+                'status' => 'ditolak',
+                'alasan_keterlambatan' => $request->alasan_keterlambatan ?? $surat->alasan_keterlambatan,
+            ]);
 
             // Notif ke pengusul: DITOLAK
             $surat->user->notify(new SuratStatusNotification(

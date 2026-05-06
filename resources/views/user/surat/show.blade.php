@@ -94,6 +94,15 @@
                             @endif
                         </div>
                     </div>
+                    @if($surat->alasan_keterlambatan)
+                    <div class="col-12 mt-2">
+                        <div style="color:#b91c1c;font-size:11px;font-weight:700;margin-bottom:4px;letter-spacing:0.5px;">ALASAN KETERLAMBATAN ADMIN</div>
+                        <div class="p-2 px-3 rounded-3 d-flex align-items-center gap-2" style="background:#fff1f2; border:1px solid #fecaca; color:#b91c1c; font-size:13px; font-weight:600;">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <span>{{ $surat->alasan_keterlambatan }}</span>
+                        </div>
+                    </div>
+                    @endif
                     @if($surat->catatan_pengusul)
                     <div class="col-12">
                         <div style="color:var(--text-secondary);font-size:11px;font-weight:600;margin-bottom:4px;letter-spacing:0.5px;">CATATAN PENGUSUL</div>
@@ -464,6 +473,11 @@
                 @if($surat->sla_status !== 'terlambat' && $surat->deadline_sla)
                     <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">
                         Sisa: <strong>{{ $surat->sisa_jam }}</strong>
+                    </div>
+                @endif
+                @if($surat->alasan_keterlambatan)
+                    <div style="font-size:11px;color:#b91c1c;margin-top:8px;padding-top:8px;border-top:1px solid #fca5a5;">
+                        <i class="bi bi-info-circle-fill me-1"></i>Alasan: <strong>{{ $surat->alasan_keterlambatan }}</strong>
                     </div>
                 @endif
             </div>

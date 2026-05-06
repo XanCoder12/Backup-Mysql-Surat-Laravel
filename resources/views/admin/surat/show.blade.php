@@ -104,6 +104,14 @@
                         <span style="font-size:12px; font-weight:700; color:#3b82f6;">{{ $surat->proses_persen }}%</span>
                     </div>
                 </div>
+                @if($surat->alasan_keterlambatan)
+                <div style="grid-column: 1 / -1; margin-top: 10px;">
+                    <div style="font-size:11px; color:var(--text-secondary); margin-bottom:4px; font-weight:700; letter-spacing:0.5px; opacity: 0.8;">ALASAN KETERLAMBATAN</div>
+                    <div style="font-size:13px; color:#ef4444; background:rgba(239, 68, 68, 0.05); padding:10px 14px; border-radius:8px; border:1px solid rgba(239, 68, 68, 0.2); font-weight: 600;">
+                        <i class="bi bi-exclamation-triangle me-2"></i>{{ $surat->alasan_keterlambatan }}
+                    </div>
+                </div>
+                @endif
                 @if($surat->catatan_pengusul)
                 <div style="grid-column: 1 / -1; margin-top: 10px;">
                     <div style="font-size:11px; color:var(--text-secondary); margin-bottom:4px; font-weight:700; letter-spacing:0.5px; opacity: 0.8;">CATATAN DARI PENGUSUL</div>
@@ -230,6 +238,21 @@
                             <input type="text" name="nomor_surat" required class="form-control form-control-sm" style="background: var(--bg-tertiary); color: var(--text-primary); border-color: var(--border-color);" placeholder="023/Metrologi/IV/2025">
                         </div>
                     @endif
+
+                    @if($surat->sla_status === 'terlambat' && !$surat->alasan_keterlambatan)
+                    <div class="mb-3">
+                        <label class="small fw-bold text-danger"><i class="bi bi-clock-history me-1"></i>Alasan Keterlambatan *</label>
+                        <select name="alasan_keterlambatan" required class="form-select form-select-sm" 
+                            style="background: var(--bg-tertiary); color: var(--text-primary); border-color: #ef4444;">
+                            <option value="">-- Pilih Alasan --</option>
+                            @foreach(\App\Models\Surat::ALASAN_KETERLAMBATAN as $alasan)
+                                <option value="{{ $alasan }}" {{ $surat->alasan_keterlambatan == $alasan ? 'selected' : '' }}>{{ $alasan }}</option>
+                            @endforeach
+                        </select>
+                        <div class="text-danger" style="font-size: 10px; margin-top: 4px;">SLA telah melewati batas. Harap pilih alasan keterlambatan.</div>
+                    </div>
+                    @endif
+
                     <div class="mb-3">
                         <label class="small fw-bold" style="color:var(--text-secondary);">Catatan (Opsional)</label>
                         <textarea name="catatan" rows="3" class="form-control form-control-sm" 
@@ -276,6 +299,20 @@
                             id="textarea-catatan"
                             placeholder="Alasan penolakan / instruksi revisi untuk user..."></textarea>
                     </div>
+
+                    @if($surat->sla_status === 'terlambat' && !$surat->alasan_keterlambatan)
+                    <div class="mb-3">
+                        <label class="small fw-bold text-danger"><i class="bi bi-clock-history me-1"></i>Alasan Keterlambatan *</label>
+                        <select name="alasan_keterlambatan" required class="form-select form-select-sm" 
+                            style="background: var(--bg-tertiary); color: var(--text-primary); border-color: #ef4444;">
+                            <option value="">-- Pilih Alasan --</option>
+                            @foreach(\App\Models\Surat::ALASAN_KETERLAMBATAN as $alasan)
+                                <option value="{{ $alasan }}" {{ $surat->alasan_keterlambatan == $alasan ? 'selected' : '' }}>{{ $alasan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+
                     <button type="button" id="btn-tolak-submit"
                         class="btn btn-danger w-100 fw-bold py-2 shadow-sm"
                         onclick="konfirmasiTolak()">
