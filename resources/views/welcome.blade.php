@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 
@@ -170,10 +169,10 @@
         }
 
         nav.scrolled {
-            background: linear-gradient(to bottom, 
-                rgba(7, 11, 19, 0.8) 0%, 
-                rgba(7, 11, 19, 0.4) 60%, 
-                transparent 100%) !important;
+            background: linear-gradient(to bottom,
+                    rgba(7, 11, 19, 0.8) 0%,
+                    rgba(7, 11, 19, 0.4) 60%,
+                    transparent 100%) !important;
             backdrop-filter: blur(12px) !important;
             -webkit-backdrop-filter: blur(12px) !important;
             border-bottom: none !important;
@@ -1318,11 +1317,11 @@
             gap: 40px;
             position: relative;
             padding: 30px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 28px;
             backdrop-filter: blur(12px);
-            box-shadow: 0 24px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         .flow-stepper {
@@ -1362,9 +1361,17 @@
         }
 
         @keyframes linePulse {
-            0% { opacity: 0.4; }
-            50% { opacity: 1; }
-            100% { opacity: 0.4; }
+            0% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.4;
+            }
         }
 
         /* U-Turn Connector from 5 to 6 */
@@ -1394,7 +1401,7 @@
             border-radius: 14px;
             background: linear-gradient(145deg, #1a202c, #0f131a);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 4px 12px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1420,7 +1427,7 @@
             color: var(--muted);
             font-weight: 700;
             z-index: 3;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
             transition: all 0.3s ease;
         }
 
@@ -1428,7 +1435,7 @@
             background: linear-gradient(145deg, rgba(200, 169, 110, 0.2), rgba(200, 169, 110, 0.05));
             border-color: rgba(200, 169, 110, 0.5);
             color: #fff;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 12px 30px rgba(200, 169, 110, 0.25);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 12px 30px rgba(200, 169, 110, 0.25);
             transform: scale(1.15) translateY(-2px);
         }
 
@@ -2001,7 +2008,7 @@
             position: relative;
             z-index: 10;
             overflow: hidden;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .dev-header-minimal {
@@ -2057,12 +2064,37 @@
             width: max-content;
         }
 
-        .tm-row.go-right { animation: scrollR 60s linear infinite; }
-        .tm-row.go-left  { animation: scrollL 65s linear infinite; }
-        .tm-row.go-right2 { animation: scrollR 55s linear infinite; }
+        .tm-row.go-right {
+            animation: scrollR 60s linear infinite;
+        }
 
-        @keyframes scrollR { from { transform: translateX(-50%); } to { transform: translateX(0); } }
-        @keyframes scrollL { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .tm-row.go-left {
+            animation: scrollL 65s linear infinite;
+        }
+
+        .tm-row.go-right2 {
+            animation: scrollR 55s linear infinite;
+        }
+
+        @keyframes scrollR {
+            from {
+                transform: translateX(-50%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scrollL {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
 
         .tm-track:hover .tm-row {
             animation-play-state: paused;
@@ -2319,64 +2351,210 @@
 
         /* ─── NEW RESPONSIVE SYSTEM ─── */
         @media (max-width: 1200px) {
-            .hero-badge { right: 20px; scale: 0.8; }
-            .hero-float-cards { right: 180px; scale: 0.9; }
+            .hero-badge {
+                right: 20px;
+                scale: 0.8;
+            }
+
+            .hero-float-cards {
+                right: 180px;
+                scale: 0.9;
+            }
         }
 
         @media (max-width: 992px) {
-            nav { padding: 16px 30px; }
-            #hero { padding: 140px 30px 80px; }
-            .hero-badge, .hero-float-cards { display: none; }
-            .hero-title { font-size: clamp(48px, 10vw, 72px); }
-            
-            #about, #stats, #charts, #portals, #footer { padding-left: 30px; padding-right: 30px; }
-            
-            .about-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-            .portals-grid { grid-template-columns: 1fr 1fr; }
+            nav {
+                padding: 16px 30px;
+            }
+
+            #hero {
+                padding: 140px 30px 80px;
+            }
+
+            .hero-badge,
+            .hero-float-cards {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: clamp(48px, 10vw, 72px);
+            }
+
+            #about,
+            #stats,
+            #charts,
+            #portals,
+            #footer {
+                padding-left: 30px;
+                padding-right: 30px;
+            }
+
+            .about-cards {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+
+            .portals-grid {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
         @media (max-width: 768px) {
-            .nav-center, .nav-auth { display: none; }
-            .nav-mobile-toggle { display: flex !important; }
-            
-            #hero { align-items: center; text-align: center; min-height: 90vh; }
-            .hero-eyebrow { justify-content: center; }
-            .hero-subtitle { margin-left: auto; margin-right: auto; font-size: 14px; }
-            .hero-cta { flex-direction: column; width: 100%; max-width: 320px; margin: 0 auto; }
-            .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
-            .cta-divider { display: none; }
 
-            #about { grid-template-columns: 1fr; gap: 50px; padding: 100px 24px; }
-            .about-cards { grid-template-columns: 1fr; }
-            .about-title { font-size: 38px; }
+            .nav-center,
+            .nav-auth {
+                display: none;
+            }
 
-            .stats-grid { grid-template-columns: 1fr; gap: 20px; }
-            .stat-card { padding: 30px; }
+            .nav-mobile-toggle {
+                display: flex !important;
+            }
 
-            .charts-grid, .charts-grid-bottom { grid-template-columns: 1fr; }
-            .chart-card { padding: 24px; }
+            #hero {
+                align-items: center;
+                text-align: center;
+                min-height: 90vh;
+            }
 
-            .portals-grid { grid-template-columns: 1fr; }
-            .portal-card { padding: 30px 24px; }
+            .hero-eyebrow {
+                justify-content: center;
+            }
 
-            .spiral-label-center h2 { font-size: 34px; }
-            .spiral-pill { font-size: 10px; padding: 8px 16px; }
+            .hero-subtitle {
+                margin-left: auto;
+                margin-right: auto;
+                font-size: 14px;
+            }
 
-            .feature-slide { padding: 0 20px; }
-            .feature-visual-wrap { flex-direction: column; gap: 40px; text-align: center; }
-            .feature-display-title { font-size: 34px; }
-            .tracking-flow { padding: 15px; border-radius: 20px; }
-            .flow-stepper { grid-template-columns: repeat(3, 1fr); gap: 20px 10px; }
-            .flow-step:not(:nth-child(5n))::after, .flow-step:nth-child(5)::before { display: none; }
+            .hero-cta {
+                flex-direction: column;
+                width: 100%;
+                max-width: 320px;
+                margin: 0 auto;
+            }
 
-            .footer-grid { grid-template-columns: 1fr; gap: 40px; text-align: center; }
-            .footer-brand { margin: 0 auto 15px; }
-            .footer-socials { justify-content: center; }
-            .footer-bottom { flex-direction: column; gap: 15px; text-align: center; }
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
 
-            .dev-header-minimal h3 { font-size: 28px; }
-            .social-links-dev { flex-direction: column; align-items: center; }
-            .btn-dev-social { width: 100%; justify-content: center; }
+            .cta-divider {
+                display: none;
+            }
+
+            #about {
+                grid-template-columns: 1fr;
+                gap: 50px;
+                padding: 100px 24px;
+            }
+
+            .about-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .about-title {
+                font-size: 38px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .stat-card {
+                padding: 30px;
+            }
+
+            .charts-grid,
+            .charts-grid-bottom {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-card {
+                padding: 24px;
+            }
+
+            .portals-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .portal-card {
+                padding: 30px 24px;
+            }
+
+            .spiral-label-center h2 {
+                font-size: 34px;
+            }
+
+            .spiral-pill {
+                font-size: 10px;
+                padding: 8px 16px;
+            }
+
+            .feature-slide {
+                padding: 0 20px;
+            }
+
+            .feature-visual-wrap {
+                flex-direction: column;
+                gap: 40px;
+                text-align: center;
+            }
+
+            .feature-display-title {
+                font-size: 34px;
+            }
+
+            .tracking-flow {
+                padding: 15px;
+                border-radius: 20px;
+            }
+
+            .flow-stepper {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px 10px;
+            }
+
+            .flow-step:not(:nth-child(5n))::after,
+            .flow-step:nth-child(5)::before {
+                display: none;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+
+            .footer-brand {
+                margin: 0 auto 15px;
+            }
+
+            .footer-socials {
+                justify-content: center;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .dev-header-minimal h3 {
+                font-size: 28px;
+            }
+
+            .social-links-dev {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-dev-social {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         /* Mobile Menu Overlay */
@@ -2394,7 +2572,9 @@
             transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        #mobile-menu.open { transform: translateX(0); }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
 
         .mobile-link {
             font-family: var(--font-display);
@@ -2407,7 +2587,10 @@
             transition: all 0.5s ease;
         }
 
-        #mobile-menu.open .mobile-link { opacity: 1; transform: translateX(0); }
+        #mobile-menu.open .mobile-link {
+            opacity: 1;
+            transform: translateX(0);
+        }
 
         .nav-mobile-toggle {
             display: none;
@@ -2415,8 +2598,8 @@
             height: 44px;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             cursor: pointer;
             z-index: 1000;
@@ -2431,7 +2614,8 @@
             transition: all 0.3s;
         }
 
-        .hamburger::before, .hamburger::after {
+        .hamburger::before,
+        .hamburger::after {
             content: '';
             position: absolute;
             width: 100%;
@@ -2440,12 +2624,29 @@
             transition: all 0.3s;
         }
 
-        .hamburger::before { top: -7px; left: 0; }
-        .hamburger::after { bottom: -7px; left: 0; }
+        .hamburger::before {
+            top: -7px;
+            left: 0;
+        }
 
-        .nav-mobile-toggle.active .hamburger { background: transparent; }
-        .nav-mobile-toggle.active .hamburger::before { transform: rotate(45deg); top: 0; }
-        .nav-mobile-toggle.active .hamburger::after { transform: rotate(-45deg); bottom: 0; }
+        .hamburger::after {
+            bottom: -7px;
+            left: 0;
+        }
+
+        .nav-mobile-toggle.active .hamburger {
+            background: transparent;
+        }
+
+        .nav-mobile-toggle.active .hamburger::before {
+            transform: rotate(45deg);
+            top: 0;
+        }
+
+        .nav-mobile-toggle.active .hamburger::after {
+            transform: rotate(-45deg);
+            bottom: 0;
+        }
     </style>
 </head>
 
@@ -2459,7 +2660,8 @@
         <a href="#charts" class="mobile-link" style="transition-delay: 0.25s;">Grafik</a>
         <a href="#portals" class="mobile-link" style="transition-delay: 0.3s;">Portal</a>
         <a href="#features-scroller" class="mobile-link" style="transition-delay: 0.35s;">Fitur</a>
-        <a href="{{ route('login') }}" class="mobile-link" style="color: var(--accent); margin-top: 20px; transition-delay: 0.4s;">Masuk</a>
+        <a href="{{ route('login') }}" class="mobile-link"
+            style="color: var(--accent); margin-top: 20px; transition-delay: 0.4s;">Masuk</a>
     </div>
     <div id="scroll-bar"></div>
     <canvas id="particles-canvas"></canvas>
@@ -2472,7 +2674,8 @@
     {{-- NAVBAR --}}
     <nav id="navbar">
         <a href="#" class="nav-logo" style="display: flex; align-items: center;">
-            <img src="{{ asset('images/BP_SUML2.png') }}" alt="BPSUML" style="height: 36px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
+            <img src="{{ asset('images/BP_SUML2.png') }}" alt="BPSUML"
+                style="height: 36px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
         </a>
         <ul class="nav-center">
             <li><a href="{{ url('/?home=1') }}">Beranda</a></li>
@@ -2594,7 +2797,7 @@
     <div class="ticker-wrap">
         <div class="ticker-track">
             @php
-                $items = ['Surat Masuk', 'Surat Keluar', 'SK Internal', 'Nota Dinas', 'Pengelolaan Surat', 'Kalibrasi Alat', 'Metrologi Legal', 'SPBE', 'Dokumen Teknis', 'Direktorat Metrologi', 'Tera Ulang', 'Surat Edaran'];
+                $items = ['Surat Masuk', 'Surat Keluar', 'Chart Data', 'Nota Dinas', 'Pengelolaan Surat', 'Pengajuan Surat', 'Notifikasi Realtime', 'Template Surat', 'Dokumen Teknis', 'Status Surat', 'Tracking Surat', 'Surat Revisi'];
             @endphp
             @foreach(array_merge($items, $items) as $item)
                 <span class="ticker-item"><span class="ticker-dot"></span>{{ $item }}</span>
@@ -2679,7 +2882,7 @@
             <div class="spiral-stage" id="spiral-stage">
                 <div class="spiral-label-center" id="spiral-center">
                     <div class="slc-num">06 — Fitur Unggulan</div>
-                    <h2>Scroll untuk<br><em>Menjelajahi</em></h2>
+                    <h2>Scroll untuk<br><em>Jelajahi Fitur</em></h2>
                     <p>Semua fitur sistem persuratan BPSUML dalam satu tampilan interaktif</p>
                 </div>
                 <div id="spiral-items-container"></div>
@@ -2896,7 +3099,8 @@
                         <div class="feature-text-side">
                             <div class="feature-card-num">03</div>
                             <h3 class="feature-card-title">Verifikasi QR Code</h3>
-                            <p class="feature-card-text">Keaslian dokumen terjamin , bisa di scan melalui HandPhone(HP) dan
+                            <p class="feature-card-text">Keaslian dokumen terjamin , bisa di scan melalui HandPhone(HP)
+                                dan
                                 verifikasi QR Code yang terintegrasi langsung dengan database sistem.</p>
                             <div class="feature-card-footer">Keamanan Berstandar</div>
                         </div>
@@ -2969,7 +3173,8 @@
     <section id="developer" class="dev-section">
         <div class="dev-header-minimal" data-reveal>
             <h3>Teknologi <em>Modern</em></h3>
-            <p>Dibangun menggunakan stack teknologi mutakhir untuk memastikan performa tinggi, keamanan maksimal, dan skalabilitas jangka panjang.</p>
+            <p>Dibangun menggunakan stack teknologi mutakhir untuk memastikan performa tinggi, keamanan maksimal, dan
+                skalabilitas jangka panjang.</p>
         </div>
 
         <div class="tm-wrap">
@@ -3031,7 +3236,7 @@
                 <div class="footer-col-title">Kontak</div>
                 <ul class="footer-links">
                     <li><a href="mailto:tubpsuml@gmail.com"><i class="bi bi-envelope-at me-2"></i>tubpsuml@gmail.com</a>
-                    
+
                     </li>
                     <li><a href="https://metrologi.kemendag.go.id/" target="_blank"><i
                                 class="bi bi-globe me-2"></i>metrologi.kemendag.go.id</a></li>
@@ -3079,58 +3284,58 @@
         }
 
         // Scroll progress + nav
-        window.addEventListener('scroll', () => { 
-            const p = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100; 
+        window.addEventListener('scroll', () => {
+            const p = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
             const scrollBar = document.getElementById('scroll-bar');
-            if (scrollBar) scrollBar.style.width = p + '%'; 
-            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40); 
+            if (scrollBar) scrollBar.style.width = p + '%';
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
         });
 
         // Particles Optimized
-        (function () { 
-            const cvs = document.getElementById('particles-canvas'); 
-            const ctx = cvs.getContext('2d'); 
-            function resize() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; } 
-            resize(); 
-            window.addEventListener('resize', resize); 
-            const N = window.innerWidth < 768 ? 20 : 40; 
-            const particles = Array.from({ length: N }, () => ({ 
-                x: Math.random() * window.innerWidth, 
-                y: Math.random() * window.innerHeight, 
-                r: Math.random() * 1.2 + 0.3, 
-                vx: (Math.random() - 0.5) * 0.2, 
-                vy: (Math.random() - 0.5) * 0.2, 
-                a: Math.random() * 0.4 + 0.1 
-            })); 
-            function drawParticles() { 
-                ctx.clearRect(0, 0, cvs.width, cvs.height); 
-                particles.forEach(p => { 
-                    p.x += p.vx; p.y += p.vy; 
-                    if (p.x < 0) p.x = cvs.width; if (p.x > cvs.width) p.x = 0; 
-                    if (p.y < 0) p.y = cvs.height; if (p.y > cvs.height) p.y = 0; 
-                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); 
-                    ctx.fillStyle = `rgba(200,169,110,${p.a})`; ctx.fill(); 
-                }); 
+        (function () {
+            const cvs = document.getElementById('particles-canvas');
+            const ctx = cvs.getContext('2d');
+            function resize() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; }
+            resize();
+            window.addEventListener('resize', resize);
+            const N = window.innerWidth < 768 ? 20 : 40;
+            const particles = Array.from({ length: N }, () => ({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                r: Math.random() * 1.2 + 0.3,
+                vx: (Math.random() - 0.5) * 0.2,
+                vy: (Math.random() - 0.5) * 0.2,
+                a: Math.random() * 0.4 + 0.1
+            }));
+            function drawParticles() {
+                ctx.clearRect(0, 0, cvs.width, cvs.height);
+                particles.forEach(p => {
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.x < 0) p.x = cvs.width; if (p.x > cvs.width) p.x = 0;
+                    if (p.y < 0) p.y = cvs.height; if (p.y > cvs.height) p.y = 0;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(200,169,110,${p.a})`; ctx.fill();
+                });
                 if (window.innerWidth > 768) {
                     for (let i = 0; i < N; i++) {
-                        for (let j = i + 1; j < N; j++) { 
-                            const dx = particles[i].x - particles[j].x; 
-                            const dy = particles[i].y - particles[j].y; 
-                            const distSq = dx * dx + dy * dy; 
-                            if (distSq < 10000) { 
+                        for (let j = i + 1; j < N; j++) {
+                            const dx = particles[i].x - particles[j].x;
+                            const dy = particles[i].y - particles[j].y;
+                            const distSq = dx * dx + dy * dy;
+                            if (distSq < 10000) {
                                 const dist = Math.sqrt(distSq);
-                                ctx.beginPath(); 
-                                ctx.moveTo(particles[i].x, particles[i].y); 
-                                ctx.lineTo(particles[j].x, particles[j].y); 
-                                ctx.strokeStyle = `rgba(200,169,110,${0.06 * (1 - dist / 100)})`; 
-                                ctx.lineWidth = 0.4; ctx.stroke(); 
-                            } 
-                        } 
+                                ctx.beginPath();
+                                ctx.moveTo(particles[i].x, particles[i].y);
+                                ctx.lineTo(particles[j].x, particles[j].y);
+                                ctx.strokeStyle = `rgba(200,169,110,${0.06 * (1 - dist / 100)})`;
+                                ctx.lineWidth = 0.4; ctx.stroke();
+                            }
+                        }
                     }
                 }
-                requestAnimationFrame(drawParticles); 
-            } 
-            drawParticles(); 
+                requestAnimationFrame(drawParticles);
+            }
+            drawParticles();
         })();
 
         // Lenis Initialization
@@ -3264,17 +3469,20 @@
         // ─── 3D SPIRAL SCROLL ANIMATION ───
         const spiralData = [
             { label: 'Surat Masuk', emoji: '📥' },
-            { label: 'Surat Keluar', emoji: '📤' },
-            { label: 'SK Internal', emoji: '📋' },
+            { label: 'Surat Selesai', emoji: '📤' },
+            { label: 'Chart Data', emoji: '📊' },
             { label: 'Nota Dinas', emoji: '📝' },
-            { label: 'UTTP Kalibrasi', emoji: '⚖️' },
-            { label: 'Tera Ulang', emoji: '🔬' },
-            { label: 'Dokumen Teknis', emoji: '📐' },
+            { label: 'Notifikasi', emoji: '🔔' },
+            { label: 'Template Surat', emoji: '📋' },
+            { label: 'Revisi Surat', emoji: '📨' },
             { label: 'Laporan Tahunan', emoji: '📊' },
-            { label: 'Surat Edaran', emoji: '📢' },
+            { label: 'Laporan Bulanan', emoji: '📆' },
             { label: 'Permohonan', emoji: '📌' },
             { label: 'QR Verifikasi', emoji: '🔐' },
             { label: '10 Tahap SLA', emoji: '⏱️' },
+            { label: 'Aplikasi', emoji: '📱' },
+            { label: 'Kontribusi', emoji: '🤝' },
+            
         ];
 
         const spiralContainer = document.getElementById('spiral-items-container');
