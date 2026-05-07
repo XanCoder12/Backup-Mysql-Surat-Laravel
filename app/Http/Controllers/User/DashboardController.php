@@ -106,10 +106,12 @@ class DashboardController extends Controller
             }
         }
 
+        $weeklyActivity = $user->getWeeklyActivityData();
+
         return view('dashboard', compact(
             'totalSurat', 'suratSelesai', 'suratProses', 'suratRevisi', 'suratDitolak', 'suratDraft',
             'suratTerbaru', 'suratAktif', 'templates',
-            'jenisSurat', 'trenBulanan', 'isLibur', 'bulanSelected', 'tahunSelected'
+            'jenisSurat', 'trenBulanan', 'isLibur', 'bulanSelected', 'tahunSelected', 'weeklyActivity'
         ));
     }
 
