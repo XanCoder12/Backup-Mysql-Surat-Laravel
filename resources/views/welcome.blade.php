@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BPSUML — Balai Pengelolaan Standar Ukuran & Metrologi Legal</title>
+    <title>BPSUML — Balai Pengelolaan Standar Ukuran Metrologi Legal</title>
     <link rel="icon" href="{{ asset('images/metrologi.png') }}" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -65,7 +65,10 @@
         /* ── BG ── */
         .bg-mesh {
             position: fixed;
-            inset: 0;
+            top: -200px;
+            left: 0;
+            right: 0;
+            bottom: -200px;
             z-index: 0;
             background:
                 radial-gradient(ellipse 80% 60% at 18% 8%, rgba(28, 48, 100, 0.55) 0%, transparent 60%),
@@ -73,17 +76,22 @@
                 radial-gradient(ellipse 38% 38% at 58% 32%, rgba(200, 169, 110, 0.07) 0%, transparent 58%),
                 linear-gradient(160deg, #070B13 0%, #0D1526 52%, #050910 100%);
             pointer-events: none;
+            will-change: transform;
         }
 
         .bg-grid {
             position: fixed;
-            inset: 0;
+            top: -100px;
+            left: 0;
+            right: 0;
+            bottom: -100px;
             z-index: 0;
             background-image:
                 linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
             background-size: 64px 64px;
             pointer-events: none;
+            will-change: transform;
         }
 
         .bg-orb {
@@ -2521,7 +2529,8 @@
                 border-bottom: 1px solid var(--glass-border);
             }
 
-            .feature-slide.first-slide, .feature-slide.last-slide {
+            .feature-slide.first-slide,
+            .feature-slide.last-slide {
                 width: 100% !important;
             }
 
@@ -2604,7 +2613,8 @@
                 flex-wrap: wrap;
             }
 
-            .btn-primary, .btn-secondary {
+            .btn-primary,
+            .btn-secondary {
                 flex: 1;
                 min-width: 140px;
                 justify-content: center;
@@ -2762,6 +2772,7 @@
             <li><a href="{{ url('/?home=1') }}">Beranda</a></li>
             <li><a href="#about">Tentang</a></li>
             <li><a href="#stats">Statistik</a></li>
+            <li><a href="#spiral-section">Jenis</a></li>
             <li><a href="#charts">Grafik</a></li>
             <li><a href="#portals">Portal</a></li>
             <li><a href="#features-scroller">Fitur</a></li>
@@ -2784,8 +2795,8 @@
                     </div>
                 </a>
             @else
-                <a href="{{ route('login') }}" class="nav-btn-login">Login</a>
-                <a href="{{ route('register') }}" class="nav-btn-register">Daftar</a>
+                <a href="{{ route('login') }}" class="nav-btn-login">Sign In</a>
+                <a href="{{ route('register') }}" class="nav-btn-register">Sign Up</a>
             @endauth
         </div>
 
@@ -2806,13 +2817,14 @@
             <span class="line"> Metrologi Legal</span>
         </h1>
         <p class="hero-subtitle">
-            Sistem Monitoring dan Pengelolaan Persuratan Balai Pengelolaan Standar Ukuran Metrologi Legal — Efisien, Efektif, Sistematis Serta Mudah Diakses Kapan Saja.
+            Sistem Monitoring dan Pengelolaan Persuratan Balai Pengelolaan Standar Ukuran Metrologi Legal — Efisien,
+            Efektif, Sistematis Serta Mudah Diakses Kapan Saja.
         </p>
         <div class="hero-cta">
             <a href="{{ route('login') }}" class="btn-primary">
-                Masuk Sistem
+                Masuk Ke Web
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M5 12h14M12 5l7 7-7 7" /> 
+                    <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
             </a>
             <a href="{{ route('register') }}" class="btn-secondary">
@@ -2889,11 +2901,12 @@
     <section id="about">
         <div class="about-left" data-reveal>
             <div class="about-label">Tentang Kami</div>
-            <h2 class="about-title">Manajemen surat digital<br>untuk <em>BPSUML</em></h2>
+            <h2 class="about-title">Manajemen Persuratan Digital Untuk <em>BPSUML</em></h2>
             <p class="about-body">Balai Pengelolaan Standar Ukuran dan Metrologi Legal (BPSUML) merupakan unit pelaksana
                 teknis di bawah Direktorat Metrologi, Kementerian Perdagangan RI, yang bertugas menyelenggarakan
                 Pengelolaan, kalibrasi, dan tera ulang alat ukur.</p>
-            <p class="about-body">Sistem arsip digital ini hadir untuk mendukung tata kelola administrasi yang
+            <p class="about-body">Sistem manajemen persuratan digital ini hadir untuk mendukung tata kelola administrasi
+                yang
                 transparan, akuntabel, dan efisien dalam lingkungan pemerintahan yang modern.</p>
         </div>
         <div class="about-cards">
@@ -2902,7 +2915,7 @@
                     <path
                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                <div class="about-card-title">Sistem Persuratan Digita</div>
+                <div class="about-card-title">Sistem Persuratan Digital</div>
                 <div class="about-card-body">Pengelolaan surat masuk, surat keluar, dan dokumen internal secara terpusat
                     dan terdigitalisasi.</div>
             </div>
@@ -2932,23 +2945,23 @@
     <section id="stats">
         <div class="stats-header">
             <div class="stats-label">Statistik</div>
-            <h2 class="stats-title">Data <em>Arsip</em> Terkini</h2>
+            <h2 class="stats-title">Data <em>Surat</em> Terkini</h2>
         </div>
         <div class="stats-grid">
             <div class="stat-card"><span class="stat-type">Masuk</span>
-                <div class="stat-number" data-target="{{ $totalSuratMasuk ?? 284 }}">0</div>
-                <div class="stat-label">Surat Masuk<br>Tercatat</div>
+                <div class="stat-number" data-target="{{ $totalSuratMasuk }}">0</div>
+                <div class="stat-label">Total Surat<br> Masuk</div>
             </div>
-            <div class="stat-card"><span class="stat-type">Keluar</span>
-                <div class="stat-number" data-target="{{ $totalSuratKeluar ?? 197 }}">0</div>
-                <div class="stat-label">Surat Keluar<br>Dikirim</div>
+            <div class="stat-card"><span class="stat-type">Selesai</span>
+                <div class="stat-number" data-target="{{ $totalSuratKeluar }}">0</div>
+                <div class="stat-label">Total Surat<br> Selesai</div>
             </div>
             <div class="stat-card"><span class="stat-type">Aktif</span>
-                <div class="stat-number" data-target="{{ $totalPengguna ?? 52 }}">0</div>
+                <div class="stat-number" data-target="{{ $totalPengguna }}">0</div>
                 <div class="stat-label">Pengguna<br>Terdaftar</div>
             </div>
-            <div class="stat-card"><span class="stat-type">Total</span>
-                <div class="stat-number" data-target="{{ ($totalSuratMasuk ?? 284) + ($totalSuratKeluar ?? 197) }}">0
+            <div class="stat-card"><span class="stat-type">Terarsip</span>
+                <div class="stat-number" data-target="{{ $totalDokumenTerarsip }}">0
                 </div>
                 <div class="stat-label">Dokumen<br>Terarsip</div>
             </div>
@@ -2987,7 +3000,9 @@
                     <div>
                         <div class="chart-card-title">Tren Surat & Kepatuhan SLA</div>
                         <div class="chart-card-sub">6 bulan terakhir · mixed chart</div>
-                    </div><span class="chart-badge up">↑ 12%</span>
+                    </div> <span class="chart-badge {{ $growth >= 0 ? 'up' : 'down' }}">
+                        {{ $growth >= 0 ? '↑' : '↓' }} {{ abs($growth) }}%
+                    </span>
                 </div>
                 <div class="chart-legend"><span class="legend-item"><span class="legend-dot"
                             style="background:#C8A96E"></span>Surat Masuk</span><span class="legend-item"><span
@@ -3002,7 +3017,7 @@
                     <div>
                         <div class="chart-card-title">Distribusi Jenis Surat</div>
                         <div class="chart-card-sub">Proporsi per kategori</div>
-                    </div><span class="chart-badge">7 jenis</span>
+                    </div> <span class="chart-badge">{{ count($doughnutLabels) }} jenis</span>
                 </div>
                 <div id="doughnut-legend" class="chart-legend" style="flex-wrap:wrap;gap:8px 14px"></div>
                 <div style="position:relative;width:100%;height:220px"><canvas id="chartDoughnut"></canvas></div>
@@ -3286,10 +3301,10 @@
     <footer id="footer">
         <div class="footer-cta-band">
             <div class="footer-cta-text">Siap menggunakan<br><em>sistem arsip digital</em>?</div>
-            <div class="footer-cta-btns"><a href="{{ route('login') }}" class="btn-primary">Login <svg width="13"
+            <div class="footer-cta-btns"><a href="{{ route('login') }}" class="btn-primary">Sign In <svg width="13"
                         height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg></a><a href="{{ route('register') }}" class="btn-secondary">Register <svg width="13"
+                    </svg></a><a href="{{ route('register') }}" class="btn-secondary">Sign Up <svg width="13"
                         height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 5v14M5 12h14" />
                     </svg></a></div>
@@ -3315,8 +3330,8 @@
             <div>
                 <div class="footer-col-title">Akses</div>
                 <ul class="footer-links">
-                    <li><a href="{{ route('login') }}">Login</a></li>
-                    <li><a href="{{ route('register') }}">Register</a></li>
+                    <li><a href="{{ route('login') }}">Sign In</a></li>
+                    <li><a href="{{ route('register') }}">Sign Up</a></li>
                 </ul>
             </div>
             <div>
@@ -3505,8 +3520,8 @@
 
         // Background Parallax
         gsap.to('.bg-mesh', {
-            y: 200,
-            opacity: 0.5,
+            y: 120, // Reduced from 200 for subtler effect
+            opacity: 0.85, // Maintain more brightness
             scrollTrigger: {
                 trigger: '#hero',
                 start: 'top top',
@@ -3569,7 +3584,7 @@
             { label: '10 Tahap SLA', emoji: '⏱️' },
             { label: 'Aplikasi', emoji: '📱' },
             { label: 'Kontribusi', emoji: '🤝' },
-            
+
         ];
 
         const spiralContainer = document.getElementById('spiral-items-container');
@@ -3658,7 +3673,7 @@
 
             const step = Math.floor(progress * 4);
             const texts = [
-                { h: 'Scroll untuk<br><em>Menjelajahi</em>', p: 'Semua fitur sistem persuratan BPSUML' },
+                { h: 'Scroll untuk<br><em>Melihat</em>', p: 'Semua fitur sistem persuratan BPSUML' },
                 { h: 'Pengelolaan<br><em>Dokumen</em>', p: 'Dari surat masuk hingga pengarsipan digital' },
                 { h: 'Keamanan<br><em>Terverifikasi</em>', p: 'QR Code & SLA monitoring real-time' },
                 { h: 'Sistem<br><em>Terintegrasi</em>', p: 'Seluruh alur kerja dalam satu platform' },
@@ -3682,14 +3697,107 @@
         }
 
         // Chart.js: Mixed
-        const months = ['Nov', 'Des', 'Jan', 'Feb', 'Mar', 'Apr']; const dataIn = [38, 45, 52, 41, 60, 55]; const dataOut = [30, 38, 44, 35, 52, 47]; const dataSLA = [88, 91, 85, 93, 96, 94];
+        const months = {!! json_encode($chartMixedMonths) !!};
+        const dataIn = {!! json_encode($chartMixedMasuk) !!};
+        const dataOut = {!! json_encode($chartMixedKeluar) !!};
+        const dataSLA = {!! json_encode($chartMixedSLA) !!};
         new Chart(document.getElementById('chartMixed'), { data: { labels: months, datasets: [{ type: 'bar', label: 'Surat Masuk', data: dataIn, backgroundColor: 'rgba(200,169,110,0.65)', borderColor: '#C8A96E', borderWidth: 1, borderRadius: 5, order: 2 }, { type: 'bar', label: 'Surat Keluar', data: dataOut, backgroundColor: 'rgba(29,158,117,0.55)', borderColor: '#1D9E75', borderWidth: 1, borderRadius: 5, order: 2 }, { type: 'line', label: 'SLA Rate %', data: dataSLA, borderColor: '#5DCAA5', backgroundColor: 'rgba(93,202,165,0.08)', borderWidth: 2.5, pointBackgroundColor: '#5DCAA5', pointRadius: 4, pointHoverRadius: 6, tension: 0.4, fill: true, yAxisID: 'y2', order: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false, backgroundColor: 'rgba(7,11,19,0.9)', borderColor: 'rgba(200,169,110,0.3)', borderWidth: 1, titleColor: '#C8A96E', bodyColor: 'rgba(244,241,236,0.7)', padding: 10 } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: 'rgba(244,241,236,0.45)', font: { size: 11 } } }, y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: 'rgba(244,241,236,0.45)', font: { size: 11 } }, beginAtZero: true }, y2: { position: 'right', min: 70, max: 100, grid: { drawOnChartArea: false }, ticks: { color: 'rgba(93,202,165,0.6)', font: { size: 11 }, callback: v => v + '%' } } } } });
         // Doughnut
-        const doughnutLabels = ['Nota Dinas', 'Surat Dinas', 'Surat Keputusan', 'Surat Pernyataan', 'Surat Keterangan', 'Surat Undangan', 'Lainnya']; const doughnutData = [28, 22, 15, 12, 10, 8, 5]; const doughnutColors = ['#C8A96E', '#1D9E75', '#378ADD', '#EF9F27', '#D85A30', '#D4537E', '#888780']; const dlegend = document.getElementById('doughnut-legend'); doughnutLabels.forEach((l, i) => { dlegend.innerHTML += `<span class="legend-item"><span class="legend-dot" style="background:${doughnutColors[i]}"></span>${l} ${doughnutData[i]}%</span>`; }); new Chart(document.getElementById('chartDoughnut'), { type: 'doughnut', data: { labels: doughnutLabels, datasets: [{ data: doughnutData, backgroundColor: doughnutColors.map(c => c + 'CC'), borderColor: doughnutColors, borderWidth: 1.5, hoverOffset: 8 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '64%', plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(7,11,19,0.9)', borderColor: 'rgba(200,169,110,0.3)', borderWidth: 1, titleColor: '#C8A96E', bodyColor: 'rgba(244,241,236,0.7)', padding: 10, callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}%` } } } } });
+        const doughnutLabels = {!! json_encode($doughnutLabels) !!};
+        const doughnutDataObj = {!! json_encode($doughnutData) !!};
+        const doughnutData = doughnutDataObj.map(d => d.pct);
+        const doughnutColors = ['#C8A96E', '#1D9E75', '#378ADD', '#EF9F27', '#D85A30', '#D4537E', '#888780'];
+        const dlegend = document.getElementById('doughnut-legend');
+        doughnutLabels.forEach((l, i) => {
+            const d = doughnutDataObj[i];
+            dlegend.innerHTML += `<span class="legend-item"><span class="legend-dot" style="background:${doughnutColors[i]}"></span>${l} <strong>(${d.count})</strong> ${d.pct}%</span>`;
+        });
+        new Chart(document.getElementById('chartDoughnut'), {
+            type: 'doughnut',
+            data: {
+                labels: doughnutLabels,
+                datasets: [{
+                    data: doughnutData,
+                    backgroundColor: doughnutColors.map(c => c + 'CC'),
+                    borderColor: doughnutColors,
+                    borderWidth: 1.5,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '64%',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(7,11,19,0.9)',
+                        borderColor: 'rgba(200,169,110,0.3)',
+                        borderWidth: 1,
+                        titleColor: '#C8A96E',
+                        bodyColor: 'rgba(244,241,236,0.7)',
+                        padding: 10,
+                        callbacks: { label: ctx => ` ${ctx.label}: ${doughnutDataObj[ctx.dataIndex].count} surat (${ctx.raw}%)` }
+                    }
+                }
+            }
+        });
         // Stacked Area
-        const months12 = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']; new Chart(document.getElementById('chartArea'), { type: 'line', data: { labels: months12, datasets: [{ label: 'Masuk', data: [30, 38, 44, 41, 52, 58, 48, 62, 55, 70, 60, 55], borderColor: '#C8A96E', backgroundColor: 'rgba(200,169,110,0.12)', borderWidth: 2, pointRadius: 3, tension: 0.4, fill: true }, { label: 'Keluar', data: [22, 30, 38, 35, 44, 50, 40, 54, 46, 60, 52, 47], borderColor: '#378ADD', backgroundColor: 'rgba(55,138,221,0.08)', borderWidth: 2, pointRadius: 3, tension: 0.4, fill: true }, { label: 'Selesai', data: [18, 26, 34, 30, 40, 46, 36, 50, 42, 56, 48, 43], borderColor: '#1D9E75', backgroundColor: 'rgba(29,158,117,0.08)', borderWidth: 2, pointRadius: 3, tension: 0.4, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(7,11,19,0.9)', borderColor: 'rgba(200,169,110,0.3)', borderWidth: 1, titleColor: '#C8A96E', bodyColor: 'rgba(244,241,236,0.7)', padding: 10 } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: 'rgba(244,241,236,0.45)', font: { size: 11 } } }, y: { stacked: false, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: 'rgba(244,241,236,0.45)', font: { size: 11 } }, beginAtZero: true } } } });
+        const months12 = {!! json_encode($chartAreaMonths) !!};
+        new Chart(document.getElementById('chartArea'), {
+            type: 'line',
+            data: {
+                labels: months12,
+                datasets: [
+                    { label: 'Masuk', data: {!! json_encode($chartAreaMasuk) !!}, borderColor: '#C8A96E', backgroundColor: 'rgba(200,169,110,0.12)', borderWidth: 2, pointRadius: 3, tension: 0.4, fill: true },
+                    { label: 'Keluar', data: {!! json_encode($chartAreaKeluar) !!}, borderColor: '#378ADD', backgroundColor: 'rgba(55,138,221,0.08)', borderWidth: 2, pointRadius: 3, tension: 0.4, fill: true },
+                    { label: 'Selesai', data: {!! json_encode($chartAreaSelesai) !!}, borderColor: '#1D9E75', backgroundColor: 'rgba(29,158,117,0.08)', borderWidth: 2, pointRadius: 3, tension: 0.4, fill: true }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { backgroundColor: 'rgba(7,11,19,0.9)', borderColor: 'rgba(200,169,110,0.3)', borderWidth: 1, titleColor: '#C8A96E', bodyColor: 'rgba(244,241,236,0.7)', padding: 10 }
+                },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: 'rgba(244,241,236,0.45)', font: { size: 11 } } },
+                    y: { stacked: false, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: 'rgba(244,241,236,0.45)', font: { size: 11 } }, beginAtZero: true }
+                }
+            }
+        });
         // SLA bars
-        const slaData = [{ name: 'Nota Dinas', pct: 96, color: '#1D9E75' }, { name: 'Surat Dinas', pct: 91, color: '#5DCAA5' }, { name: 'Surat Keputusan', pct: 84, color: '#C8A96E' }, { name: 'Surat Pernyataan', pct: 88, color: '#C8A96E' }, { name: 'Surat Undangan', pct: 78, color: '#EF9F27' }, { name: 'Lainnya', pct: 72, color: '#D85A30' }]; const slaList = document.getElementById('sla-list'); slaData.forEach((s, i) => { slaList.innerHTML += `<div class="sla-item"><div class="sla-row"><span class="sla-name">${s.name}</span><span class="sla-val" id="sla-val-${i}">0%</span></div><div class="sla-bar-wrap"><div class="sla-bar" id="sla-bar-${i}" style="background:${s.color}"></div></div></div>`; }); ScrollTrigger.create({ trigger: '#sla-list', start: 'top 80%', once: true, onEnter: () => { slaData.forEach((s, i) => { anime({ targets: `#sla-bar-${i}`, width: s.pct + '%', duration: 1400, delay: i * 120, easing: 'easeOutExpo' }); anime({ targets: `#sla-val-${i}`, innerHTML: [0, s.pct], round: 1, duration: 1400, delay: i * 120, easing: 'easeOutExpo', update: function (a) { document.getElementById(`sla-val-${i}`).innerHTML = Math.round(a.animations[0].currentValue) + '%'; } }); }); } });
+        const slaData = {!! json_encode($slaPerJenis) !!};
+        const slaList = document.getElementById('sla-list');
+        slaData.forEach((s, i) => {
+            slaList.innerHTML += `<div class="sla-item"><div class="sla-row"><span class="sla-name">${s.name}</span><span class="sla-val" id="sla-val-${i}">0%</span></div><div class="sla-bar-wrap"><div class="sla-bar" id="sla-bar-${i}" style="background:${s.color}"></div></div></div>`;
+        });
+        ScrollTrigger.create({
+            trigger: '#sla-list',
+            start: 'top 80%',
+            once: true,
+            onEnter: () => {
+                slaData.forEach((s, i) => {
+                    anime({ targets: `#sla-bar-${i}`, width: s.pct + '%', duration: 1400, delay: i * 120, easing: 'easeOutExpo' });
+
+                    const obj = { val: 0 };
+                    anime({
+                        targets: obj,
+                        val: s.pct,
+                        round: 1,
+                        duration: 1400,
+                        delay: i * 120,
+                        easing: 'easeOutExpo',
+                        update: function () {
+                            const el = document.getElementById(`sla-val-${i}`);
+                            if (el) el.innerHTML = Math.round(obj.val) + '%';
+                        }
+                    });
+                });
+            }
+        });
         // Portals reveal
         gsap.fromTo('.portal-card', { opacity: 0, scale: 0.95, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, stagger: 0.08, scrollTrigger: { trigger: '#portals', start: 'top 75%' } });
         gsap.fromTo('.portals-header > *', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.1, scrollTrigger: { trigger: '#portals', start: 'top 80%' } });
