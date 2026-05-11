@@ -27,7 +27,7 @@
                         Mohon maaf, layanan pengajuan surat dinonaktifkan sementara.<br>
                         Saat ini pukul <strong>{{ now()->format('H:i') }} WIB</strong>.<br>
                         Silakan kembali lagi pada jam operasional layanan.<br>
-                        <span class="badge bg-light text-dark mt-2 p-2">Senin–Kamis: 07.30–16.00 WIB &nbsp;|&nbsp; Jumat: 07.30–16.30 WIB</span>
+                        <span class="badge bg-light text-dark mt-2 p-2">Senin–Kamis: 07.30–16.00 WIB | Jumat: 07.30–16.30 WIB | Sabtu–Minggu: <span class="text-danger">Libur</span></span>
                     </p>
                     <a href="{{ route('dashboard') }}" class="btn btn-primary-modern px-4">
                         <i class="bi bi-house-door-fill me-2"></i>Kembali ke Dashboard
@@ -170,11 +170,11 @@
                             <div>
                                 <label class="form-label" style="font-size:13px;font-weight:500;color:#111827;">
                                     Lampiran (opsional)
-                                    <span class="text-muted fw-normal" style="font-size:11px;">PDF, JPG, PNG, DOCX</span>
+                                    <span class="text-muted fw-normal" style="font-size:11px;">PDF, JPG, PNG, DOCX, XLSX</span>
                                 </label>
                                 <label class="upload-area d-block" for="file_lampiran">
                                     <input type="file" id="file_lampiran" name="file_lampiran"
-                                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx"
                                     class="@error('file_lampiran') is-invalid @enderror"
                                         onchange="showFileName(this, 'nama_lampiran')">
                                     <i class="bi bi-paperclip" style="font-size:24px; display:block; margin-bottom:6px;"></i>
