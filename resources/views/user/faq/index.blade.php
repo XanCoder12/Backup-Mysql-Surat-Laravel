@@ -620,7 +620,7 @@
             {{-- Stats --}}
             <div class="faq-stats fade-up fade-up-3">
                 <div class="faq-stat">
-                    <div class="faq-stat-num">27</div>
+                    <div class="faq-stat-num">33</div>
                     <div class="faq-stat-label">Artikel FAQ</div>
                 </div>
                 <div class="faq-stat-divider"></div>
@@ -782,6 +782,28 @@
 
             <div class="faq-item" data-cat="pengajuan">
                 <button class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-q-icon">💬</div>
+                    <span class="faq-q-text">Bagaimana cara menggunakan menu Aspirasi?</span>
+                    <div class="faq-q-arrow"><i class="bi bi-chevron-down"></i></div>
+                </button>
+                <div class="faq-answer-wrap">
+                    <div class="faq-answer">
+                        Menu <strong>Aspirasi</strong> adalah fitur untuk menyampaikan saran, keluhan, atau masukan kepada pihak terkait. Cara menggunakan:
+                        <ul>
+                            <li>Buka menu <strong>Aspirasi</strong> di sidebar atau navigasi.</li>
+                            <li>Klik tombol <strong>"Tulis Aspirasi"</strong> untuk membuat baru.</li>
+                            <li>Pilih mau mengajukan ke <strong>Admin</strong> atau <strong>IT Support</strong>.</li>
+                            <li>Pilih kategori: <strong>Saran, Keluhan,</strong> atau <strong>Masukan</strong>.</li>
+                            <li>Isi subjek dan detail aspirasi Anda.</li>
+                            <li>Klik <strong>Kirim</strong> — aspirasi akan masuk ke sistem dan ditinjau oleh Admin.</li>
+                        </ul>
+                        Aspirasi yang sudah terkirim berstatus <span class="tag-success">Terkirim</span> dan menunggu balasan. Jika masih berstatus <strong>Draft</strong>, artinya belum dikirim dan bisa diedit atau dihapus.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-cat="pengajuan">
+                <button class="faq-question" onclick="toggleFaq(this)">
                     <div class="faq-q-icon">⏳</div>
                     <span class="faq-q-text">Berapa lama batas waktu saya bisa mengedit surat?</span>
                     <div class="faq-q-arrow"><i class="bi bi-chevron-down"></i></div>
@@ -924,6 +946,26 @@
 
             <div class="faq-item" data-cat="teknis">
                 <button class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-q-icon">🔔</div>
+                    <span class="faq-q-text">Bagaimana cara mengelola notifikasi?</span>
+                    <div class="faq-q-arrow"><i class="bi bi-chevron-down"></i></div>
+                </button>
+                <div class="faq-answer-wrap">
+                    <div class="faq-answer">
+                        Sistem menyediakan menu <strong>Notifikasi</strong> untuk mengelola semua pemberitahuan. Cara menggunakan:
+                        <ul>
+                            <li><strong>Melihat Notifikasi:</strong> Klik icon lonceng di navbar. Notifikasi yang belum dibaca ditandai dengan titik merah.</li>
+                            <li><strong>Tandai Sudah Dibaca:</strong> Klik satu notifikasi untuk otomatis menandai sebagai sudah dibaca, atau gunakan tombol <strong>"Tandai Semua Dibaca"</strong> untuk sekaligus.</li>
+                            <li><strong>Hapus Notifikasi:</strong> Klik icon sampah pada masing-masing notifikasi untuk menghapusnya satu per satu.</li>
+                            <li><strong>Hapus Semua:</strong> Gunakan tombol <strong"Hapus Semua Notifikasi"</strong> untuk membersihkan semua notifikasi sekaligus.</li>
+                        </ul>
+                        <em>Catatan: Notifikasi yang berumur lebih dari 1 minggu akan dihapus otomatis setiap Senin pukul 01.00 untuk menjaga kebersihan sistem.</em>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-cat="teknis">
+                <button class="faq-question" onclick="toggleFaq(this)">
                     <div class="faq-q-icon">📅</div>
                     <span class="faq-q-text">Kenapa tidak bisa mengajukan surat di hari Sabtu/Minggu?</span>
                     <div class="faq-q-arrow"><i class="bi bi-chevron-down"></i></div>
@@ -951,12 +993,47 @@
             <div class="faq-item" data-cat="teknis">
                 <button class="faq-question" onclick="toggleFaq(this)">
                     <div class="faq-q-icon">📊</div>
+                    <span class="faq-q-text">Berapa lama dashboard diperbarui secara otomatis?</span>
+                    <div class="faq-q-arrow"><i class="bi bi-chevron-down"></i></div>
+                </button>
+                <div class="faq-answer-wrap">
+                    <div class="faq-answer">
+                        <strong>Dashboard realtime</strong> akan diperbarui secara otomatis setiap <strong>15–20 detik</strong> untuk memastikan data yang Anda lihat selalu terbaru. Namun, fitur update otomatis ini <strong>tidak berlaku</strong> jika Anda sedang berada di halaman lain (misal: Template, About, FAQ) — update baru akan berjalan ketika Anda kembali ke Dashboard.
+                        <br><br>
+                        Fitur ini membantu mengurangi beban server sambil tetap menjaga data tetap segar saat Anda aktif di halaman utama.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-cat="teknis">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-q-icon">📊</div>
                     <span class="faq-q-text">Dapatkah saya melihat statistik pengajuan surat saya?</span>
                     <div class="faq-q-arrow"><i class="bi bi-chevron-down"></i></div>
                 </button>
                 <div class="faq-answer-wrap">
                     <div class="faq-answer">
                         Tentu! Anda dapat mengakses menu <strong>Statistik</strong> untuk melihat grafik distribusi jenis surat dan tren bulanan pengajuan Anda. Selain itu, terdapat fitur <strong>Export Statistik</strong> untuk mengunduh laporan aktivitas surat Anda.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-cat="teknis">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-q-icon">📈</div>
+                    <span class="faq-q-text">Apa saja yang bisa saya lihat di menu Statistik?</span>
+                    <div class="faq-q-arrow"><i class="bi bi-chevron-down"></i></div>
+                </button>
+                <div class="faq-answer-wrap">
+                    <div class="faq-answer">
+                        Menu <strong>Statistik</strong> menyediakan visualisasi data pengajuan Anda secara lengkap:
+                        <ul>
+                            <li><strong>Grafik Tren Bulanan:</strong> Melihat jumlah pengajuan setiap bulan.</li>
+                            <li><strong>Distribusi Jenis Surat:</strong> Diagram Pie/Donut menampilkan proporsi jenis surat (Nota Dinas, Surat Dinas, SK, dll).</li>
+                            <li><strong>Status Surat:</strong> Ringkasan jumlah: Draft, Diproses, Selesai, Ditolak.</li>
+                            <li><strong>Export Laporan:</strong> Tombol untuk mengunduh data statistik Anda dalam format Excel/CSV.</li>
+                        </ul>
+                        Akses melalui menu <strong>Statistik</strong> di sidebar user Anda.
                     </div>
                 </div>
             </div>
@@ -1128,6 +1205,26 @@
                 <div class="faq-answer-wrap">
                     <div class="faq-answer">
                         Website ini dirancang dan dikembangkan sebagai bagian dari <strong>Proyek PKL (Praktik Kerja Lapangan)</strong> oleh siswa <strong>SMK Alfalah</strong> dengan peran Fullstack Developer. Pengembangan dibantu oleh AI untuk memastikan kode yang bersih, efisien, dan mengikuti standar industri modern.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-cat="tentang">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-q-icon">ℹ️</div>
+                    <span class="faq-q-text">Apa itu halaman About dan fungsinya?</span>
+                    <div class="faq-q-arrow"><i class="bi bi-chevron-down"></i></div>
+                </button>
+                <div class="faq-answer-wrap">
+                    <div class="faq-answer">
+                        Menu <strong>About</strong> adalah halaman informatif yang berisi:
+                        <ul>
+                            <li><strong>Profil Website:</strong> Penjelasan singkat tentang sistem persuratan BP Suml.</li>
+                            <li><strong>Struktur Organisasi:</strong> Informasi hierarki pengelolaan surat.</li>
+                            <li><strong>Kontak & Sosial Media:</strong> Link WhatsApp, Telegram, Email, dan channel komunikasi resmi lainnya.</li>
+                            <li><strong>Link Bantuan:</strong> Akses cepat ke FAQ dan panduan penggunaan.</li>
+                        </ul>
+                        Halaman ini berguna bagi pengguna baru untuk memahami konteks dan tujuan sistem sebelum mulai mengajukan surat.
                     </div>
                 </div>
             </div>
