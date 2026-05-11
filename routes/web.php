@@ -92,6 +92,11 @@ Route::prefix('Admin')->middleware(['auth', 'verified', 'admin'])->name('admin.'
         Route::get('/Chart', [\App\Http\Controllers\Admin\ChartController::class, 'index'])->name('chart.index');
         Route::get('/Chart/data', [\App\Http\Controllers\Admin\ChartController::class, 'data'])->name('chart.data');
 
+        // Analytics
+        Route::prefix('Analytics')->group(function () {
+            Route::get('/SLA', [\App\Http\Controllers\Admin\AnalyticsController::class, 'sla'])->name('analytics.sla');
+        });
+
         Route::get('/FAQ', function () {
             return view('admin.faq.index', ['title' => 'FAQ & Bantuan']);
         })->name('faq.index');
@@ -148,6 +153,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware(['it_support'])->prefix('IT-Support')->name('itsupport.')->group(function () {
         Route::get('/Dashboard', [\App\Http\Controllers\ITSupportController::class, 'dashboard'])->name('dashboard');
+        Route::patch('/Aspirasi/{aspirasi}', [\App\Http\Controllers\ITSupportController::class, 'updateAspirasi'])->name('aspirasi.update');
+        
+        Route::get('/Notification/Create', [\App\Http\Controllers\ITSupportController::class, 'createNotification'])->name('notification.create');
+        Route::post('/Notification', [\App\Http\Controllers\ITSupportController::class, 'storeNotification'])->name('notification.store');
     });
 });
 
