@@ -41,6 +41,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('surat')->name('user.surat.')->group(function () {
         Route::get('/', [UserSurat::class, 'index'])->name('index');
         Route::get('/tabel', [UserSurat::class, 'table'])->name('table');
+        Route::get('/export-excel', [UserSurat::class, 'exportExcel'])->name('exportExcel');
         Route::get('/ajukan', [UserSurat::class, 'create'])->name('create');
         Route::post('/ajukan', [UserSurat::class, 'store'])->name('store');
         Route::get('/{surat}', [UserSurat::class, 'show'])->name('show');
@@ -100,6 +101,11 @@ Route::prefix('Admin')->middleware(['auth', 'verified', 'admin'])->name('admin.'
         Route::get('/FAQ', function () {
             return view('admin.faq.index', ['title' => 'FAQ & Bantuan']);
         })->name('faq.index');
+
+        // Bug Report / IT Support
+        Route::get('/Bantuan-IT-Support', [\App\Http\Controllers\Admin\BugReportController::class, 'index'])->name('bug-report.index');
+        Route::post('/Bantuan-IT-Support', [\App\Http\Controllers\Admin\BugReportController::class, 'store'])->name('bug-report.store');
+        Route::delete('/Bantuan-IT-Support/{aspirasi}', [\App\Http\Controllers\Admin\BugReportController::class, 'destroy'])->name('bug-report.destroy');
 
         // Riwayat Pemrosesan Surat
         Route::get('/Riwayat', [\App\Http\Controllers\Admin\RiwayatController::class, 'index'])->name('riwayat.index');
