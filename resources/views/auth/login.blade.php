@@ -749,11 +749,6 @@
             display: flex; align-items: center; justify-content: center; gap: 6px;
             color: rgba(255,255,255,0.25); font-size: 10.5px;
         }
-            font-size: 11px;
-            color: #7dd3fc;
-            margin-bottom: 14px;
-            width: fit-content;
-        }
     </style>
 </head>
 <body>
