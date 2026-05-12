@@ -587,6 +587,11 @@
                     <i class="bi bi-info-circle-fill me-2"></i>
                     <strong>Jangan Khawatir:</strong> Seluruh riwayat pemrosesan (tracking), catatan admin, dan status surat tetap akan tersimpan di dashboard ini. Hanya file dokumennya saja yang tidak akan bisa didownload lagi.
                 </div>
+                <div class="mt-3 text-center">
+                    <a href="{{ route('user.surat.file_index') }}" style="font-size:11px; color:#3b82f6; text-decoration:none;">
+                        <i class="bi bi-gear me-1"></i> Lihat semua file yang bisa dibersihkan
+                    </a>
+                </div>
             </div>
             <div class="modal-footer border-0 pt-0 p-4">
                 <button type="button" class="btn btn-light w-100 mb-2" data-bs-dismiss="modal" style="border-radius:10px; font-size:13px; font-weight:600;">Batal</button>
