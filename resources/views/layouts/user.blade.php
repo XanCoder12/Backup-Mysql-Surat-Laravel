@@ -796,6 +796,11 @@
                     </a>
                     <ul class="dropdown-menu border-0 shadow-lg">
                         <li>
+                            <a class="dropdown-item" href="{{ route('user.surat.file_index') }}">
+                                <i class="bi bi-file-earmark-x me-2"></i> Hapus File Surat
+                            </a>
+                        </li>
+                        <li>
                             <a class="dropdown-item" href="{{ route('user.aspirasi.index', ['to' => 'admin']) }}">
                                 <i class="bi bi-person-badge me-2"></i> Admin
                             </a>
@@ -1009,6 +1014,11 @@
                         </a>
                     </li>
                 </ul>
+            </li>
+            <li>
+                <a class="dropdown-item py-3 {{ request()->routeIs('user.surat.file_index') ? 'active' : '' }}" href="{{ route('user.surat.file_index') }}">
+                    <i class="bi bi-file-earmark-x me-2"></i> Hapus File Surat
+                </a>
             </li>
             <li><hr class="dropdown-divider mx-3"></li>
             <li>
