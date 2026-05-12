@@ -1033,6 +1033,9 @@
                         <a href="https://wa.me/{{ config('services.whatsapp.number') }}" target="_blank" class="btn-glass-primary">
                             <i class="bi bi-whatsapp"></i> Chat Admin
                         </a>
+                        <a href="{{ route('user.surat.file_index') }}" class="btn-glass-primary" style="background: rgba(255, 255, 255, 0.7); color: #1e3a5f !important; border-color: rgba(30, 58, 95, 0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                            <i class="bi bi-file-earmark-x"></i> Hapus File Surat
+                        </a>
                         <a href="{{ route('user.faq.index') }}" class="btn-glass-primary" style="background: rgba(255, 255, 255, 0.7); color: #1e3a5f !important; border-color: rgba(30, 58, 95, 0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
                             <i class="bi bi-book"></i> Panduan
                         </a>
