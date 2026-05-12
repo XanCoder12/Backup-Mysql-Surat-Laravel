@@ -74,19 +74,23 @@ class LaporanController extends Controller
             // Header CSV
             fputcsv($file, [
                 'No', 'Jenis Surat', 'Nama Pengusul', 'Judul Surat',
-                'Tujuan Surat', 'Nomor Surat', 'Tanggal Surat',
-                'Progress (Tahap)', 'Status', 'SLA',
+                'Tujuan Surat', 'Nomor Surat', 'Tgl Dokumen',
+                'Tgl Pengajuan', 'Tgl Selesai', 'Deadline SLA',
+                'Progress (Tahap)', 'Status', 'SLA Status',
             ]);
 
             foreach ($surats as $i => $surat) {
                 fputcsv($file, [
                     $i + 1,
                     $surat->jenis_label,
-                    $surat->user->name,
+                    $surat->user->name ?? '-',
                     $surat->judul,
                     $surat->tujuan,
                     $surat->nomor_surat ?? '-',
                     $surat->tanggal_surat ? $surat->tanggal_surat->format('d/m/Y') : '-',
+                    $surat->created_at->format('d/m/Y H:i'),
+                    $surat->disetujui_pada ? $surat->disetujui_pada->format('d/m/Y H:i') : '-',
+                    $surat->deadline_sla ? $surat->deadline_sla->format('d/m/Y H:i') : '-',
                     "Tahap {$surat->tahap_sekarang}/10 — {$surat->nama_tahap}",
                     ucfirst($surat->status),
                     $surat->sla_status === 'terlambat' ? 'Terlambat' : 'OK',

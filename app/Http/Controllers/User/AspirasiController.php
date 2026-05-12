@@ -27,6 +27,7 @@ class AspirasiController extends Controller
             'judul' => 'required|string|max:255',
             'isi' => 'required|string',
             'kategori' => 'required|in:saran,keluhan,pertanyaan',
+            'tujuan' => 'nullable|in:admin,it_support',
         ]);
 
         $aspirasi = Aspirasi::create([
@@ -34,12 +35,23 @@ class AspirasiController extends Controller
             'judul' => $request->judul,
             'isi' => $request->isi,
             'kategori' => $request->kategori,
+            'tujuan' => $request->tujuan ?? 'admin',
         ]);
 
-        // Kirim notif ke Admin
-        $admins = \App\Models\User::whereIn('role', ['admin', 'admin_kasubbag_tu', 'admin_kepala_balai'])->get();
-        foreach ($admins as $admin) {
-            $admin->notify(new \App\Notifications\AspirasiBaruNotification($aspirasi));
+        // Kirim notif ke pihak yang dituju
+        if ($aspirasi->tujuan === 'it_support') {
+            $targets = \App\Models\User::where('role', 'it_support')->get();
+        } else {
+            $targets = \App\Models\User::whereIn('role', ['admin', 'admin_kasubbag_tu', 'admin_kepala_balai'])->get();
+        }
+
+        foreach ($targets as $target) {
+            $target->notify(new \App\Notifications\AspirasiBaruNotification($aspirasi));
+        }
+
+        // Redirect berdasarkan tujuan
+        if ($aspirasi->tujuan === 'it_support') {
+            return redirect()->route('itsupport.dashboard')->with('success', 'Aspirasi Anda berhasil dikirim ke IT Support!');
         }
 
         return redirect()->route('user.aspirasi.index')->with('success', 'Aspirasi Anda berhasil dikirim!');

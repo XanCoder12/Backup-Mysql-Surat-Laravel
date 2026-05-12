@@ -31,9 +31,8 @@ class DashboardController extends Controller
         $totalSurat   = Surat::where('user_id', $userId)->whereMonth('created_at', $bulanSelected)->whereYear('created_at', $tahunSelected)->count();
         $suratSelesai = Surat::where('user_id', $userId)->whereMonth('created_at', $bulanSelected)->whereYear('created_at', $tahunSelected)->where('status', 'selesai')->count();
         $suratProses  = Surat::where('user_id', $userId)->whereMonth('created_at', $bulanSelected)->whereYear('created_at', $tahunSelected)->where('status', 'proses')->count();
-        $suratRevisi  = Surat::where('user_id', $userId)->whereMonth('created_at', $bulanSelected)->whereYear('created_at', $tahunSelected)->where('status', 'revisi')->count();
-        $suratDitolak = Surat::where('user_id', $userId)->whereMonth('created_at', $bulanSelected)->whereYear('created_at', $tahunSelected)->where('status', 'ditolak')->count();
-        $suratDraft   = Surat::where('user_id', $userId)->whereMonth('created_at', $bulanSelected)->whereYear('created_at', $tahunSelected)->where('status', 'draft')->count();
+        $suratDitolak = Surat::where('user_id', $userId)->whereMonth('created_at', $bulanSelected)->whereYear('created_at', $tahunSelected)->whereIn('status', ['ditolak', 'revisi', 'revisi_admin'])->count();
+        $suratActionUrgent = Surat::where('user_id', $userId)->whereIn('status', ['ditolak', 'revisi', 'revisi_admin'])->count();
 
         // Surat terbaru + tahapan untuk tracking
         $suratTerbaru = Surat::where('user_id', $userId)
@@ -44,7 +43,7 @@ class DashboardController extends Controller
 
         // Surat aktif untuk SLA bar
         $suratAktif = Surat::where('user_id', $userId)
-                           ->whereIn('status', ['proses', 'revisi'])
+                           ->whereIn('status', ['proses', 'revisi', 'revisi_admin'])
                            ->latest()
                            ->limit(3)
                            ->get();
@@ -109,9 +108,9 @@ class DashboardController extends Controller
         $weeklyActivity = $user->getWeeklyActivityData();
 
         return view('dashboard', compact(
-            'totalSurat', 'suratSelesai', 'suratProses', 'suratRevisi', 'suratDitolak', 'suratDraft',
+            'totalSurat', 'suratSelesai', 'suratProses', 'suratDitolak',
             'suratTerbaru', 'suratAktif', 'templates',
-            'jenisSurat', 'trenBulanan', 'isLibur', 'bulanSelected', 'tahunSelected', 'weeklyActivity'
+            'jenisSurat', 'trenBulanan', 'isLibur', 'bulanSelected', 'tahunSelected', 'weeklyActivity', 'suratActionUrgent'
         ));
     }
 
@@ -129,9 +128,8 @@ class DashboardController extends Controller
             'totalSurat'   => Surat::where('user_id', $userId)->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun)->count(),
             'suratSelesai' => Surat::where('user_id', $userId)->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun)->where('status', 'selesai')->count(),
             'suratProses'  => Surat::where('user_id', $userId)->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun)->where('status', 'proses')->count(),
-            'suratRevisi'  => Surat::where('user_id', $userId)->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun)->where('status', 'revisi')->count(),
-            'suratDitolak' => Surat::where('user_id', $userId)->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun)->where('status', 'ditolak')->count(),
-            'suratDraft'   => Surat::where('user_id', $userId)->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun)->where('status', 'draft')->count(),
+            'suratDitolak' => Surat::where('user_id', $userId)->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun)->whereIn('status', ['ditolak', 'revisi', 'revisi_admin'])->count(),
+            'suratActionUrgent' => Surat::where('user_id', $userId)->whereIn('status', ['ditolak', 'revisi', 'revisi_admin'])->count(),
         ];
 
         // 2. Notifications
@@ -170,8 +168,9 @@ class DashboardController extends Controller
                     'judul_short' => \Illuminate\Support\Str::limit($s->judul, 30),
                     'sla_status' => $s->sla_status,
                     'sisa_jam' => $s->sisa_jam,
+                    'sisa_jam_angka' => $s->deadline_sla ? now()->diffInHours($s->deadline_sla, false) : 99,
                     'pct' => $pct,
-                    'color' => $pct >= 90 ? '#ef4444' : ($pct >= 60 ? '#f59e0b' : '#22c55e'),
+                    'color' => $s->sla_color, // Gunakan sla_color dari model
                     'tahap' => $s->tahap_sekarang,
                     'nama_tahap' => $s->nama_tahap,
                 ];
@@ -197,6 +196,7 @@ class DashboardController extends Controller
                         'tahap_sekarang' => $s->tahap_sekarang,
                         'proses_persen' => $s->proses_persen,
                         'sla_status' => $s->sla_status,
+                        'sla_color' => $s->sla_color, // Tambahkan ini
                         'show_url' => route('user.surat.show', $s),
                         'tahapans' => $s->tahapans->map(function($t) {
                             return [

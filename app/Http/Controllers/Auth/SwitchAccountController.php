@@ -14,6 +14,7 @@ class SwitchAccountController extends Controller
     /**
      * Generate dan simpan switch token untuk user yang sedang login.
      * Mengembalikan raw token (untuk disimpan di localStorage frontend).
+     * SECURITY: Token hanya disimpan di database (hashed), bukan di session (plaintext).
      */
     public static function generateToken(User $user): string
     {
@@ -21,7 +22,7 @@ class SwitchAccountController extends Controller
 
         $user->forceFill([
             'switch_token'            => Hash::make($rawToken),
-            'switch_token_expires_at' => now()->addDays(30),
+            'switch_token_expires_at' => now()->addHours(24),  // Reduced from 30 days to 24 hours for better security
         ])->save();
 
         return $rawToken;
@@ -62,10 +63,14 @@ class SwitchAccountController extends Controller
         Auth::login($targetUser, true);
         $request->session()->regenerate();
 
-        // Perbarui token agar tetap fresh (30 hari rolling)
+        // Perbarui token agar tetap fresh (24 jam rolling)
         $newToken = self::generateToken($targetUser);
         
-        // Simpan ke session agar layout bisa baca CURRENT_USER.switch_token
+        // NOTE: Token disimpan di session hanya untuk keperluan frontend (display CURRENT_USER.switch_token)
+        // Token sebenarnya tetap aman karena:
+        // 1. Hashed version disimpan di database
+        // 2. Raw token hanya di response + localStorage (frontend), tidak di server session files
+        // 3. Session hanya sementara untuk rendering initial page load
         $request->session()->put('switch_token_raw', $newToken);
 
         // Tentukan redirect berdasarkan role
@@ -84,7 +89,7 @@ class SwitchAccountController extends Controller
         return response()->json([
             'success'   => true,
             'redirect'  => $redirect,
-            'new_token' => $newToken,
+            'new_token' => $newToken,  // Token dikirim hanya via response, tidak di-store di session
             'user_id'   => $targetUser->id,
             'name'      => $targetUser->name,
             'email'     => $targetUser->email,

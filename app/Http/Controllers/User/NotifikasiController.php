@@ -76,7 +76,7 @@ class NotifikasiController extends Controller
 
         if (request()->expectsJson()) {
             return response()->json([
-                'ok' => true,
+                'success' => true,
                 'unreadCount' => Auth::user()->unreadNotifications()->count()
             ]);
         }
@@ -91,7 +91,7 @@ class NotifikasiController extends Controller
 
         if (request()->expectsJson()) {
             return response()->json([
-                'ok' => true,
+                'success' => true,
                 'unreadCount' => 0
             ]);
         }

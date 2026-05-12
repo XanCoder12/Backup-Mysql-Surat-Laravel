@@ -31,7 +31,9 @@ class AuthenticatedSessionController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        // Generate switch token & simpan raw token di session
+        // Generate switch token - disimpan hashed di database
+        // Raw token disimpan di session untuk keperluan frontend saja
+        // (Token dikirim ke frontend dan disimpan di localStorage untuk account switching)
         $rawToken = SwitchAccountController::generateToken($user);
         $request->session()->put('switch_token_raw', $rawToken);
 

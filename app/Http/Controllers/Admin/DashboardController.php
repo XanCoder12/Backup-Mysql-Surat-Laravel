@@ -35,6 +35,7 @@ class DashboardController extends Controller
                 'totalSelesai' => $data['totalSelesai'],
                 'totalProses' => $data['totalProses'],
                 'totalTerlambat' => $data['totalTerlambat'],
+                'unreadNotifCount' => Auth::user()->unreadNotifications()->count(),
             ],
             'antrian' => [
                 'items' => $data['antrian'],
@@ -124,11 +125,25 @@ class DashboardController extends Controller
         $chartMonths = [];
         $chartMasuk = [];
         $chartSelesai = [];
+        $chartTerlambat = [];
         for ($i = 5; $i >= 0; $i--) {
             $date = now()->subMonths($i);
+            $month = $date->month;
+            $year = $date->year;
+            
             $chartMonths[] = $date->translatedFormat('M Y');
-            $chartMasuk[] = Surat::whereMonth('created_at', $date->month)->whereYear('created_at', $date->year)->count();
-            $chartSelesai[] = Surat::whereMonth('created_at', $date->month)->whereYear('created_at', $date->year)->where('status', 'selesai')->count();
+            $chartMasuk[] = Surat::whereMonth('created_at', $month)->whereYear('created_at', $year)->count();
+            
+            $suratSelesaiCount = Surat::whereMonth('created_at', $month)->whereYear('created_at', $year)->where('status', 'selesai')->count();
+            $chartSelesai[] = $suratSelesaiCount;
+            
+            // Hitung surat terlambat (melebihi SLA) per bulan
+            $chartTerlambat[] = Surat::whereMonth('created_at', $month)
+                ->whereYear('created_at', $year)
+                ->whereNotNull('deadline_sla')
+                ->where('deadline_sla', '<', now())
+                ->whereIn('status', ['proses', 'revisi', 'revisi_admin'])
+                ->count();
         }
 
         $heatmapYear = (int) request()->input('heatmap_year', date('Y'));
@@ -146,6 +161,7 @@ class DashboardController extends Controller
             'chartMonths' => $chartMonths,
             'chartMasuk' => $chartMasuk,
             'chartSelesai' => $chartSelesai,
+            'chartTerlambat' => $chartTerlambat,
             'heatmapData' => $admin->getAdminActivityHeatmapData($heatmapYear),
             'heatmapYear' => $heatmapYear,
         ];

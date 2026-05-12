@@ -143,7 +143,6 @@ class Surat extends Model
         $diff = now()->diff($this->deadline_sla);
         return $diff->h . 'j ' . $diff->i . 'm';
     }
-
     public function getJamTerlambatAttribute(): float
     {
         if (!$this->deadline_sla || $this->status === 'selesai')
@@ -152,6 +151,27 @@ class Surat extends Model
             return round(now()->diffInHours($this->deadline_sla), 1);
         }
         return 0;
+    }
+    public function getSlaColorAttribute(): string
+    {
+        if ($this->status === 'selesai') return '#22c55e';
+        if ($this->sla_status === 'terlambat') return '#ef4444';
+        
+        $sisaJam = $this->deadline_sla ? now()->diffInHours($this->deadline_sla, false) : 99;
+        if ($sisaJam <= 12) return '#f59e0b'; // Kuning jika sisa <= 12 jam
+        
+        return '#22c55e'; // Hijau jika sisa > 12 jam
+    }
+
+    public function getSlaIconAttribute(): string
+    {
+        if ($this->status === 'selesai') return '🟢';
+        if ($this->sla_status === 'terlambat') return '🔴';
+        
+        $sisaJam = $this->deadline_sla ? now()->diffInHours($this->deadline_sla, false) : 99;
+        if ($sisaJam <= 12) return '🟡';
+        
+        return '🟢';
     }
 
     public function bisaRevisi(): bool

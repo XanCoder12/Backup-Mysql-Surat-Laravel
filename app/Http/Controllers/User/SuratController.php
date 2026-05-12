@@ -17,6 +17,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\UserSuratExport;
 
 class SuratController extends Controller
 {
@@ -52,6 +54,26 @@ class SuratController extends Controller
         return view('user.surat.index', compact('surats', 'title'));
     }
 
+    public function fileIndex(Request $request)
+    {
+        $query = Surat::where('user_id', Auth::id())
+                      ->where('status', 'selesai')
+                      ->where(function($q) {
+                          $q->whereNotNull('file_word')
+                            ->orWhereNotNull('file_lampiran');
+                      })
+                      ->latest();
+
+        if ($request->filled('search')) {
+            $query->where('judul', 'like', '%' . $request->search . '%');
+        }
+
+        $surats = $query->paginate(15)->withQueryString();
+        $title = 'Manajemen File Fisik Surat';
+
+        return view('user.surat.file_index', compact('surats', 'title'));
+    }
+
     public function table(Request $request)
     {
         $query = Surat::where('user_id', Auth::id())
@@ -85,6 +107,14 @@ class SuratController extends Controller
         return view('user.surat.table', compact('surats', 'title'));
     }
 
+    public function exportExcel(Request $request)
+    {
+        $filters = $request->only(['status', 'jenis', 'tahun', 'bulan', 'search']);
+        $fileName = 'Data_Surat_' . Auth::user()->name . '_' . date('Y-m-d_His') . '.xlsx';
+        
+        return Excel::download(new UserSuratExport($filters), $fileName);
+    }
+
     public function create()
     {
         $isLibur = $this->isLayananTutup();
@@ -101,8 +131,8 @@ class SuratController extends Controller
     {
         $isDraft = $request->input('action') === 'draft';
 
-        if ($this->isLayananTutup()) {
-            return back()->with('error', 'Mohon maaf, layanan pengajuan dan draf surat hanya tersedia pada hari kerja. Senin–Kamis pukul 07.00–16.00 WIB, Jumat pukul 07.30–16.30 WIB. Sabtu & Minggu libur.');
+        if ($this->isLayananTutup() && !$isDraft) {
+            return back()->with('error', 'Mohon maaf, pengajuan surat baru hanya tersedia pada hari kerja. Senin–Kamis pukul 07.00–16.00 WIB, Jumat pukul 07.30–16.30 WIB. Sabtu & Minggu libur. Namun Anda tetap bisa menyimpan sebagai draf.');
         }
 
         $rules = [
@@ -112,12 +142,12 @@ class SuratController extends Controller
             'tujuan'         => ($isDraft ? 'nullable' : 'required') . '|string|max:500',
             'catatan_pengusul' => 'nullable|string|max:100',
             'file_word'      => ($isDraft ? 'nullable' : 'required') . '|file|mimes:docx,doc|max:5120',
-            'file_lampiran'  => 'nullable|file|mimes:pdf,jpg,jpeg,png,docx,doc|max:10240',
+            'file_lampiran'  => 'nullable|file|mimes:pdf,jpg,jpeg,png,docx,doc,xlsx,xls|max:10240',
         ];
 
         $request->validate($rules, [
             'file_word.mimes' => 'File harus berupa dokumen Word (.docx, .doc)',
-            'file_lampiran.mimes' => 'File lampiran harus berupa PDF, Gambar (JPG, PNG), atau Dokumen Word (DOCX)',
+            'file_lampiran.mimes' => 'File lampiran harus berupa PDF, Gambar (JPG, PNG), Word (DOCX/DOC), atau Excel (XLSX/XLS)',
         ]);
 
         // Upload file ke disk 'private'
@@ -184,8 +214,8 @@ class SuratController extends Controller
 
         $isDraft = $request->input('action') === 'draft';
 
-        if ($this->isLayananTutup()) {
-            return back()->with('error', 'Mohon maaf, layanan pengajuan dan draf surat hanya tersedia pada hari kerja. Senin–Kamis pukul 07.00–16.00 WIB, Jumat pukul 07.30–16.30 WIB. Sabtu & Minggu libur.');
+        if ($this->isLayananTutup() && !$isDraft) {
+            return back()->with('error', 'Mohon maaf, pengajuan surat baru hanya tersedia pada hari kerja. Senin–Kamis pukul 07.00–16.00 WIB, Jumat pukul 07.30–16.30 WIB. Sabtu & Minggu libur. Namun Anda tetap bisa menyimpan draf ini.');
         }
 
         $rules = [
@@ -195,7 +225,7 @@ class SuratController extends Controller
             'tujuan'         => ($isDraft ? 'nullable' : 'required') . '|string|max:500',
             'catatan_pengusul' => 'nullable|string|max:100',
             'file_word'      => ($isDraft || $surat->file_word ? 'nullable' : 'required') . '|file|mimes:docx,doc|max:5120',
-            'file_lampiran'  => 'nullable|file|mimes:pdf,jpg,jpeg,png,docx,doc|max:10240',
+            'file_lampiran'  => 'nullable|file|mimes:pdf,jpg,jpeg,png,docx,doc,xlsx,xls|max:10240',
         ];
 
         $request->validate($rules);
@@ -429,10 +459,6 @@ class SuratController extends Controller
         // Pastikan hanya pemilik yang bisa upload ulang
         abort_if($surat->user_id !== Auth::id(), 403);
 
-        if ($this->isLayananTutup()) {
-            return back()->with('error', 'Mohon maaf, layanan pengajuan surat hanya tersedia pada hari kerja. Senin–Kamis pukul 07.00–16.00 WIB, Jumat pukul 07.30–16.30 WIB. Sabtu & Minggu libur.');
-        }
-
         // Hanya bisa jika status ditolak
         if (!$surat->bisaRevisi()) {
             return back()->with('error', 'Upload ulang hanya bisa dilakukan jika surat ditolak.');
@@ -440,7 +466,7 @@ class SuratController extends Controller
 
         $request->validate([
             'file_word'     => 'required|file|mimes:docx,doc|max:5120',
-            'file_lampiran' => 'nullable|file|mimes:pdf,jpg,jpeg,png,docx,doc|max:10240',
+            'file_lampiran' => 'nullable|file|mimes:pdf,jpg,jpeg,png,docx,doc,xlsx,xls|max:10240',
         ]);
 
         if ($surat->file_word) {
@@ -558,16 +584,17 @@ class SuratController extends Controller
 
         // Cek jika request minta raw file (untuk iframe/img source)
         if (request()->has('raw')) {
-            $fileContent = Storage::disk('private')->get($filePath);
-            if ($fileContent === false) {
-                abort(404, 'File tidak dapat dibaca.');
+            if (!Storage::disk('private')->exists($filePath)) {
+                abort(404, 'File tidak ditemukan di disk.');
             }
-            $mimeType = $extension === 'pdf' ? 'application/pdf' : $this->getMimeTypeFromExtension($extension);
-            $headers = [
-                'Content-Type' => $mimeType,
-                'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
-            ];
-            return response($fileContent, 200, $headers);
+
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+
+            return response()->file($fullPath, [
+                'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"'
+            ]);
         }
 
         // PDF inline preview via view

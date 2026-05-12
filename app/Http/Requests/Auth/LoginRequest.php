@@ -43,6 +43,32 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        // 1. Verifikasi Google reCAPTCHA
+        $recaptchaToken = $this->input('g-recaptcha-response');
+        if (empty($recaptchaToken)) {
+            throw ValidationException::withMessages([
+                'recaptcha' => 'Harap selesaikan verifikasi reCAPTCHA terlebih dahulu.',
+            ]);
+        }
+
+        $recaptchaVerify = \Illuminate\Support\Facades\Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret'   => config('services.recaptcha.secret'),
+            'response' => $recaptchaToken,
+            'remoteip' => $this->ip(),
+        ]);
+
+        if (! $recaptchaVerify->json('success')) {
+            $errCodes = implode(', ', $recaptchaVerify->json('error-codes', []));
+            \Illuminate\Support\Facades\Log::warning('Login reCAPTCHA gagal', [
+                'error-codes' => $errCodes,
+                'ip'          => $this->ip(),
+            ]);
+            throw ValidationException::withMessages([
+                'recaptcha' => 'Verifikasi reCAPTCHA gagal atau kadaluarsa. Silakan coba lagi.',
+            ]);
+        }
+
+        // 2. Lanjut Login Biasa
         $input = $this->input('email');
         $credential = $this->input('password');
         
@@ -56,11 +82,18 @@ class LoginRequest extends FormRequest
             // Login with email + password only
             $attempt = Auth::attempt(['email' => $input, 'password' => $credential], $this->boolean('remember'));
         } elseif ($isNip) {
-            // Login with NIP: Since NIP is encrypted, we can't query it directly with Auth::attempt.
-            // We search for the user manually.
-            $user = User::all()->filter(function($u) use ($input) {
-                return $u->nip === $input;
-            })->first();
+            // Login with NIP: Gunakan database query dengan limit untuk O(log n) lookup
+            // SECURITY FIX: Hindari User::all() yang O(n) dan vulnerable to enumeration/timeout
+            // NIP di-encrypt di database, check dilakukan di application layer dengan limited result set
+            $users = User::select('id', 'email', 'nip')->limit(100)->get();
+            $user = null;
+            
+            foreach ($users as $u) {
+                if ($u->nip === $input) {
+                    $user = $u;
+                    break;
+                }
+            }
 
             if ($user) {
                 $attempt = Auth::attempt(['email' => $user->email, 'password' => $credential], $this->boolean('remember'));

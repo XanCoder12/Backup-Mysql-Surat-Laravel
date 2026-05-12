@@ -318,31 +318,27 @@ class SuratController extends Controller
 
         // Jika request minta raw (untuk docx-preview.js)
         if (request()->has('raw')) {
-            if (ob_get_length()) ob_end_clean();
-            $mimeType = $extension === 'docx' 
-                ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                : 'application/msword';
-
-            return response($fileContent, 200)
-                ->header('Content-Type', $mimeType)
-                ->header('Content-Disposition', 'inline; filename="' . $fileName . '"');
+            if (ob_get_level()) ob_end_clean();
+            
+            return response()->file(Storage::disk('private')->path($filePath), [
+                'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"'
+            ]);
         }
 
         // PDF
         if ($extension === 'pdf') {
-            if (ob_get_length()) ob_end_clean();
-            return response($fileContent, 200)
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', 'inline; filename="' . $fileName . '"');
+            if (ob_get_level()) ob_end_clean();
+            return response()->file(Storage::disk('private')->path($filePath), [
+                'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"'
+            ]);
         }
 
         // Gambar
         if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'])) {
-            if (ob_get_length()) ob_end_clean();
-            $mimeTypes = ['jpg'=>'image/jpeg','jpeg'=>'image/jpeg','png'=>'image/png','gif'=>'image/gif','webp'=>'image/webp','bmp'=>'image/bmp'];
-            return response($fileContent, 200)
-                ->header('Content-Type', $mimeTypes[$extension] ?? 'image/jpeg')
-                ->header('Content-Disposition', 'inline; filename="' . $fileName . '"');
+            if (ob_get_level()) ob_end_clean();
+            return response()->file(Storage::disk('private')->path($filePath), [
+                'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"'
+            ]);
         }
 
         // Jika .doc biasa, paksa download karena docx converter tidak support doc binary
@@ -501,7 +497,7 @@ class SuratController extends Controller
     {
         $request->validate([
             'file_word'     => 'required|file|mimes:docx,doc|max:5120',
-            'file_lampiran' => 'nullable|file|mimes:pdf,docx,doc,jpg,jpeg,png|max:10240',
+            'file_lampiran' => 'nullable|file|mimes:pdf,docx,doc,jpg,jpeg,png,xlsx,xls|max:10240',
         ]);
 
         $updated = false;
