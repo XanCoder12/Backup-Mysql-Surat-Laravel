@@ -4313,8 +4313,8 @@
         (function () {
             const stacks = {
                 'tm-row1': [
-                    { name: 'Laravel 11/12', img: 'https://cdn.simpleicons.org/laravel/FF2D20' },
-                    { name: 'PHP 8.3', img: 'https://cdn.simpleicons.org/php/777BB4' },
+                    { name: 'Laravel 12', img: 'https://cdn.simpleicons.org/laravel/FF2D20' },
+                    { name: 'PHP 8.2', img: 'https://cdn.simpleicons.org/php/777BB4' },
                     { name: 'MySQL 8', img: 'https://cdn.simpleicons.org/mysql/4479A1' },
                     { name: 'Redis', img: 'https://cdn.simpleicons.org/redis/DC382D' },
                     { name: 'MongoDB', img: 'https://cdn.simpleicons.org/mongodb/47A248' },
@@ -4323,6 +4323,7 @@
                     { name: 'Sanctum Auth', img: 'https://cdn.simpleicons.org/laravel/FF2D20' },
                     { name: 'Composer', img: 'https://cdn.simpleicons.org/composer/885630' },
                     { name: 'JQuery', img: 'https://cdn.simpleicons.org/jquery/1621A5' },
+                    { name: 'Golang', img: 'https://cdn.simpleicons.org/go/00ADD8' }
                 ],
                 'tm-row2': [
                     { name: 'Bootstrap 5', img: 'https://cdn.simpleicons.org/bootstrap/7952B3' },
