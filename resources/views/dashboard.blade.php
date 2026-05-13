@@ -574,7 +574,7 @@
             <div>
                 <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2 mb-1">
                     <h2 class="fw-bold mb-0">
-                        <i class="bi bi-hand-thumbs-up-fill me-2"></i>Halo, {{ Str::words(Auth::user()->name, 1, '') }}!
+                        <i class="bi bi-hand-thumbs-up-fill me-2"></i>Halo, {{ Str::words(Auth::user()->name, 2, '') }}!
                     </h2>
                     <div id="live-indicator" class="badge rounded-pill bg-success d-flex align-items-center gap-1" style="font-size: 10px; padding: 4px 8px; opacity: 0; transition: opacity 0.5s;">
                         <span class="pulse-dot"></span> LIVE
@@ -608,7 +608,6 @@
     </div>
 </div>
 @endif
-</div>
 
 {{-- BANNER BUTUH TINDAKAN (REVISI & DITOLAK) --}}
 @php
@@ -1113,6 +1112,8 @@
         </div>
     </div>
 </div>
+
+</div>{{-- /.container-fluid --}}
 
 {{-- Chart.js CDN --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
