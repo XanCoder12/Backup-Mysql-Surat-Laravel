@@ -8,6 +8,7 @@ use App\Http\Controllers\User\DashboardController as UserDashboard;
 use App\Http\Controllers\User\SuratController as UserSurat;
 use App\Http\Controllers\User\TemplateController as UserTemplateController;
 use App\Http\Controllers\User\StatistikController as UserStatistik;
+use App\Http\Controllers\User\SlaMonitoringController as UserSlaMonitoring;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationApiController;
@@ -33,6 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/faq', [UserDashboard::class, 'faq'])->name('user.faq.index');
     Route::get('/statistik', [UserStatistik::class, 'index'])->name('user.statistik.index');
+    Route::get('/monitoring-sla', [UserSlaMonitoring::class, 'index'])->name('user.sla.index');
     Route::get('/notifikasi', [\App\Http\Controllers\User\NotifikasiController::class, 'index'])->name('user.notifikasi.index');
     Route::get('/aspirasi', [\App\Http\Controllers\User\AspirasiController::class, 'index'])->name('user.aspirasi.index');
     Route::post('/aspirasi', [\App\Http\Controllers\User\AspirasiController::class, 'store'])->name('user.aspirasi.store');
