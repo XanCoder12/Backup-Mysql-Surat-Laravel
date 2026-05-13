@@ -46,22 +46,99 @@
         </div>
     </div>
 
-    <div class="card-custom p-4 mb-4">
-        <div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
-            <div>
-                <h2 class="h5 fw-bold mb-1" style="color: var(--text-primary);">
-                    <i class="bi bi-speedometer2 text-primary me-2"></i>Tren SLA Surat Saya
-                </h2>
-                <p class="text-muted mb-0 small">6 bulan terakhir — batang: jumlah selesai · garis: rata-rata jam pemrosesan</p>
-            </div>
-            <div class="d-flex flex-wrap gap-3 small">
-                <span class="d-inline-flex align-items-center gap-2"><span class="rounded" style="width:12px;height:12px;background:#10b981;"></span> Tepat waktu</span>
-                <span class="d-inline-flex align-items-center gap-2"><span class="rounded" style="width:12px;height:12px;background:#ef4444;"></span> Terlambat</span>
-                <span class="d-inline-flex align-items-center gap-2"><span class="rounded-circle border border-primary" style="width:10px;height:10px;background:#4361ee;"></span> Rata-rata jam</span>
+    <style>
+        .last-border-0:last-child { border-bottom: none !important; margin-bottom: 0 !important; padding-bottom: 0 !important; }
+    </style>
+
+    <div class="row g-4 mb-4">
+        <!-- Grafik -->
+        <div class="col-12">
+            <div class="card-custom p-4">
+                <div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+                    <div>
+                        <h2 class="h5 fw-bold mb-1" style="color: var(--text-primary);">
+                            <i class="bi bi-speedometer2 text-primary me-2"></i>Tren SLA Surat Saya
+                        </h2>
+                        <p class="text-muted mb-0 small">6 bulan terakhir — batang: jumlah selesai · garis: rata-rata jam pemrosesan</p>
+                    </div>
+                    <div class="d-flex flex-wrap gap-3 small">
+                        <span class="d-inline-flex align-items-center gap-2"><span class="rounded" style="width:12px;height:12px;background:#10b981;"></span> Tepat waktu</span>
+                        <span class="d-inline-flex align-items-center gap-2"><span class="rounded" style="width:12px;height:12px;background:#ef4444;"></span> Terlambat</span>
+                    </div>
+                </div>
+                <div style="height: 380px; position: relative;">
+                    <canvas id="userSlaMixedChart"></canvas>
+                </div>
             </div>
         </div>
-        <div style="height: 380px; position: relative;">
-            <canvas id="userSlaMixedChart"></canvas>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <!-- Status SLA Surat Aktif -->
+        <div class="col-12">
+            <div class="card-custom p-0 overflow-hidden">
+                <div class="p-4 border-bottom">
+                    <h2 class="h6 fw-bold mb-0" style="color: var(--text-primary);">
+                        <i class="bi bi-speedometer text-primary me-2"></i>Status SLA Surat Aktif
+                    </h2>
+                </div>
+                <div class="p-4" style="max-height: 600px; overflow-y: auto;">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+                        @forelse($suratAktif as $s)
+                            @php
+                                $hoursElapsed = $s->created_at->diffInHours(now());
+                                $colorClass = 'bg-success';
+                                
+                                if ($hoursElapsed >= 24) {
+                                    $colorClass = 'bg-danger';
+                                } elseif ($hoursElapsed >= 12) {
+                                    $colorClass = 'bg-warning text-dark';
+                                }
+                            @endphp
+                            <div class="col">
+                                <div class="p-3 border rounded-3 h-100 bg-white shadow-sm">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fw-bold text-dark text-truncate me-2">{{ $s->judul }}</span>
+                                    @if($hoursElapsed >= 24)
+                                        <span class="badge rounded-pill bg-danger-subtle text-danger px-2 py-1" style="font-size: 10px;">
+                                            <i class="bi bi-exclamation-triangle-fill me-1"></i>Terlambat
+                                        </span>
+                                    @elseif($hoursElapsed >= 12)
+                                        <span class="badge rounded-pill bg-warning-subtle text-warning px-2 py-1" style="font-size: 10px; color: #92400e !important;">
+                                            <i class="bi bi-clock-history me-1"></i>Hampir
+                                        </span>
+                                    @endif
+                                </div>
+                                <!-- SLA Line -->
+                                <div class="rounded-pill overflow-hidden bg-light mb-2" style="height: 6px;">
+                                    <div class="h-100 {{ $colorClass }}" style="width: {{ min(100, ($hoursElapsed / 24) * 100) }}%; transition: width 1s ease-in-out;"></div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="text-muted" style="font-size: 11px;">
+                                        <div class="fw-medium text-dark">{{ $s->nama_tahap }}</div>
+                                        <div>Tahap {{ $s->tahap_sekarang }}/10</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-light text-dark border fw-semibold" style="font-size: 11px;">
+                                            {{ $hoursElapsed }} Jam
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="col-12">
+                            <div class="text-center py-5 w-100">
+                                <div class="mb-3">
+                                    <i class="bi bi-envelope-check text-muted" style="font-size: 3rem;"></i>
+                                </div>
+                                <h6 class="text-muted fw-bold">Tidak ada surat aktif</h6>
+                                <p class="text-muted small mb-0">Semua surat Anda telah selesai atau belum diajukan.</p>
+                            </div>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
         </div>
     </div>
 </div>
