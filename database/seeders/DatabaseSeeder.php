@@ -15,19 +15,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Jalankan seeder pegawai
+        $this->call(PegawaiSeeder::class);
 
-        User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@metrologi.com',
-            'password' => bcrypt('password'),
-            'role' => 'admin',
-        ]);
+        // Buat admin user jika belum ada
+        User::firstOrCreate(
+            ['email' => 'admin@metrologi.com'],
+            [
+                'name' => 'Admin User',
+                'password' => bcrypt('password'),
+                'role' => 'admin',
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'role' => 'user',
-        ]);
+        // Buat test user jika belum ada
+        User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => bcrypt('password'),
+                'role' => 'user',
+            ]
+        );
     }
 }
