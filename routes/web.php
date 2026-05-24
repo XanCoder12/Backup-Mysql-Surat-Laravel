@@ -37,6 +37,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/monitoring-sla', [UserSlaMonitoring::class, 'index'])->name('user.sla.index');
     Route::get('/notifikasi', [\App\Http\Controllers\User\NotifikasiController::class, 'index'])->name('user.notifikasi.index');
     
+    // Activity Log
+    Route::prefix('activity-log')->name('user.activity-log.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\User\ActivityLogController::class, 'index'])->name('index');
+        Route::get('/export', [\App\Http\Controllers\User\ActivityLogController::class, 'export'])->name('export');
+        Route::get('/{log}', [\App\Http\Controllers\User\ActivityLogController::class, 'show'])->name('show');
+    });
+    
     // Aspirasi routes dengan rate limiting
     Route::get('/aspirasi', [\App\Http\Controllers\User\AspirasiController::class, 'index'])->name('user.aspirasi.index');
     Route::post('/aspirasi', [\App\Http\Controllers\User\AspirasiController::class, 'store'])
