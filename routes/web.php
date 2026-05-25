@@ -88,6 +88,13 @@ Route::prefix('Admin')->middleware(['auth', 'verified', 'admin'])->name('admin.'
     // Download routes (tanpa admin.role.check agar binary gak corrupt)
     Route::get('/Surat/{surat}/preview/{tipe}', [\App\Http\Controllers\Admin\SuratController::class, 'preview'])->name('surat.preview');
     Route::get('/Surat/{surat}/download/{tipe}', [\App\Http\Controllers\Admin\SuratController::class, 'download'])->name('surat.download');
+    Route::get('/Surat/preview-status/{cacheKey}', function ($cacheKey) {
+        $htmlContent = \Illuminate\Support\Facades\Cache::get($cacheKey);
+        if ($htmlContent !== null) {
+            return response()->json(['ready' => true, 'html' => $htmlContent]);
+        }
+        return response()->json(['ready' => false]);
+    })->name('surat.preview-status');
 
     // Dashboard & other routes (dengan middleware admin.role.check)
     Route::middleware(['admin.role.check'])->group(function () {

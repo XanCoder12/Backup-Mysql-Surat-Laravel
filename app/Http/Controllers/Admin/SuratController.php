@@ -354,7 +354,7 @@ class SuratController extends Controller
             return $this->download($surat, $tipe);
         }
 
-        // Word (.docx) - Tampilkan View Preview dengan Caching
+        // Word (.docx) - Tampilkan View Preview dengan Background Job
         if ($extension === 'docx') {
             $fullFilePath = Storage::disk('private')->path($filePath);
             
@@ -363,11 +363,20 @@ class SuratController extends Controller
             $cacheKey = 'docx_preview_' . md5($filePath . $fileModTime);
             
             // Cek cache dulu
-            $htmlContent = \Illuminate\Support\Facades\Cache::remember($cacheKey, now()->addDays(7), function() use ($fullFilePath) {
-                $converter = new \App\Services\DocxToHtmlConverter($fullFilePath);
-                $htmlRaw = $converter->convert();
-                return HtmlSanitizer::clean($htmlRaw);
-            });
+            $htmlContent = \Illuminate\Support\Facades\Cache::get($cacheKey);
+            
+            if ($htmlContent === null) {
+                // Belum di-cache, dispatch job untuk convert di background
+                \App\Jobs\ConvertDocxToHtmlJob::dispatch($fullFilePath, $cacheKey);
+                
+                // Return loading page dengan polling
+                return response()->view('admin.surat.preview-word-loading', [
+                    'surat' => $surat,
+                    'cacheKey' => $cacheKey,
+                    'tipe' => $tipe,
+                    'fileName' => $fileName,
+                ]);
+            }
 
             return response()->view('admin.surat.preview-word', [
                 'surat' => $surat,
