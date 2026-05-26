@@ -44,18 +44,6 @@
             .word-document-content a { color: #2563eb; text-decoration: underline; }
             </style>
 
-        {{-- PDF Preview --}}
-        @elseif(isset($pdfUrl))
-            <div style="width:100%; height:calc(100vh - 280px); min-height:600px; border:1px solid var(--border-color); border-radius:12px; overflow:hidden;">
-                <iframe src="{{ $pdfUrl }}" width="100%" height="100%" frameborder="0" style="border:none;"></iframe>
-            </div>
-
-        {{-- Image Preview --}}
-        @elseif(isset($imageUrl))
-            <div style="width:100%; text-align:center; background:var(--bg-tertiary); border:1px solid var(--border-color); border-radius:12px; padding:20px;">
-                <img src="{{ $imageUrl }}" alt="Preview" style="max-width:100%; max-height:calc(100vh - 320px); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
-            </div>
-
         @else
             <div style="padding:60px; text-align:center; color:var(--text-secondary);">
                 <div style="font-size:48px; margin-bottom:16px;">📄</div>
