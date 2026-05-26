@@ -143,11 +143,13 @@
                                 </td>
                                 <td style="text-align: center;">
                                     <div style="display: flex; gap: 6px; justify-content: center;">
-                                        <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm" title="Lihat detail">
-                                            👁️
-                                        </a>
-                                        @if($user->id !== auth()->id())
-                                            <form method="POST" action="{{ route('admin.users.destroy', $user) }}" 
+                                        @if($user && $user->id)
+                                            <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-sm" title="Lihat detail">
+                                                👁️
+                                            </a>
+                                        @endif
+                                        @if($user && $user->id !== auth()->id())
+                                            <form method="POST" action="{{ route('admin.users.destroy', $user->id) }}" 
                                                   style="display: inline;" 
                                                   onsubmit="return confirm('Yakin hapus user ini?');">
                                                 @csrf
