@@ -354,18 +354,9 @@ class SuratController extends Controller
             return $this->download($surat, $tipe);
         }
 
-        // Word (.docx) - Sama seperti user preview (langsung convert)
+        // Word (.docx) - Download only untuk admin (preview terlalu berat di server)
         if ($extension === 'docx') {
-            $converter = new \App\Services\DocxToHtmlConverter(Storage::disk('private')->path($filePath));
-            $htmlRaw = $converter->convert();
-            $htmlContent = HtmlSanitizer::clean($htmlRaw);
-
-            return response()->view('admin.surat.preview-word', [
-                'surat' => $surat,
-                'htmlContent' => $htmlContent,
-                'tipe' => $tipe,
-                'fileName' => $fileName,
-            ]);
+            return $this->download($surat, $tipe);
         }
 
         // Fallback: download
