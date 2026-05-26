@@ -603,6 +603,20 @@ class SuratController extends Controller
 
         // PDF inline preview via view
         if ($extension === 'pdf') {
+            if (request()->has('raw')) {
+                if (!Storage::disk('private')->exists($filePath)) {
+                    abort(404, 'File tidak ditemukan di disk.');
+                }
+
+                while (ob_get_level()) {
+                    ob_end_clean();
+                }
+
+                return response()->file($fullPath, [
+                    'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"'
+                ]);
+            }
+
             return view('user.surat.preview', [
                 'surat' => $surat,
                 'pdfUrl' => route('user.surat.preview', [$surat, $tipe, 'raw' => 1]),
@@ -613,6 +627,20 @@ class SuratController extends Controller
 
         // Image inline preview via view
         if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'])) {
+            if (request()->has('raw')) {
+                if (!Storage::disk('private')->exists($filePath)) {
+                    abort(404, 'File tidak ditemukan di disk.');
+                }
+
+                while (ob_get_level()) {
+                    ob_end_clean();
+                }
+
+                return response()->file($fullPath, [
+                    'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"'
+                ]);
+            }
+
             return view('user.surat.preview', [
                 'surat' => $surat,
                 'imageUrl' => route('user.surat.preview', [$surat, $tipe, 'raw' => 1]),
