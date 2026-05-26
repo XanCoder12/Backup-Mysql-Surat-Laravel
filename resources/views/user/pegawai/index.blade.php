@@ -214,52 +214,49 @@
     </div>
 
     {{-- Results --}}
-    @if(request()->filled('search'))
-        @if($users->isNotEmpty())
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 20px;">
-                @foreach($users as $pegawai)
-                    <div class="pegawai-card">
-                        <div class="pegawai-cover">
-                            <div class="pegawai-avatar">
-                                @if($pegawai->profile_photo)
-                                    <img src="{{ Storage::url($pegawai->profile_photo) }}" alt="">
-                                @else
-                                    {{ strtoupper(substr($pegawai->name, 0, 2)) }}
-                                @endif
-                            </div>
-                        </div>
-                        <div class="pegawai-body">
-                            <div class="pegawai-name" title="{{ $pegawai->name }}">{{ $pegawai->name }}</div>
-                            <div class="pegawai-nip">NIP: {{ $pegawai->nip ?: '—' }}</div>
-                            <div class="pegawai-role-badge">{{ $pegawai->getRoleLabel() }}</div>
-                            <a href="{{ route('user.pegawai.show', $pegawai->uuid) }}" class="pegawai-action">
-                                <i class="bi bi-person-lines-fill me-1"></i> Lihat Detail
-                            </a>
+    @if($users->isNotEmpty())
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 20px;">
+            @foreach($users as $pegawai)
+                <div class="pegawai-card">
+                    <div class="pegawai-cover">
+                        <div class="pegawai-avatar">
+                            @if($pegawai->profile_photo)
+                                <img src="{{ Storage::url($pegawai->profile_photo) }}" alt="">
+                            @else
+                                {{ strtoupper(substr($pegawai->name, 0, 2)) }}
+                            @endif
                         </div>
                     </div>
-                @endforeach
-            </div>
-            {{-- Pagination --}}
-            <div class="mt-5 d-flex justify-content-center">
-                {{ $users->links() }}
-            </div>
-        @else
-            <div class="empty-state">
+                    <div class="pegawai-body">
+                        <div class="pegawai-name" title="{{ $pegawai->name }}">{{ $pegawai->name }}</div>
+                        <div class="pegawai-nip">NIP: {{ $pegawai->nip ?: '—' }}</div>
+                        <div class="pegawai-role-badge">{{ $pegawai->getRoleLabel() }}</div>
+                        <a href="{{ route('user.pegawai.show', $pegawai->uuid) }}" class="pegawai-action">
+                            <i class="bi bi-person-lines-fill me-1"></i> Lihat Detail
+                        </a>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        {{-- Pagination --}}
+        <div class="mt-5 d-flex justify-content-center">
+            {{ $users->links() }}
+        </div>
+    @else
+        <div class="empty-state">
+            @if(request()->filled('search'))
                 <div class="empty-state-icon">
                     <i class="bi bi-person-slash text-muted"></i>
                 </div>
                 <h5 class="fw-bold mb-2">Pegawai Tidak Ditemukan</h5>
                 <p class="text-muted mb-0">Tidak ada pegawai dengan nama atau NIP "<strong>{{ request('search') }}</strong>".<br>Coba kata kunci lain.</p>
-            </div>
-        @endif
-    @else
-        {{-- Empty / Idle State --}}
-        <div class="empty-state">
-            <div class="empty-state-icon" style="background: linear-gradient(135deg, rgba(67,97,238,0.1) 0%, rgba(14,165,233,0.1) 100%); font-size: 40px;">
-                🔍
-            </div>
-            <h5 class="fw-bold mb-2">Cari Pegawai</h5>
-            <p class="text-muted mb-0">Ketik nama atau NIP rekan kamu di kolom pencarian di atas untuk mulai mencari.</p>
+            @else
+                <div class="empty-state-icon" style="background: linear-gradient(135deg, rgba(67,97,238,0.1) 0%, rgba(14,165,233,0.1) 100%); font-size: 40px;">
+                    🔍
+                </div>
+                <h5 class="fw-bold mb-2">Cari Pegawai</h5>
+                <p class="text-muted mb-0">Ketik nama atau NIP rekan kamu di kolom pencarian di atas untuk mulai mencari.</p>
+            @endif
         </div>
     @endif
 
