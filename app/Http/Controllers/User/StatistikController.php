@@ -34,18 +34,89 @@ class StatistikController extends Controller
             $monthlyStats[] = $count;
         }
 
-        // 3. Data for Chart: Group by Status
+        // 3. Detailed Monthly Data for Table with Status Breakdown and Sparkline
+        $monthlyDetails = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $monthlyQuery = Surat::where('user_id', $userId)
+                ->whereYear('created_at', $tahun)
+                ->whereMonth('created_at', $m);
+            
+            $mTotal = (clone $monthlyQuery)->count();
+            $mDisetujui = (clone $monthlyQuery)->where('status', 'selesai')->count();
+            $mProses = (clone $monthlyQuery)->whereIn('status', ['proses', 'revisi'])->count();
+            $mDitolak = (clone $monthlyQuery)->where('status', 'ditolak')->count();
+
+            // Daily activity in that month for inline sparkline
+            $dailyData = Surat::where('user_id', $userId)
+                ->whereYear('created_at', $tahun)
+                ->whereMonth('created_at', $m)
+                ->select(DB::raw('DAY(created_at) as day'), DB::raw('count(*) as count'))
+                ->groupBy('day')
+                ->pluck('count', 'day')
+                ->toArray();
+
+            $daysInMonth = Carbon::create($tahun, $m, 1)->daysInMonth;
+            $sparklineData = [];
+            for ($d = 1; $d <= $daysInMonth; $d++) {
+                $sparklineData[] = $dailyData[$d] ?? 0;
+            }
+
+            $monthlyDetails[] = [
+                'name' => $labels[$m - 1],
+                'total' => $mTotal,
+                'disetujui' => $mDisetujui,
+                'proses' => $mProses,
+                'ditolak' => $mDitolak,
+                'sparkline' => $sparklineData,
+            ];
+        }
+
+        // 4. Data for Chart: Group by Status
         $statusLabels = ['Disetujui', 'Ditolak', 'Diproses'];
         $statusStats = [$totalDisetujui, $totalDitolak, $totalProses];
 
-        // 4. Data for Chart: Distribusi Jenis Surat
+        // 5. Data for Chart: Distribusi Jenis Surat & Detailed Jenis Table
         $jenisSurat = (clone $baseQuery)
                           ->select('jenis', DB::raw('count(*) as total'))
                           ->groupBy('jenis')
                           ->pluck('total', 'jenis')
                           ->toArray();
 
-        // 5. Data Heatmap Kontribusi (GitHub Stats)
+        $jenisDetails = [];
+        foreach (Surat::JENIS_LABEL as $key => $label) {
+            $jenisQuery = Surat::where('user_id', $userId)
+                ->whereYear('created_at', $tahun)
+                ->where('jenis', $key);
+
+            $jTotal = (clone $jenisQuery)->count();
+            $jDisetujui = (clone $jenisQuery)->where('status', 'selesai')->count();
+            $jProses = (clone $jenisQuery)->whereIn('status', ['proses', 'revisi'])->count();
+            $jDitolak = (clone $jenisQuery)->where('status', 'ditolak')->count();
+
+            // Monthly trend for this specific jenis
+            $jenisMonthlyTrend = [];
+            for ($m = 1; $m <= 12; $m++) {
+                $jenisMonthlyTrend[] = (clone $jenisQuery)->whereMonth('created_at', $m)->count();
+            }
+
+            if ($jTotal > 0) {
+                $jenisDetails[] = [
+                    'label' => $label,
+                    'total' => $jTotal,
+                    'disetujui' => $jDisetujui,
+                    'proses' => $jProses,
+                    'ditolak' => $jDitolak,
+                    'trend' => $jenisMonthlyTrend,
+                ];
+            }
+        }
+
+        // Sort jenisDetails descending by total
+        usort($jenisDetails, function($a, $b) {
+            return $b['total'] <=> $a['total'];
+        });
+
+        // 6. Data Heatmap Kontribusi (GitHub Stats)
         $heatmapYear = (int) $request->input('heatmap_year', date('Y'));
         $heatmapData = auth()->user()->getActivityHeatmapData($heatmapYear);
 
@@ -63,6 +134,8 @@ class StatistikController extends Controller
             'jenisSurat' => $jenisSurat,
             'heatmapData' => $heatmapData,
             'heatmapYear' => $heatmapYear,
+            'monthlyDetails' => $monthlyDetails,
+            'jenisDetails' => $jenisDetails,
         ]);
     }
 }

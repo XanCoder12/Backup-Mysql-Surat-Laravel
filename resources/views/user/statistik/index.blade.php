@@ -2,107 +2,347 @@
 
 @section('content')
 <div class="container-fluid py-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 animate-in">
+    <!-- Header Panel with Glassmorphism -->
+    <div class="card-glass mb-4 p-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 animate-in" style="border-radius: 20px;">
         <div>
-            <h2 class="h4 mb-0 fw-bold" style="color: var(--text-primary);">
-                <i class="bi bi-bar-chart-line text-primary me-2"></i>Statistik Saya
+            <h2 class="h3 mb-1 fw-extrabold text-gradient-primary d-flex align-items-center">
+                <i class="bi bi-bar-chart-steps text-cyan me-3 fs-3"></i>Statistik & Analisis Surat
             </h2>
-            <p class="text-secondary mb-0" style="font-size: 13px;">Ringkasan dan visualisasi data pengajuan surat Anda.</p>
+            <p class="text-secondary mb-0" style="font-size: 13px; font-weight: 500;">
+                Visualisasi komprehensif, performa waktu nyata, dan analisis tren surat masuk/keluar Anda.
+            </p>
         </div>
         <div>
             <form action="{{ route('user.statistik.index') }}" method="GET" id="yearForm" data-turbo="false">
-                <select name="tahun" class="form-select" onchange="document.getElementById('yearForm').submit()" style="width: 140px; border-radius: 10px; font-weight: 600; border-color: #e5e7eb;">
-                    @php $startYear = 2024; $currentYear = date('Y'); @endphp
-                    @for($y = $currentYear; $y >= $startYear; $y--)
-                        <option value="{{ $y }}" {{ $tahun == $y ? 'selected' : '' }}>Tahun {{ $y }}</option>
-                    @endfor
-                </select>
+                <div class="input-group-glass">
+                    <span class="input-group-text-glass"><i class="bi bi-calendar3 text-cyan"></i></span>
+                    <select name="tahun" class="form-select-glass" onchange="document.getElementById('yearForm').submit()">
+                        @php $startYear = 2024; $currentYear = date('Y'); @endphp
+                        @for($y = $currentYear; $y >= $startYear; $y--)
+                            <option value="{{ $y }}" {{ $tahun == $y ? 'selected' : '' }}>Tahun {{ $y }}</option>
+                        @endfor
+                    </select>
+                </div>
             </form>
         </div>
     </div>
 
-    <!-- Cards Row -->
+    <!-- Glowing Premium Stats Cards -->
     <div class="row g-4 mb-4 animate-in" style="animation-delay: 0.1s;">
         <!-- Total Surat -->
-        <div class="col-6 col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon text-primary"><i class="bi bi-envelope-paper"></i></div>
-                <div class="stat-value">{{ $totalSurat }}</div>
-                <div class="stat-label">Total Pengajuan</div>
+        <div class="col-6 col-lg-3">
+            <div class="premium-stat-card card-cyan">
+                <div class="card-glow"></div>
+                <div class="d-flex justify-between items-start mb-2">
+                    <div class="stat-icon-wrapper">
+                        <i class="bi bi-envelope-paper-fill"></i>
+                    </div>
+                    <span class="trend-badge positive"><i class="bi bi-graph-up me-1"></i>100%</span>
+                </div>
+                <div class="stat-num">{{ $totalSurat }}</div>
+                <div class="stat-title-custom">Total Pengajuan</div>
+                <div class="stat-footer-text">Akumulasi tahun {{ $tahun }}</div>
             </div>
         </div>
         <!-- Disetujui -->
-        <div class="col-6 col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon text-success"><i class="bi bi-check-circle"></i></div>
-                <div class="stat-value text-success">{{ $totalDisetujui }}</div>
-                <div class="stat-label">Disetujui</div>
+        <div class="col-6 col-lg-3">
+            <div class="premium-stat-card card-green">
+                <div class="card-glow"></div>
+                <div class="d-flex justify-between items-start mb-2">
+                    <div class="stat-icon-wrapper">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <span class="trend-badge positive-green">
+                        @if($totalSurat > 0)
+                            {{ round(($totalDisetujui / $totalSurat) * 100, 1) }}%
+                        @else
+                            0%
+                        @endif
+                    </span>
+                </div>
+                <div class="stat-num text-emerald">{{ $totalDisetujui }}</div>
+                <div class="stat-title-custom">Telah Disetujui</div>
+                <div class="stat-footer-text">Selesai diproses admin</div>
             </div>
         </div>
         <!-- Diproses -->
-        <div class="col-6 col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon text-warning"><i class="bi bi-hourglass-split"></i></div>
-                <div class="stat-value text-warning">{{ $totalProses }}</div>
-                <div class="stat-label">Diproses</div>
+        <div class="col-6 col-lg-3">
+            <div class="premium-stat-card card-amber">
+                <div class="card-glow"></div>
+                <div class="d-flex justify-between items-start mb-2">
+                    <div class="stat-icon-wrapper">
+                        <i class="bi bi-hourglass-split"></i>
+                    </div>
+                    <span class="trend-badge warning-amber">
+                        @if($totalSurat > 0)
+                            {{ round(($totalProses / $totalSurat) * 100, 1) }}%
+                        @else
+                            0%
+                        @endif
+                    </span>
+                </div>
+                <div class="stat-num text-amber">{{ $totalProses }}</div>
+                <div class="stat-title-custom">Sedang Diproses</div>
+                <div class="stat-footer-text">Termasuk draf & revisi</div>
             </div>
         </div>
-        <!-- Ditolak </> -->
-        <div class="col-6 col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon text-danger"><i class="bi bi-x-circle"></i></div>
-                <div class="stat-value text-danger">{{ $totalDitolak }}</div>
-                <div class="stat-label">Ditolak</div>
+        <!-- Ditolak -->
+        <div class="col-6 col-lg-3">
+            <div class="premium-stat-card card-rose">
+                <div class="card-glow"></div>
+                <div class="d-flex justify-between items-start mb-2">
+                    <div class="stat-icon-wrapper">
+                        <i class="bi bi-x-circle-fill"></i>
+                    </div>
+                    <span class="trend-badge critical-rose">
+                        @if($totalSurat > 0)
+                            {{ round(($totalDitolak / $totalSurat) * 100, 1) }}%
+                        @else
+                            0%
+                        @endif
+                    </span>
+                </div>
+                <div class="stat-num text-rose">{{ $totalDitolak }}</div>
+                <div class="stat-title-custom">Ditolak / Perlu Revisi</div>
+                <div class="stat-footer-text">Ditolak verifikator</div>
             </div>
         </div>
     </div>
 
-    <!-- Heatmap Row (GitHub-style Contribution Grid) -->
+    <!-- Heatmap Row -->
     <div class="row mb-4 animate-in" style="animation-delay: 0.15s;">
         <div class="col-12">
-            <x-activity-heatmap :data="$heatmapData" :selected-year="$heatmapYear" title="Kontribusi Aktivitas Pengajuan Surat" />
+            <div class="card-glass p-4" style="border-radius: 20px;">
+                <x-activity-heatmap :data="$heatmapData" :selected-year="$heatmapYear" title="Heatmap Kontribusi Aktivitas Surat" />
+            </div>
         </div>
     </div>
 
-    <!-- Charts Row -->
-    <div class="row g-4 animate-in" style="animation-delay: 0.2s;">
+    <!-- Main Visual Charts Row -->
+    <div class="row g-4 mb-4 animate-in" style="animation-delay: 0.2s;">
         <!-- Line Chart -->
-        <div class="col-md-8">
-            <div class="card-custom p-4 h-100">
-                <h5 class="fw-bold mb-4" style="font-size: 15px;"><i class="bi bi-graph-up text-primary me-2"></i>Tren Pengajuan Surat (Line Chart)</h5>
-                <div style="height: 300px; position: relative;">
+        <div class="col-lg-8">
+            <div class="card-glass p-4 h-100" style="border-radius: 20px;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold mb-0 text-gradient-primary d-flex align-items-center" style="font-size: 15px;">
+                        <i class="bi bi-graph-up-arrow text-cyan me-2"></i>Tren Pengajuan Surat Bulanan
+                    </h5>
+                    <span class="badge bg-cyan-soft text-cyan px-2.5 py-1.5 fw-bold" style="font-size: 11px;">12 Bulan</span>
+                </div>
+                <div style="height: 320px; position: relative;">
                     <canvas id="lineChart"></canvas>
                 </div>
             </div>
         </div>
-        <!-- Doughnut Chart -->
-        <div class="col-md-4">
-            <div class="card-custom p-4 h-100">
-                <h5 class="fw-bold mb-4" style="font-size: 15px;"><i class="bi bi-pie-chart text-success me-2"></i>Status Pengajuan</h5>
-                <div style="height: 250px; position: relative; display: flex; justify-content: center;">
+        <!-- Doughnut Status Chart -->
+        <div class="col-lg-4">
+            <div class="card-glass p-4 h-100" style="border-radius: 20px;">
+                <h5 class="fw-bold mb-4 text-gradient-primary d-flex align-items-center" style="font-size: 15px;">
+                    <i class="bi bi-pie-chart text-emerald me-2"></i>Rasio Status Pengajuan
+                </h5>
+                <div style="height: 230px; position: relative; display: flex; justify-content: center; align-items: center;">
                     <canvas id="doughnutChart"></canvas>
+                    <div class="absolute-center text-center">
+                        <div class="fw-extrabold text-gradient-primary" style="font-size: 26px; line-height: 1;">
+                            {{ $totalSurat }}
+                        </div>
+                        <div class="text-secondary" style="font-size: 10px; font-weight: 700; uppercase; letter-spacing: 0.05em; margin-top: 2px;">
+                            Total Surat
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-2 mt-3 pt-3 border-top border-white-5">
+                    <div class="col-4 text-center">
+                        <div class="text-emerald fw-bold mb-0" style="font-size: 14px;">{{ $totalDisetujui }}</div>
+                        <div class="text-muted" style="font-size: 10px;">Setuju</div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div class="text-amber fw-bold mb-0" style="font-size: 14px;">{{ $totalProses }}</div>
+                        <div class="text-muted" style="font-size: 10px;">Proses</div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div class="text-rose fw-bold mb-0" style="font-size: 14px;">{{ $totalDitolak }}</div>
+                        <div class="text-muted" style="font-size: 10px;">Tolak</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Additional Charts Row -->
-    <div class="row g-4 mt-1 animate-in" style="animation-delay: 0.3s;">
-        <!-- Distribusi Jenis Surat -->
-        <div class="col-md-6">
-            <div class="card-custom p-4 h-100">
-                <h5 class="fw-bold mb-4" style="font-size: 15px;"><i class="bi bi-pie-chart-fill text-info me-2"></i>Distribusi Jenis Surat</h5>
-                <div style="height: 250px; position: relative; display: flex; justify-content: center;">
+    <!-- Advanced Section: Tables with Inline Sparkline Charts -->
+    <div class="row g-4 mb-4 animate-in" style="animation-delay: 0.25s;">
+        <!-- Table 1: Bulanan + Sparkline Harian -->
+        <div class="col-xl-7">
+            <div class="card-glass p-4 h-100" style="border-radius: 20px;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h5 class="fw-bold mb-1 text-gradient-primary d-flex align-items-center" style="font-size: 15px;">
+                            <i class="bi bi-table text-cyan me-2"></i>Analisis & Aktivitas Bulanan
+                        </h5>
+                        <p class="text-secondary mb-0" style="font-size: 11px;">Rincian total dan fluktuasi harian per bulan.</p>
+                    </div>
+                    <span class="badge bg-cyan-soft text-cyan px-2.5 py-1.5 fw-bold" style="font-size: 11px;">Sparkline Aktif</span>
+                </div>
+                <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+                    <table class="table-custom align-middle">
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">Bulan</th>
+                                <th class="text-center" style="width: 15%;">Total</th>
+                                <th class="text-center" style="width: 30%;">Status</th>
+                                <th class="text-center" style="width: 15%;">Selesai %</th>
+                                <th class="text-center" style="width: 25%;">Tren Harian</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($monthlyDetails as $mDetail)
+                                <tr>
+                                    <td class="fw-bold" style="color: var(--text-primary);">{{ $mDetail['name'] }}</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-primary-soft text-primary fw-bold" style="font-size: 12px; min-width: 30px;">
+                                            {{ $mDetail['total'] }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if($mDetail['total'] > 0)
+                                            <div class="progress-segmented-custom">
+                                                <div class="segment-green" style="width: {{ ($mDetail['disetujui'] / $mDetail['total']) * 100 }}%" title="Disetujui: {{ $mDetail['disetujui'] }}"></div>
+                                                <div class="segment-yellow" style="width: {{ ($mDetail['proses'] / $mDetail['total']) * 100 }}%" title="Diproses: {{ $mDetail['proses'] }}"></div>
+                                                <div class="segment-red" style="width: {{ ($mDetail['ditolak'] / $mDetail['total']) * 100 }}%" title="Ditolak: {{ $mDetail['ditolak'] }}"></div>
+                                            </div>
+                                            <div class="d-flex justify-content-between mt-1 text-muted" style="font-size: 9px; font-weight: 600;">
+                                                <span class="text-emerald">{{ $mDetail['disetujui'] }}</span>
+                                                <span class="text-amber">{{ $mDetail['proses'] }}</span>
+                                                <span class="text-rose">{{ $mDetail['ditolak'] }}</span>
+                                            </div>
+                                        @else
+                                            <span class="text-muted d-block text-center" style="font-size: 11px; font-style: italic;">Tidak ada data</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center fw-bold">
+                                        @if($mDetail['total'] > 0)
+                                            <div class="d-inline-flex align-items-center gap-1">
+                                                <span class="text-emerald">{{ round(($mDetail['disetujui'] / $mDetail['total']) * 100) }}%</span>
+                                            </div>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @if($mDetail['total'] > 0)
+                                            <div class="d-flex justify-content-center">
+                                                <canvas id="sparkline-month-{{ $loop->index }}" width="110" height="26" class="sparkline-canvas" data-sparkline-data="{{ json_encode($mDetail['sparkline']) }}"></canvas>
+                                            </div>
+                                        @else
+                                            <div class="d-flex justify-content-center align-items-center" style="height: 26px;">
+                                                <div class="sparkline-placeholder"></div>
+                                            </div>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table 2: Jenis Surat + Sparkline Bulanan -->
+        <div class="col-xl-5">
+            <div class="card-glass p-4 h-100" style="border-radius: 20px;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h5 class="fw-bold mb-1 text-gradient-primary d-flex align-items-center" style="font-size: 15px;">
+                            <i class="bi bi-tag text-emerald me-2"></i>Kinerja Per Jenis Surat
+                        </h5>
+                        <p class="text-secondary mb-0" style="font-size: 11px;">Analisis efektivitas berdasarkan klasifikasi surat.</p>
+                    </div>
+                    <span class="badge bg-emerald-soft text-emerald px-2.5 py-1.5 fw-bold" style="font-size: 11px;">Kategori</span>
+                </div>
+                <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+                    <table class="table-custom align-middle">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%;">Jenis Surat</th>
+                                <th class="text-center" style="width: 15%;">Total</th>
+                                <th class="text-center" style="width: 20%;">Rasio</th>
+                                <th class="text-center" style="width: 25%;">Tren 12B</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($jenisDetails as $jDetail)
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold text-truncate" style="color: var(--text-primary); max-width: 150px;" title="{{ $jDetail['label'] }}">
+                                            {{ $jDetail['label'] }}
+                                        </div>
+                                        <div class="d-flex align-items-center gap-1.5 mt-0.5" style="font-size: 10px;">
+                                            <span class="text-emerald" title="Disetujui"><i class="bi bi-check-circle me-0.5"></i>{{ $jDetail['disetujui'] }}</span>
+                                            <span class="text-muted">|</span>
+                                            <span class="text-rose" title="Ditolak"><i class="bi bi-x-circle me-0.5"></i>{{ $jDetail['ditolak'] }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-cyan-soft text-cyan fw-bold" style="font-size: 12px;">
+                                            {{ $jDetail['total'] }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if($jDetail['total'] > 0)
+                                            @php 
+                                                $rate = round(($jDetail['disetujui'] / $jDetail['total']) * 100); 
+                                                $colorClass = $rate >= 75 ? 'text-emerald' : ($rate >= 50 ? 'text-amber' : 'text-rose');
+                                            @endphp
+                                            <div class="d-flex flex-column">
+                                                <span class="fw-bold {{ $colorClass }}" style="font-size: 13px;">{{ $rate }}%</span>
+                                                <div class="progress-mini-bar mt-1">
+                                                    <div class="progress-mini-fill" style="width: {{ $rate }}%; background-color: var(--{{ $rate >= 75 ? 'emerald' : ($rate >= 50 ? 'amber' : 'rose') }});"></div>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center">
+                                            <canvas id="sparkline-jenis-{{ $loop->index }}" width="100" height="26" class="sparkline-canvas-bar" data-sparkline-data="{{ json_encode($jDetail['trend']) }}"></canvas>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center py-4 text-muted" style="font-style: italic; font-size: 12px;">
+                                        Tidak ada data pengajuan surat pada tahun ini.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Distribusi Jenis Surat & Bar Chart Row (Secondary charts) -->
+    <div class="row g-4 animate-in" style="animation-delay: 0.3s;">
+        <!-- Distribusi Jenis Surat Polar Area -->
+        <div class="col-lg-6">
+            <div class="card-glass p-4 h-100" style="border-radius: 20px;">
+                <h5 class="fw-bold mb-4 text-gradient-primary d-flex align-items-center" style="font-size: 15px;">
+                    <i class="bi bi-compass text-cyan me-2"></i>Komparasi Volume Jenis Surat
+                </h5>
+                <div style="height: 270px; position: relative; display: flex; justify-content: center;">
                     <canvas id="jenisChart"></canvas>
                 </div>
             </div>
         </div>
         <!-- Bar Chart Tren -->
-        <div class="col-md-6">
-            <div class="card-custom p-4 h-100">
-                <h5 class="fw-bold mb-4" style="font-size: 15px;"><i class="bi bi-bar-chart-fill text-warning me-2"></i>Tren Pengajuan Surat (Bar Chart)</h5>
-                <div style="height: 250px; position: relative;">
+        <div class="col-lg-6">
+            <div class="card-glass p-4 h-100" style="border-radius: 20px;">
+                <h5 class="fw-bold mb-4 text-gradient-primary d-flex align-items-center" style="font-size: 15px;">
+                    <i class="bi bi-bar-chart-fill text-amber me-2"></i>Frekuensi Pengajuan Surat
+                </h5>
+                <div style="height: 270px; position: relative;">
                     <canvas id="barChart"></canvas>
                 </div>
             </div>
@@ -110,19 +350,328 @@
     </div>
 </div>
 
+<!-- Stylings for Advanced Visual Stats -->
+<style>
+    /* Gradient text helper */
+    .text-gradient-primary {
+        background: linear-gradient(135deg, #1e293b 0%, #2563eb 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .text-cyan {
+        color: #06b6d4 !important;
+    }
+    
+    .text-emerald {
+        color: #10b981 !important;
+    }
+    
+    .text-amber {
+        color: #f59e0b !important;
+    }
+    
+    .text-rose {
+        color: #f43f5e !important;
+    }
+    
+    /* Card Glassmorphism layout */
+    .card-glass {
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card-glass:hover {
+        box-shadow: 0 15px 35px -8px rgba(0, 0, 0, 0.06);
+    }
+    
+    /* Select form elements */
+    .input-group-glass {
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        padding: 0.15rem 0.5rem;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    }
+    
+    .input-group-text-glass {
+        background: transparent;
+        border: none;
+        padding-right: 0.25rem;
+    }
+    
+    .form-select-glass {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--text-primary);
+        font-weight: 700;
+        font-size: 13.5px;
+        padding: 0.4rem 2rem 0.4rem 0.5rem;
+        cursor: pointer;
+    }
+    
+    .form-select-glass:focus {
+        box-shadow: none;
+    }
+    
+    /* Premium Stats Cards styles */
+    .premium-stat-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.02);
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .premium-stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.07);
+    }
+    
+    .premium-stat-card.card-cyan:hover {
+        border-color: rgba(6, 182, 212, 0.4);
+    }
+    .premium-stat-card.card-green:hover {
+        border-color: rgba(16, 185, 129, 0.4);
+    }
+    .premium-stat-card.card-amber:hover {
+        border-color: rgba(245, 158, 11, 0.4);
+    }
+    .premium-stat-card.card-rose:hover {
+        border-color: rgba(244, 63, 94, 0.4);
+    }
+    
+    .card-glow {
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 70%);
+        top: -65px;
+        right: -65px;
+        opacity: 0.12;
+        pointer-events: none;
+        transition: transform 0.5s ease;
+    }
+    
+    .premium-stat-card:hover .card-glow {
+        transform: scale(1.3);
+        opacity: 0.22;
+    }
+    
+    .stat-icon-wrapper {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    
+    .card-cyan .stat-icon-wrapper {
+        background: rgba(6, 182, 212, 0.1);
+        color: #06b6d4;
+    }
+    .card-green .stat-icon-wrapper {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+    }
+    .card-amber .stat-icon-wrapper {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+    }
+    .card-rose .stat-icon-wrapper {
+        background: rgba(244, 63, 94, 0.1);
+        color: #f43f5e;
+    }
+    
+    .trend-badge {
+        font-size: 10px;
+        font-weight: 800;
+        padding: 0.25rem 0.5rem;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .trend-badge.positive {
+        background: rgba(6, 182, 212, 0.1);
+        color: #06b6d4;
+    }
+    
+    .trend-badge.positive-green {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+    }
+    
+    .trend-badge.warning-amber {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+    }
+    
+    .trend-badge.critical-rose {
+        background: rgba(244, 63, 94, 0.1);
+        color: #f43f5e;
+    }
+    
+    .stat-num {
+        font-size: 32px;
+        font-weight: 900;
+        line-height: 1.1;
+        margin-top: 0.65rem;
+        letter-spacing: -0.03em;
+        color: var(--text-primary);
+    }
+    
+    .stat-title-custom {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--text-secondary);
+        margin-top: 0.25rem;
+    }
+    
+    .stat-footer-text {
+        font-size: 10px;
+        color: #94a3b8;
+        font-weight: 500;
+        margin-top: 0.5rem;
+    }
+    
+    /* Segmented status indicator */
+    .progress-segmented-custom {
+        display: flex;
+        height: 6px;
+        border-radius: 99px;
+        overflow: hidden;
+        background: rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(255,255,255,0.4);
+    }
+    
+    .segment-green {
+        background-color: #10b981;
+        transition: width 0.3s ease;
+    }
+    
+    .segment-yellow {
+        background-color: #f59e0b;
+        transition: width 0.3s ease;
+    }
+    
+    .segment-red {
+        background-color: #f43f5e;
+        transition: width 0.3s ease;
+    }
+    
+    /* Table styles */
+    .table-custom {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .table-custom th {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: #94a3b8;
+        letter-spacing: 0.05em;
+        padding: 0.75rem 1rem;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.04);
+    }
+    
+    .table-custom td {
+        padding: 0.85rem 1rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        font-size: 13px;
+    }
+    
+    .table-custom tr:last-child td {
+        border-bottom: none;
+    }
+    
+    /* mini progress bar */
+    .progress-mini-bar {
+        width: 100%;
+        height: 4px;
+        background: rgba(0, 0, 0, 0.04);
+        border-radius: 99px;
+        overflow: hidden;
+    }
+    
+    .progress-mini-fill {
+        height: 100%;
+        border-radius: 99px;
+    }
+    
+    /* Sparkline canvas placeholder */
+    .sparkline-placeholder {
+        width: 60px;
+        height: 2px;
+        background: rgba(0, 0, 0, 0.06);
+        border-radius: 99px;
+    }
+    
+    .absolute-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+    
+    /* Badges */
+    .bg-cyan-soft {
+        background-color: rgba(6, 182, 212, 0.12) !important;
+    }
+    .bg-emerald-soft {
+        background-color: rgba(16, 185, 129, 0.12) !important;
+    }
+    .bg-primary-soft {
+        background-color: rgba(37, 99, 235, 0.09) !important;
+    }
+    
+    .border-white-5 {
+        border-color: rgba(0,0,0,0.06) !important;
+    }
+</style>
+
 <!-- Import Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
     (function() {
+        // Shared colors definition for charts
+        const colors = {
+            cyan: '#06b6d4',
+            cyanLight: 'rgba(6, 182, 212, 0.4)',
+            cyanTransparent: 'rgba(6, 182, 212, 0.0)',
+            emerald: '#10b981',
+            amber: '#f59e0b',
+            rose: '#f43f5e',
+            gray: '#64748b',
+            border: 'rgba(0,0,0,0.03)'
+        };
+
         // Line Chart Configuration
         const ctxLine = document.getElementById('lineChart');
         if (ctxLine) {
             const ctx = ctxLine.getContext('2d');
-            // Gradient for Line Chart
             let gradientLine = ctx.createLinearGradient(0, 0, 0, 300);
-            gradientLine.addColorStop(0, 'rgba(59, 130, 246, 0.4)');
-            gradientLine.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+            gradientLine.addColorStop(0, colors.cyanLight);
+            gradientLine.addColorStop(1, colors.cyanTransparent);
 
             new Chart(ctx, {
                 type: 'line',
@@ -131,32 +680,43 @@
                     datasets: [{
                         label: 'Jumlah Surat',
                         data: {!! json_encode($chartData) !!},
-                        borderColor: '#3b82f6',
+                        borderColor: colors.cyan,
                         backgroundColor: gradientLine,
                         borderWidth: 3,
                         pointBackgroundColor: '#fff',
-                        pointBorderColor: '#3b82f6',
-                        pointBorderWidth: 2,
+                        pointBorderColor: colors.cyan,
+                        pointBorderWidth: 2.5,
                         pointRadius: 5,
-                        pointHoverRadius: 7,
+                        pointHoverRadius: 8,
+                        pointHoverBackgroundColor: colors.cyan,
+                        pointHoverBorderColor: '#fff',
+                        pointHoverBorderWidth: 2.5,
                         fill: true,
-                        tension: 0.4
+                        tension: 0.38
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleColor: '#fff',
+                            bodyColor: '#e2e8f0',
+                            padding: 10,
+                            borderRadius: 8,
+                            boxPadding: 4
+                        }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: { stepSize: 1, color: '#64748b' },
-                            grid: { color: 'rgba(255,255,255,0.4)', drawBorder: false }
+                            ticks: { stepSize: 1, color: colors.gray, font: { family: 'Plus Jakarta Sans', weight: '600' } },
+                            grid: { color: 'rgba(0,0,0,0.04)', drawBorder: false }
                         },
                         x: {
-                            ticks: { color: '#64748b' },
+                            ticks: { color: colors.gray, font: { family: 'Plus Jakarta Sans', weight: '600' } },
                             grid: { display: false, drawBorder: false }
                         }
                     }
@@ -174,34 +734,34 @@
                     datasets: [{
                         data: {!! json_encode($statusData) !!},
                         backgroundColor: [
-                            'rgba(16, 185, 129, 0.8)', // Disetujui (Green)
-                            'rgba(239, 68, 68, 0.8)',  // Ditolak (Red)
-                            'rgba(245, 158, 11, 0.8)'  // Diproses (Yellow/Orange)
+                            '#10b981', // Disetujui (Green)
+                            '#f43f5e', // Ditolak (Red)
+                            '#f59e0b'  // Diproses (Yellow/Orange)
                         ],
-                        borderColor: 'rgba(255,255,255,0.5)',
-                        borderWidth: 2,
-                        hoverOffset: 4
+                        borderColor: '#ffffff',
+                        borderWidth: 3.5,
+                        hoverOffset: 6
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '70%',
+                    cutout: '76%',
                     plugins: {
                         legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#475569',
-                                usePointStyle: true,
-                                padding: 20
-                            }
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            padding: 10,
+                            borderRadius: 8
                         }
                     }
                 }
             });
         }
 
-        // Distribusi Jenis Surat
+        // Distribusi Jenis Surat Polar Area Chart
         const jenisCtx = document.getElementById('jenisChart');
         if (jenisCtx) {
             const jenisData = @json($jenisSurat);
@@ -209,13 +769,13 @@
             
             const labels = Object.keys(jenisData).map(key => jenisLabels[key] || key);
             const data = Object.values(jenisData);
-            const colors = [
-                'rgba(30, 58, 95, 0.8)', 
-                'rgba(37, 99, 235, 0.8)', 
-                'rgba(34, 197, 94, 0.8)', 
+            const colorsArray = [
+                'rgba(6, 182, 212, 0.8)', 
+                'rgba(16, 185, 129, 0.8)', 
                 'rgba(245, 158, 11, 0.8)', 
-                'rgba(239, 68, 68, 0.8)', 
-                'rgba(139, 92, 246, 0.8)', 
+                'rgba(244, 63, 94, 0.8)', 
+                'rgba(99, 102, 241, 0.8)', 
+                'rgba(168, 85, 247, 0.8)', 
                 'rgba(236, 72, 153, 0.8)'
             ];
             
@@ -225,10 +785,9 @@
                     labels: labels,
                     datasets: [{
                         data: data,
-                        backgroundColor: colors.slice(0, data.length),
-                        borderWidth: 1,
+                        backgroundColor: colorsArray.slice(0, data.length),
+                        borderWidth: 2,
                         borderColor: '#ffffff',
-                        hoverOffset: 8
                     }]
                 },
                 options: {
@@ -241,13 +800,20 @@
                                 padding: 16,
                                 usePointStyle: true,
                                 pointStyle: 'circle',
-                                font: { size: 12 }
+                                color: colors.gray,
+                                font: { family: 'Plus Jakarta Sans', size: 10.5, weight: '600' }
                             }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            padding: 10,
+                            borderRadius: 8
                         }
                     },
                     scales: {
                         r: {
-                            ticks: { display: false }
+                            ticks: { display: false },
+                            grid: { color: 'rgba(0,0,0,0.04)' }
                         }
                     }
                 }
@@ -264,33 +830,97 @@
                     datasets: [{
                         label: 'Jumlah Surat',
                         data: {!! json_encode($chartData) !!},
-                        backgroundColor: 'rgba(30, 58, 95, 0.8)',
-                        borderColor: '#1e3a5f',
-                        borderWidth: 2,
-                        borderRadius: 8,
-                        barPercentage: 0.6
+                        backgroundColor: 'rgba(6, 182, 212, 0.75)',
+                        hoverBackgroundColor: '#06b6d4',
+                        borderColor: '#06b6d4',
+                        borderWidth: 0,
+                        borderRadius: 6,
+                        barPercentage: 0.55
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            padding: 10,
+                            borderRadius: 8
+                        }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: { stepSize: 1, color: '#64748b' },
-                            grid: { color: '#f1f5f9' }
+                            ticks: { stepSize: 1, color: colors.gray, font: { family: 'Plus Jakarta Sans', weight: '600' } },
+                            grid: { color: 'rgba(0,0,0,0.04)', drawBorder: false }
                         },
                         x: {
-                            ticks: { color: '#64748b' },
-                            grid: { display: false }
+                            ticks: { color: colors.gray, font: { family: 'Plus Jakarta Sans', weight: '600' } },
+                            grid: { display: false, drawBorder: false }
                         }
                     }
                 }
             });
         }
+
+        // --- INLINE SPARKLINE INITIALIZATIONS ---
+        
+        // 1. Monthly Daily Sparklines (Line Style)
+        document.querySelectorAll('.sparkline-canvas').forEach(canvas => {
+            const data = JSON.parse(canvas.getAttribute('data-sparkline-data') || '[]');
+            new Chart(canvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: data.map((_, i) => i + 1),
+                    datasets: [{
+                        data: data,
+                        borderColor: '#06b6d4',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: true,
+                        backgroundColor: 'rgba(6, 182, 212, 0.08)',
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+        });
+
+        // 2. Jenis Monthly Trend Sparklines (Bar Style)
+        document.querySelectorAll('.sparkline-canvas-bar').forEach(canvas => {
+            const data = JSON.parse(canvas.getAttribute('data-sparkline-data') || '[]');
+            new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: data.map((_, i) => i + 1),
+                    datasets: [{
+                        data: data,
+                        backgroundColor: '#10b981',
+                        borderRadius: 2,
+                        barPercentage: 0.7
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+        });
+
     })();
 </script>
 @endsection
