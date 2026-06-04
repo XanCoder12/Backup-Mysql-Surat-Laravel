@@ -50,8 +50,11 @@
     <div class="bg-orb bg-orb-2"></div>
     <div class="bg-orb bg-orb-3"></div>
 
-    {{-- THREE.JS 3D CANVAS --}}
-    <canvas id="threejs-canvas"></canvas>
+    {{-- VIDEO BACKGROUND --}}
+    <video id="bg-video" autoplay loop muted playsinline>
+        <source src="{{ asset('videos/background.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
 
     {{-- NAVBAR --}}
     <nav id="navbar">
@@ -1000,95 +1003,37 @@
             drawParticles();
         })();
 
-        /* ─── THREE.JS 3D BACKGROUND WITH INTERACTIVE BOXES ─── */
+        /* ─── BACKGROUND VIDEO SCROLL FADE ─── */
         (() => {
-            const canvas = document.getElementById('threejs-canvas');
-            if (!canvas) return;
+            const video = document.getElementById('bg-video');
+            if (!video) return;
 
-            let scene, camera, renderer;
-            let boxes = [];
-            let mouseX = 0, mouseY = 0;
-            let targetMouseX = 0, targetMouseY = 0;
             let isAboutInView = false;
             let isPortalsInView = false;
-            let canvasVisible = false;
+            let videoVisible = false;
 
-            function initThreeJS() {
-                // Scene setup
-                scene = new THREE.Scene();
-                scene.background = new THREE.Color(0xfafbff);
-                scene.fog = new THREE.Fog(0xfafbff, 500, 0.1);
-
-                // Camera - adjusted for better view
-                camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
-                camera.position.z = 100;
-
-                // Renderer
-                renderer = new THREE.WebGLRenderer({ canvas, alpha: false, antialias: true });
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                renderer.setPixelRatio(window.devicePixelRatio);
-                renderer.setClearColor(0xfafbff, 1);
-
-                // Create grid of boxes
-                const gridSize = 6;
-                const spacing = 30;
-                const startX = -(gridSize / 2) * spacing;
-                const startY = -(gridSize / 2) * spacing;
-
-                for (let i = 0; i < gridSize; i++) {
-                    for (let j = 0; j < gridSize; j++) {
-                        const geometry = new THREE.BoxGeometry(16, 16, 16);
-                        const material = new THREE.MeshStandardMaterial({
-                            color: 0x1a73e8,
-                            emissive: 0x1a73e8,
-                            emissiveIntensity: 0.3,
-                            metalness: 0.3,
-                            roughness: 0.4
-                        });
-                        const box = new THREE.Mesh(geometry, material);
-                        box.position.x = startX + i * spacing;
-                        box.position.y = startY + j * spacing;
-                        box.position.z = (Math.random() - 0.5) * 60;
-                        box.rotation.x = Math.random() * Math.PI;
-                        box.rotation.y = Math.random() * Math.PI;
-
-                        box.originalColor = new THREE.Color(0x1a73e8);
-                        box.targetColor = new THREE.Color(0x1a73e8);
-                        box.distanceToMouse = Infinity;
-                        box.velocity = {
-                            x: (Math.random() - 0.5) * 0.015,
-                            y: (Math.random() - 0.5) * 0.015,
-                            z: (Math.random() - 0.5) * 0.015
-                        };
-
-                        scene.add(box);
-                        boxes.push(box);
+            function updateVideoVisibility() {
+                const shouldBeVisible = isAboutInView || isPortalsInView;
+                if (shouldBeVisible !== videoVisible) {
+                    videoVisible = shouldBeVisible;
+                    video.classList.toggle('visible', videoVisible);
+                    if (videoVisible) {
+                        video.play().catch(err => console.log("Video auto-play prevented or failed: ", err));
+                    } else {
+                        video.pause();
                     }
                 }
+            }
 
-                // Lighting - stronger for visibility
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-                scene.add(ambientLight);
+            const aboutSection = document.getElementById('about');
+            const portalsSection = document.getElementById('portals');
 
-                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
-                directionalLight.position.set(100, 100, 100);
-                scene.add(directionalLight);
-
-                // Handle window resize
-                window.addEventListener('resize', onWindowResize);
-
-                // Mouse tracking
-                document.addEventListener('mousemove', onMouseMove);
-
-                // About section scroll trigger
-                const aboutSection = document.getElementById('about');
-                const portalsSection = document.getElementById('portals');
-
+            if ('IntersectionObserver' in window) {
                 if (aboutSection) {
                     const observer = new IntersectionObserver((entries) => {
                         entries.forEach(entry => {
                             isAboutInView = entry.isIntersecting;
-                            updateCanvasVisibility();
+                            updateVideoVisibility();
                         });
                     }, { threshold: 0.5, rootMargin: '-50px' });
                     observer.observe(aboutSection);
@@ -1098,108 +1043,15 @@
                     const observer = new IntersectionObserver((entries) => {
                         entries.forEach(entry => {
                             isPortalsInView = entry.isIntersecting;
-                            updateCanvasVisibility();
+                            updateVideoVisibility();
                         });
                     }, { threshold: 0.5, rootMargin: '-50px' });
                     observer.observe(portalsSection);
                 }
-
-                // Start animation
-                animate();
-            }
-
-            function updateCanvasVisibility() {
-                const shouldBeVisible = isAboutInView || isPortalsInView;
-                if (shouldBeVisible !== canvasVisible) {
-                    canvasVisible = shouldBeVisible;
-                    canvas.classList.toggle('visible', canvasVisible);
-                }
-            }
-
-            function onMouseMove(event) {
-                targetMouseX = (event.clientX / window.innerWidth) * 2 - 1;
-                targetMouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-            }
-
-            function onWindowResize() {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            }
-
-            function animate() {
-                requestAnimationFrame(animate);
-                if (!canvasVisible || !renderer) return;
-
-                boxes.forEach(box => {
-                    box.rotation.x += box.velocity.x;
-                    box.rotation.y += box.velocity.y;
-                    box.rotation.z += box.velocity.z;
-
-                    // Interactive effects only when about or portals in view
-                    if (isAboutInView || isPortalsInView) {
-                        // Calculate distance from mouse in normalized space
-                        const boxScreenPos = new THREE.Vector3();
-                        boxScreenPos.copy(box.position);
-                        boxScreenPos.project(camera);
-
-                        const distance = Math.sqrt(
-                            Math.pow(boxScreenPos.x - targetMouseX, 2) +
-                            Math.pow(boxScreenPos.y - targetMouseY, 2)
-                        );
-
-                        box.distanceToMouse = distance;
-
-                        // Trigger color change when cursor near
-                        if (distance < 0.25) {
-                            box.targetColor.setHSL(0.11, 0.95, 0.55); // Gold/yellow
-                            box.position.z += (Math.random() - 0.5) * 1.5;
-                            box.material.emissiveIntensity = 0.8;
-                        } else {
-                            box.targetColor.copy(box.originalColor);
-                            box.material.emissiveIntensity = 0.3;
-                        }
-
-                        // Smooth color transition
-                        box.material.color.lerp(box.targetColor, 0.08);
-                        box.material.emissive.lerp(box.targetColor, 0.08);
-
-                        // Scale based on distance
-                        const scale = 1 + Math.max(0, 0.25 - distance) * 0.4;
-                        box.scale.set(scale, scale, scale);
-                    } else {
-                        // Neutral state when not in view
-                        box.scale.set(1, 1, 1);
-                        box.material.emissiveIntensity = 0.2;
-                    }
-                });
-
-                renderer.render(scene, camera);
-            }
-
-            function bootThree() {
-                if (window.innerWidth <= 768) return;
-                if (window.THREE) {
-                    initThreeJS();
-                    return;
-                }
-                const s = document.createElement('script');
-                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-                s.onload = initThreeJS;
-                document.head.appendChild(s);
-            }
-
-            const preloadTargets = [document.getElementById('about'), document.getElementById('portals')].filter(Boolean);
-            if (preloadTargets.length && 'IntersectionObserver' in window) {
-                const io = new IntersectionObserver((entries) => {
-                    if (entries.some(e => e.isIntersecting)) {
-                        bootThree();
-                        io.disconnect();
-                    }
-                }, { rootMargin: '200px' });
-                preloadTargets.forEach(el => io.observe(el));
             } else {
-                bootThree();
+                // Fallback for older browsers
+                isAboutInView = true;
+                updateVideoVisibility();
             }
         })();
 
@@ -2012,7 +1864,6 @@
                     { name: 'Alpine.js', img: 'https://cdn.simpleicons.org/alpinedotjs/8BC0D0' },
                     { name: 'JavaScript', img: 'https://cdn.simpleicons.org/javascript/F7DF1E' },
                     { name: 'Chart.js', img: 'https://cdn.simpleicons.org/chartdotjs/FF6384' },
-                    { name: 'Three.js', img: 'https://cdn.simpleicons.org/threedotjs/000000' },
                     { name: 'Vite', img: 'https://cdn.simpleicons.org/vite/646CFF' },
                     { name: 'GSAP', img: 'https://cdn.simpleicons.org/greensock/88CE02' },
                     { name: 'Anime.js', img: 'https://cdn.simpleicons.org/anime.js/FF2D20' },

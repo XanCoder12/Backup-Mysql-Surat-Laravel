@@ -99,19 +99,20 @@
             will-change: transform;
         }
 
-        #threejs-canvas {
+        #bg-video {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            object-fit: cover;
             z-index: 1;
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.3s ease;
         }
 
-        #threejs-canvas.visible {
+        #bg-video.visible {
             opacity: 1;
         }
 
@@ -3335,7 +3336,7 @@
                 width: 100% !important;
             }
 
-            #threejs-canvas {
+            #bg-video {
                 display: none !important;
             }
 
