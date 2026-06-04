@@ -835,7 +835,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    (function() {
+    function initPegawaiCharts() {
         // Shared colors definition for charts
         const colors = {
             cyan: '#06b6d4',
@@ -1103,7 +1103,10 @@
                 }
             });
         });
+    }
 
-    })();
+    // Bind event listeners for both normal reload and Turbo navigation
+    document.addEventListener('turbo:load', initPegawaiCharts);
+    document.addEventListener('DOMContentLoaded', initPegawaiCharts);
 </script>
 @endsection
