@@ -63,7 +63,7 @@
             </div>
         </div>
         <div class="header-title">Balai Pengelolaan SUML</div>
-        <div class="header-sub">Sistem Manajemen Persuratan BP SUML</div>
+        <div class="header-sub">Sistem Manajemen Persuratan BPSUML</div>
     </div>
 
     <div class="glass-card">
