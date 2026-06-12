@@ -245,7 +245,7 @@ npm run build -> npm run dev
 
 ## 🎥 Demo Video
 
-
+https://drive.google.com/drive/folders/1UYCrUPZQjaQawTXM33jwFN9uRqLGoQh_?usp=sharing
 
 ---
 
