@@ -12,13 +12,10 @@
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@300;400&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ asset('css/welcome.css') }}?v=1">
+    <link rel="stylesheet" href="{{ asset('css/welcome.css') }}?v=6">
 </head>
 
 <body>
-
-    {{-- CUSTOM CURSOR --}}
-    <div class="custom-cursor" id="customCursor"></div>
 
     {{-- MOBILE MENU BACKDROP --}}
     <div id="mobile-menu-backdrop"></div>
@@ -28,18 +25,18 @@
         <a href="{{ url('/?home=1') }}" class="mobile-link" style="transition-delay: 0.05s;">Beranda</a>
         <a href="#about" class="mobile-link" style="transition-delay: 0.1s;">Tentang</a>
         <a href="#stats" class="mobile-link" style="transition-delay: 0.15s;">Statistik</a>
-        <a href="#spiral-section" class="mobile-link" style="transition-delay: 0.2s;">Jenis</a>
-        <a href="#charts" class="mobile-link" style="transition-delay: 0.25s;">Grafik</a>
-        <a href="#portals" class="mobile-link" style="transition-delay: 0.3s;">Portal</a>
-        <a href="#features-scroller" class="mobile-link" style="transition-delay: 0.35s;">Fitur</a>
+        <a href="#charts" class="mobile-link" style="transition-delay: 0.2s;">Grafik</a>
+        <a href="#portals" class="mobile-link" style="transition-delay: 0.25s;">Portal</a>
+        <a href="#features-scroller" class="mobile-link" style="transition-delay: 0.3s;">Fitur</a>
+        <a href="#alur-kerja" class="mobile-link" style="transition-delay: 0.35s;">Alur</a>
         <a href="#developer" class="mobile-link" style="transition-delay: 0.4s;">Developer</a>
         <a href="#footer" class="mobile-link" style="transition-delay: 0.45s;">Kontak</a>
         <div style="width: 100%; height: 1px; background: var(--glass-border); margin: 8px 0; opacity: 0.5;"></div>
         @auth
-            <a href="{{ route('dashboard') }}" class="mobile-link" style="color: var(--accent); font-weight: 600; transition-delay: 0.5s;">Dashboard</a>
+            <a href="{{ route('dashboard') }}" class="mobile-link" style="color: var(--accent); font-weight: 600; transition-delay: 0.48s;">Dashboard</a>
         @else
-            <a href="{{ route('login') }}" class="mobile-link" style="color: var(--accent); font-weight: 600; transition-delay: 0.5s;">Sign In</a>
-            <a href="{{ route('register') }}" class="mobile-link" style="color: var(--accent-gold); font-weight: 600; transition-delay: 0.55s;">Sign Up</a>
+            <a href="{{ route('login') }}" class="mobile-link" style="color: var(--accent); font-weight: 600; transition-delay: 0.48s;">Sign In</a>
+            <a href="{{ route('register') }}" class="mobile-link" style="color: var(--accent-gold); font-weight: 600; transition-delay: 0.52s;">Sign Up</a>
         @endauth
     </div>
     <div id="scroll-bar"></div>
@@ -70,6 +67,7 @@
             <li><a href="#charts">Grafik</a></li>
             <li><a href="#portals">Portal</a></li>
             <li><a href="#features-scroller">Fitur</a></li>
+            <li><a href="#alur-kerja">Alur</a></li>
             <li><a href="#developer">Developer</a></li>
             <li><a href="#footer">Kontak</a></li>
         </ul>
@@ -319,7 +317,6 @@
     <section id="spiral-section">
         <div class="spiral-sticky">
             <div class="spiral-bg-gradient"></div>
-            <div class="spiral-bg-3d-elements" id="spiral-bg-3d"></div>
             <div class="spiral-stage" id="spiral-stage">
                 <div class="spiral-label-center" id="spiral-center">
                     <div class="slc-num">06 — Fitur Unggulan</div>
@@ -458,74 +455,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Slide 2: Visual Tracking Flow -->
-                <div class="feature-slide wide">
-                    <div class="feature-visual-wrap">
-                        <div class="feature-text-side">
-                            <div class="feature-card-num">01</div>
-                            <h3 class="feature-card-title">Tracking Alur Kerja</h3>
-                            <p class="feature-card-text">Monitor setiap tahapan dokumen secara akurat. Dari
-                                pengajuan awal, verifikasi, hingga approval dalam satu alur terpadu.</p>
-                            <div class="feature-card-footer">10 Tahap Otomatis</div>
-                        </div>
-                        <div class="feature-visual-side">
-                            <div class="tracking-flow">
-                                <div class="flow-stepper">
-                                    <div class="flow-step active">
-                                        <div class="step-node"><span class="step-num">1</span>📤</div>
-                                        <div class="step-label">Usulan Diajukan</div>
-                                    </div>
-                                    <div class="flow-step active">
-                                        <div class="step-node"><span class="step-num">2</span>🔍</div>
-                                        <div class="step-label">Verifikasi Arsiparis</div>
-                                    </div>
-                                    <div class="flow-step active">
-                                        <div class="step-node"><span class="step-num">3</span>🏢</div>
-                                        <div class="step-label">Verifikasi Kasubbag</div>
-                                    </div>
-                                    <div class="flow-step active">
-                                        <div class="step-node"><span class="step-num">4</span>✍️</div>
-                                        <div class="step-label">Persetujuan Kepala Balai</div>
-                                    </div>
-                                    <div class="flow-step">
-                                        <div class="step-node"><span class="step-num">5</span>🔢</div>
-                                        <div class="step-label">Penomoran Surat</div>
-                                    </div>
-                                    <div class="flow-step">
-                                        <div class="step-node"><span class="step-num">10</span>✅</div>
-                                        <div class="step-label">Selesai</div>
-                                    </div>
-                                    <div class="flow-step">
-                                        <div class="step-node"><span class="step-num">9</span>🗄️</div>
-                                        <div class="step-label">Pengarsipan</div>
-                                    </div>
-                                    <div class="flow-step">
-                                        <div class="step-node"><span class="step-num">8</span>📧</div>
-                                        <div class="step-label">Kirim Srikandi</div>
-                                    </div>
-                                    <div class="flow-step">
-                                        <div class="step-node"><span class="step-num">7</span>📡</div>
-                                        <div class="step-label">Kirim TNDe</div>
-                                    </div>
-                                    <div class="flow-step">
-                                        <div class="step-node"><span class="step-num">6</span>🔏</div>
-                                        <div class="step-label">Tanda Tangan</div>
-                                    </div>
-                                </div>
-                                <div
-                                    style="margin-top: 25px; text-align: center; color: var(--accent); font-size: 11px; font-family: var(--font-mono); letter-spacing: 1px; text-transform: uppercase;">
-                                    <span style="display: inline-flex; align-items: center; gap: 8px;">
-                                        <span
-                                            style="width: 6px; height: 6px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent);"></span>
-                                        Real-time Tracking Active
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Slide 3: SLA Visual (Circular Chronometer) -->
+                                <!-- Slide 2: SLA Visual (Circular Chronometer) -->
                 <div class="feature-slide">
                     <div class="feature-visual-wrap">
                         <div class="feature-visual-side" style="display: flex; justify-content: center;">
@@ -541,7 +471,7 @@
                             </div>
                         </div>
                         <div class="feature-text-side">
-                            <div class="feature-card-num">02</div>
+                            <div class="feature-card-num">01</div>
                             <h3 class="feature-card-title">Akurasi Waktu Pelayanan</h3>
                             <p class="feature-card-text">Setiap dokumen dipantau dengan presisi melalui sistem
                                 SLA 24 jam. Memastikan komitmen pelayanan tetap terjaga dan akuntabel.</p>
@@ -550,11 +480,11 @@
                     </div>
                 </div>
 
-                <!-- Slide 4: QR Code Visual -->
+                <!-- Slide 3: QR Code Visual -->
                 <div class="feature-slide wide">
                     <div class="feature-visual-wrap">
                         <div class="feature-text-side">
-                            <div class="feature-card-num">03</div>
+                            <div class="feature-card-num">02</div>
                             <h3 class="feature-card-title">Verifikasi QR Code</h3>
                             <p class="feature-card-text">Keaslian dokumen terjamin , bisa di scan melalui HandPhone(HP)
                                 dan
@@ -582,11 +512,11 @@
                     </div>
                 </div>
 
-                <!-- Slide 5: Digitalisasi (Floating Stack) -->
+                <!-- Slide 4: Digitalisasi (Floating Stack) -->
                 <div class="feature-slide wide">
                     <div class="feature-visual-wrap">
                         <div class="feature-text-side">
-                            <div class="feature-card-num">04</div>
+                            <div class="feature-card-num">03</div>
                             <h3 class="feature-card-title">Arsip Digital Terpadu</h3>
                             <p class="feature-card-text">Ubah tumpukan kertas menjadi aset digital yang terorganisir.
                                 Seluruh dokumen terenkripsi dan tersimpan dalam ekosistem cloud yang aman.</p>
@@ -630,9 +560,225 @@
                 </div>
             </div>
 
-            <!-- SLEEK HORIZONTAL PROGRESS INDICATOR -->
+            <!-- SLEEK HORIZONTAL SCROLL PROGRESS INDICATOR -->
             <div class="features-progress-bar-wrap">
                 <div class="features-progress-bar-inner" id="features-progress-bar"></div>
+            </div>
+        </div>
+    </section>
+
+    {{-- ALUR KERJA PERSURATAN (Timeline) VERTICAL SCROLL --}}
+    <section id="alur-kerja">
+        <div class="alur-kerja-container">
+            <div class="alur-header" data-reveal>
+                <div class="alur-label">Alur Kerja</div>
+                <h2 class="alur-title">Alur <em>Persuratan</em> Digital</h2>
+                <p class="alur-subtitle">Prosedur pengelolaan persuratan dari awal hingga akhir dokumen terarsip secara sistematis.</p>
+            </div>
+            <div class="alur-timeline">
+                <div class="alur-line-track">
+                    <div class="alur-line-fill"></div>
+                </div>
+
+                {{-- Tahap 1 --}}
+                <div class="alur-step alur-left">
+                    <div class="alur-card">
+                        <div class="alur-card-header">
+                            <span class="alur-step-num">Tahap 01</span>
+                            <span class="alur-card-emoji">📤</span>
+                        </div>
+                        <h3>Usulan Diajukan</h3>
+                        <p>Pengaju membuat usulan surat baru beserta draf dokumen dan data pendukung.</p>
+                        <div class="alur-card-role">
+                            <span class="alur-role-indicator user"></span>
+                            Pengaju Surat
+                        </div>
+                    </div>
+                    <div class="alur-dot">
+                        <span>1</span>
+                    </div>
+                    <div class="alur-spacer"></div>
+                </div>
+
+                {{-- Tahap 2 --}}
+                <div class="alur-step alur-right">
+                    <div class="alur-spacer"></div>
+                    <div class="alur-dot">
+                        <span>2</span>
+                    </div>
+                    <div class="alur-card">
+                        <div class="alur-card-header">
+                            <span class="alur-step-num">Tahap 02</span>
+                            <span class="alur-card-emoji">🔍</span>
+                        </div>
+                        <h3>Verifikasi Arsiparis</h3>
+                        <p>Arsiparis memeriksa kelengkapan berkas dan kesesuaian format surat yang diajukan.</p>
+                        <div class="alur-card-role">
+                            <span class="alur-role-indicator admin-tu"></span>
+                            Arsiparis
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Tahap 3 --}}
+                <div class="alur-step alur-left">
+                    <div class="alur-card">
+                        <div class="alur-card-header">
+                            <span class="alur-step-num">Tahap 03</span>
+                            <span class="alur-card-emoji">🏢</span>
+                        </div>
+                        <h3>Verifikasi Kasubbag</h3>
+                        <p>Kepala Subbagian Tata Usaha memeriksa substansi dan memberikan rekomendasi persetujuan.</p>
+                        <div class="alur-card-role">
+                            <span class="alur-role-indicator admin"></span>
+                            Kasubbag TU
+                        </div>
+                    </div>
+                    <div class="alur-dot">
+                        <span>3</span>
+                    </div>
+                    <div class="alur-spacer"></div>
+                </div>
+
+                {{-- Tahap 4 --}}
+                <div class="alur-step alur-right">
+                    <div class="alur-spacer"></div>
+                    <div class="alur-dot">
+                        <span>4</span>
+                    </div>
+                    <div class="alur-card">
+                        <div class="alur-card-header">
+                            <span class="alur-step-num">Tahap 04</span>
+                            <span class="alur-card-emoji">✍️</span>
+                        </div>
+                        <h3>Persetujuan Kepala Balai</h3>
+                        <p>Kepala Balai memberikan persetujuan akhir atau disposisi terhadap usulan surat.</p>
+                        <div class="alur-card-role">
+                            <span class="alur-role-indicator admin-kaplai"></span>
+                            Kepala Balai
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Tahap 5 --}}
+                <div class="alur-step alur-left">
+                    <div class="alur-card">
+                        <div class="alur-card-header">
+                            <span class="alur-step-num">Tahap 05</span>
+                            <span class="alur-card-emoji">🔢</span>
+                        </div>
+                        <h3>Penomoran Surat</h3>
+                        <p>Sistem atau Arsiparis memberikan nomor surat resmi yang valid sesuai klasifikasi arsip.</p>
+                        <div class="alur-card-role">
+                            <span class="alur-role-indicator admin-tu"></span>
+                            Arsiparis
+                        </div>
+                    </div>
+                    <div class="alur-dot">
+                        <span>5</span>
+                    </div>
+                    <div class="alur-spacer"></div>
+                </div>
+
+                {{-- Tahap 6 --}}
+                <div class="alur-step alur-right">
+                    <div class="alur-spacer"></div>
+                    <div class="alur-dot">
+                        <span>6</span>
+                    </div>
+                    <div class="alur-card">
+                        <div class="alur-card-header">
+                            <span class="alur-step-num">Tahap 06</span>
+                            <span class="alur-card-emoji">🔏</span>
+                        </div>
+                        <h3>Tanda Tangan</h3>
+                        <p>Penandatanganan dokumen secara elektronik menggunakan tanda tangan tersertifikasi.</p>
+                        <div class="alur-card-role">
+                            <span class="alur-role-indicator admin-kaplai"></span>
+                            Arsiparis
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Tahap 7 --}}
+                <div class="alur-step alur-left">
+                    <div class="alur-card">
+                        <div class="alur-card-header">
+                            <span class="alur-step-num">Tahap 07</span>
+                            <span class="alur-card-emoji">📡</span>
+                        </div>
+                        <h3>Kirim TNDe</h3>
+                        <p>Pengiriman surat eksternal ke sistem Tata Naskah Dinas elektronik secara otomatis.</p>
+                        <div class="alur-card-role">
+                            <span class="alur-role-indicator system"></span>
+                            Sistem TNDe
+                        </div>
+                    </div>
+                    <div class="alur-dot">
+                        <span>7</span>
+                    </div>
+                    <div class="alur-spacer"></div>
+                </div>
+
+                {{-- Tahap 8 --}}
+                <div class="alur-step alur-right">
+                    <div class="alur-spacer"></div>
+                    <div class="alur-dot">
+                        <span>8</span>
+                    </div>
+                    <div class="alur-card">
+                        <div class="alur-card-header">
+                            <span class="alur-step-num">Tahap 08</span>
+                            <span class="alur-card-emoji">📧</span>
+                        </div>
+                        <h3>Kirim Srikandi</h3>
+                        <p>Integrasi dan sinkronisasi surat ke aplikasi Sistem Informasi Kearsipan Dinamis Terintegrasi.</p>
+                        <div class="alur-card-role">
+                            <span class="alur-role-indicator system"></span>
+                            Sistem Srikandi
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Tahap 9 --}}
+                <div class="alur-step alur-left">
+                    <div class="alur-card">
+                        <div class="alur-card-header">
+                            <span class="alur-step-num">Tahap 09</span>
+                            <span class="alur-card-emoji">🗄️</span>
+                        </div>
+                        <h3>Pengarsipan</h3>
+                        <p>Dokumen yang telah selesai diproses diarsipkan ke dalam sistem penyimpanan berkas digital.</p>
+                        <div class="alur-card-role">
+                            <span class="alur-role-indicator admin-tu"></span>
+                            Arsiparis
+                        </div>
+                    </div>
+                    <div class="alur-dot">
+                        <span>9</span>
+                    </div>
+                    <div class="alur-spacer"></div>
+                </div>
+
+                {{-- Tahap 10 --}}
+                <div class="alur-step alur-right">
+                    <div class="alur-spacer"></div>
+                    <div class="alur-dot">
+                        <span>10</span>
+                    </div>
+                    <div class="alur-card">
+                        <div class="alur-card-header">
+                            <span class="alur-step-num">Tahap 10</span>
+                            <span class="alur-card-emoji">✅</span>
+                        </div>
+                        <h3>Selesai</h3>
+                        <p>Seluruh alur selesai, notifikasi akhir dikirim ke pengaju dan status surat menjadi 'Selesai'.</p>
+                        <div class="alur-card-role">
+                            <span class="alur-role-indicator system"></span>
+                            Sistem Persuratan
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -854,6 +1000,7 @@
         </div>
         <div class="footer-grid">
             <div>
+                <div class="footer-brief">Website Tracking Persuratan BPSUML &copy; {{ date('Y') }}</div>
                 <div class="footer-brand">BPSUML</div>
                 <p class="footer-desc">Balai Pengelolaan Standar Ukuran Metrologi Legal — unit pelaksana teknis
                     Direktorat Metrologi.</p>
@@ -901,11 +1048,40 @@
                         <img src="https://cdn.simpleicons.org/x/white" alt="X">
                     </a>
                 </div>
+
+                {{-- DEVELOPER INFO --}}
+                <div class="footer-dev-info">
+                    <div class="footer-dev-label">Pengembang</div>
+                    <div class="footer-dev-links">
+                        <a href="https://akromdev.portofolio.app" target="_blank">
+                            <img class="dev-link-icon" src="https://cdn.simpleicons.org/googlechrome/4285F4" alt="">
+                            akromdev.portofolio.app
+                        </a>
+                        <a href="https://github.com/Ye-Shaiyoe" target="_blank">
+                            <img class="dev-link-icon" src="https://cdn.simpleicons.org/github/000000" alt="">
+                            github.com/akromdev
+                        </a>
+                        <a href="https://instagram.com/akrom.dev" target="_blank">
+                            <img class="dev-link-icon" src="https://cdn.simpleicons.org/instagram/E4405F" alt="">
+                            @akrom.dev
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="footer-bottom"><span class="footer-copy">© {{ date('Y') }} BPSUML — Direktorat Metrologi
             </span><span class="footer-tagline">Mengukur dengan Adil, Melayani dengan Tepat</span></div>
     </footer>
+
+    {{-- BACK TO TOP BUTTON --}}
+    <button class="back-to-top" id="backToTop" title="Kembali ke atas">
+        <svg class="btt-progress" viewBox="0 0 52 52">
+            <circle cx="26" cy="26" r="25" id="bttCircle"></circle>
+        </svg>
+        <svg viewBox="0 0 24 24">
+            <path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+    </button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -1341,7 +1517,9 @@
         gsap.to('.bg-orb-2', { x: -40, y: -60, scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 3 } });
         gsap.to('.bg-orb-3', { x: 30, y: 80, scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 1.5 } });
 
-        // ─── 3D SPIRAL SCROLL ANIMATION ───
+        // ─── 3D SPIRAL SCROLL ANIMATION (Skip on Mobile) ───
+        const isMobile = window.innerWidth < 768;
+
         const spiralData = [
             { label: 'Surat Masuk', emoji: '📥' },
             { label: 'Surat Selesai', emoji: '📤' },
@@ -1364,10 +1542,9 @@
         const spiralStage = document.getElementById('spiral-stage');
         const spiralCenter = document.getElementById('spiral-center');
         const spiralProgressEl = document.getElementById('spiral-progress');
-        const spiralBg3d = document.getElementById('spiral-bg-3d');
-        const bgPillsData = [];
 
-        if (spiralContainer && spiralProgressEl) {
+
+        if (spiralContainer && spiralProgressEl && !isMobile) {
             // Build DOM items
             spiralData.forEach((d, i) => {
                 const el = document.createElement('div');
@@ -1386,74 +1563,12 @@
             });
         }
 
-        // Initialize 3D Floating Background Pills dynamically
-        if (spiralBg3d) {
-            const numBgPills = 15;
-            for (let i = 0; i < numBgPills; i++) {
-                const el = document.createElement('div');
-                el.className = 'spiral-bg-pill';
-                
-                // Randomize sizes and aspect ratios (pill shapes)
-                const width = Math.random() * 150 + 90;
-                const height = width * (Math.random() * 0.35 + 0.25); // Pill shape
-                el.style.width = width + 'px';
-                el.style.height = height + 'px';
-                
-                spiralBg3d.appendChild(el);
-                
-                // Save random factors for scroll 3D zoom & translation
-                bgPillsData.push({
-                    el: el,
-                    startX: Math.random() * window.innerWidth,
-                    startY: Math.random() * window.innerHeight,
-                    // Starting depth (Z translation)
-                    startZ: Math.random() * -800 - 300, 
-                    // Floating directions/speeds
-                    speedX: (Math.random() - 0.5) * 350,
-                    speedY: (Math.random() - 0.5) * 350,
-                    rotX: Math.random() * 360,
-                    rotY: Math.random() * 360,
-                    rotZ: Math.random() * 360,
-                    rotSpeed: (Math.random() - 0.5) * 180
-                });
-            }
-        }
-
         // Spiral scroll logic
         const spiralSection = document.getElementById('spiral-section');
 
         function updateSpiral(progress) {
             const n = spiralData.length;
             const totalTurns = 2.5;
-
-            // Animate background 3D pills: they fly forward towards the camera (Z increases, scale grows)
-            bgPillsData.forEach(p => {
-                const currentZ = p.startZ + (progress * 1200); // Zoom in closer
-                const currentX = p.startX + (progress * p.speedX);
-                const currentY = p.startY + (progress * p.speedY);
-                
-                // Calculate scale so they get larger as they fly closer
-                const distanceRatio = (currentZ + 1100) / 1400; // Normalized 0 to 1
-                
-                // Fade in at the start, fade out as they get extremely close
-                let opacity = 0.4;
-                if (distanceRatio < 0.25) {
-                    opacity = (distanceRatio / 0.25) * 0.4;
-                } else if (distanceRatio > 0.75) {
-                    opacity = ((1 - distanceRatio) / 0.25) * 0.4;
-                }
-
-                gsap.set(p.el, {
-                    x: currentX - window.innerWidth / 2,
-                    y: currentY - window.innerHeight / 2,
-                    z: currentZ,
-                    rotationX: p.rotX + (progress * p.rotSpeed),
-                    rotationY: p.rotY + (progress * p.rotSpeed),
-                    rotationZ: p.rotZ + (progress * p.rotSpeed),
-                    opacity: Math.max(0, opacity),
-                    scale: 0.35 + (distanceRatio * 2.5) // Grows larger!
-                });
-            });
 
             spiralData.forEach((d, i) => {
                 const el = document.getElementById(`spiral-item-${i}`);
@@ -1522,7 +1637,7 @@
             }
         }
 
-        if (spiralSection) {
+        if (spiralSection && !isMobile) {
             ScrollTrigger.create({
                 trigger: spiralSection,
                 start: 'top top',
@@ -1806,6 +1921,91 @@
             trackHorizontal.style.flexDirection = 'column';
         }
 
+        // ========== ALUR KERJA PERSURATAN TRIGGER ==========
+        const alurTimeline = document.querySelector('#alur-kerja .alur-timeline');
+        if (alurTimeline) {
+            // Animasi bar timeline terisi berdasarkan scroll
+            gsap.to('#alur-kerja .alur-line-fill', {
+                height: '100%',
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: alurTimeline,
+                    start: 'top 75%',
+                    end: 'bottom 75%',
+                    scrub: true
+                }
+            });
+
+            // Trigger kelas visible untuk masing-masing step
+            document.querySelectorAll('#alur-kerja .alur-step').forEach(step => {
+                ScrollTrigger.create({
+                    trigger: step,
+                    start: 'top 85%',
+                    onEnter: () => step.classList.add('visible'),
+                    onLeaveBack: () => step.classList.remove('visible')
+                });
+            });
+
+            // ── Sticky Header Detection + Live Step Counter ──
+            const alurHeader = document.querySelector('#alur-kerja .alur-header');
+            if (alurHeader) {
+                // Create live step counter element
+                const stepCounter = document.createElement('div');
+                stepCounter.className = 'alur-step-counter';
+                stepCounter.innerHTML = '<span class="counter-current">0</span> <span class="counter-sep">/</span> <span class="counter-total">10</span>';
+                alurHeader.appendChild(stepCounter);
+
+                // Detect when header becomes sticky using IntersectionObserver with sentinel
+                const sentinel = document.createElement('div');
+                sentinel.style.cssText = 'height:1px;width:100%;pointer-events:none;position:absolute;top:0;left:0;';
+                alurHeader.style.position && document.querySelector('#alur-kerja .alur-kerja-container').prepend(sentinel);
+
+                // Use scroll event to detect sticky state (more reliable than IO for sticky)
+                const updateStickyState = () => {
+                    const headerRect = alurHeader.getBoundingClientRect();
+                    const isStuck = headerRect.top <= 32;
+                    alurHeader.classList.toggle('is-stuck', isStuck);
+
+                    // Update counter: count visible steps
+                    const steps = document.querySelectorAll('#alur-kerja .alur-step');
+                    let lastVisible = 0;
+                    steps.forEach((step, i) => {
+                        if (step.classList.contains('visible')) lastVisible = i + 1;
+                    });
+                    const counterEl = stepCounter.querySelector('.counter-current');
+                    if (counterEl) counterEl.textContent = lastVisible;
+                };
+
+                window.addEventListener('scroll', updateStickyState, { passive: true });
+                updateStickyState();
+            }
+
+            // ── Per-Step Color Themes ──
+            const stepThemes = [
+                { color: '#4ade80', end: '#16a34a', glow: 'rgba(74,222,128,0.35)', glowSoft: 'rgba(74,222,128,0.12)', bg: 'rgba(74,222,128,0.06)', bgHover: 'rgba(74,222,128,0.12)', border: 'rgba(74,222,128,0.12)' },
+                { color: '#a78bfa', end: '#7c3aed', glow: 'rgba(167,139,250,0.35)', glowSoft: 'rgba(167,139,250,0.12)', bg: 'rgba(167,139,250,0.06)', bgHover: 'rgba(167,139,250,0.12)', border: 'rgba(167,139,250,0.12)' },
+                { color: '#3b82f6', end: '#1d4ed8', glow: 'rgba(59,130,246,0.35)', glowSoft: 'rgba(59,130,246,0.12)', bg: 'rgba(59,130,246,0.06)', bgHover: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.12)' },
+                { color: '#fbbf24', end: '#d97706', glow: 'rgba(251,191,36,0.35)', glowSoft: 'rgba(251,191,36,0.12)', bg: 'rgba(251,191,36,0.06)', bgHover: 'rgba(251,191,36,0.12)', border: 'rgba(251,191,36,0.12)' },
+                { color: '#c084fc', end: '#9333ea', glow: 'rgba(192,132,252,0.35)', glowSoft: 'rgba(192,132,252,0.12)', bg: 'rgba(192,132,252,0.06)', bgHover: 'rgba(192,132,252,0.12)', border: 'rgba(192,132,252,0.12)' },
+                { color: '#f472b6', end: '#db2777', glow: 'rgba(244,114,182,0.35)', glowSoft: 'rgba(244,114,182,0.12)', bg: 'rgba(244,114,182,0.06)', bgHover: 'rgba(244,114,182,0.12)', border: 'rgba(244,114,182,0.12)' },
+                { color: '#06b6d4', end: '#0891b2', glow: 'rgba(6,182,212,0.35)', glowSoft: 'rgba(6,182,212,0.12)', bg: 'rgba(6,182,212,0.06)', bgHover: 'rgba(6,182,212,0.12)', border: 'rgba(6,182,212,0.12)' },
+                { color: '#fb923c', end: '#ea580c', glow: 'rgba(251,146,60,0.35)', glowSoft: 'rgba(251,146,60,0.12)', bg: 'rgba(251,146,60,0.06)', bgHover: 'rgba(251,146,60,0.12)', border: 'rgba(251,146,60,0.12)' },
+                { color: '#818cf8', end: '#4f46e5', glow: 'rgba(129,140,248,0.35)', glowSoft: 'rgba(129,140,248,0.12)', bg: 'rgba(129,140,248,0.06)', bgHover: 'rgba(129,140,248,0.12)', border: 'rgba(129,140,248,0.12)' },
+                { color: '#C8A96E', end: '#a67c3d', glow: 'rgba(200,169,110,0.45)', glowSoft: 'rgba(200,169,110,0.2)', bg: 'rgba(200,169,110,0.08)', bgHover: 'rgba(200,169,110,0.15)', border: 'rgba(200,169,110,0.15)' },
+            ];
+
+            document.querySelectorAll('#alur-kerja .alur-step').forEach((step, i) => {
+                const theme = stepThemes[i] || stepThemes[0];
+                step.style.setProperty('--step-color', theme.color);
+                step.style.setProperty('--step-color-end', theme.end);
+                step.style.setProperty('--step-glow', theme.glow);
+                step.style.setProperty('--step-glow-soft', theme.glowSoft);
+                step.style.setProperty('--step-bg', theme.bg);
+                step.style.setProperty('--step-bg-hover', theme.bgHover);
+                step.style.setProperty('--step-border', theme.border);
+            });
+        }
+
         // SLA Chronometer Pulse Animation (All devices)
         const progressRing = document.querySelector('.timer-progress-ring');
         if (progressRing) {
@@ -1842,21 +2042,20 @@
                 }
             });
         }, 1000);
-        // Developer Stack Loop
+
         (function () {
             const stacks = {
                 'tm-row1': [
-                    { name: 'Laravel 12', img: 'https://cdn.simpleicons.org/laravel/FF2D20' },
-                    { name: 'PHP 8.2', img: 'https://cdn.simpleicons.org/php/777BB4' },
-                    { name: 'MySQL 8', img: 'https://cdn.simpleicons.org/mysql/4479A1' },
+                    { name: 'Laravel', img: 'https://cdn.simpleicons.org/laravel/FF2D20' },
                     { name: 'Redis', img: 'https://cdn.simpleicons.org/redis/DC382D' },
-                    { name: 'MongoDB', img: 'https://cdn.simpleicons.org/mongodb/47A248' },
+                    { name: 'PostgreSQL', img: 'https://cdn.simpleicons.org/postgresql/646CFF' },
                     { name: 'Eloquent ORM', dot: '#e11d48' },
                     { name: 'REST API', dot: '#0ea5e9' },
                     { name: 'Sanctum Auth', img: 'https://cdn.simpleicons.org/laravel/FF2D20' },
                     { name: 'Composer', img: 'https://cdn.simpleicons.org/composer/885630' },
                     { name: 'JQuery', img: 'https://cdn.simpleicons.org/jquery/1621A5' },
-                    { name: 'Golang', img: 'https://cdn.simpleicons.org/go/00ADD8' }
+                    { name: 'Golang', img: 'https://cdn.simpleicons.org/go/00ADD8' },
+                    { name: 'Python', img: 'https://cdn.simpleicons.org/python/3776AB' }
                 ],
                 'tm-row2': [
                     { name: 'Bootstrap 5', img: 'https://cdn.simpleicons.org/bootstrap/7952B3' },
@@ -1864,20 +2063,22 @@
                     { name: 'Alpine.js', img: 'https://cdn.simpleicons.org/alpinedotjs/8BC0D0' },
                     { name: 'JavaScript', img: 'https://cdn.simpleicons.org/javascript/F7DF1E' },
                     { name: 'Chart.js', img: 'https://cdn.simpleicons.org/chartdotjs/FF6384' },
+                    { name: 'MVC', img: 'https://cdn.simpleicons.org/laravel/FF2D20' },
                     { name: 'Vite', img: 'https://cdn.simpleicons.org/vite/646CFF' },
                     { name: 'GSAP', img: 'https://cdn.simpleicons.org/greensock/88CE02' },
                     { name: 'Anime.js', img: 'https://cdn.simpleicons.org/anime.js/FF2D20' },
                 ],
-                'tm-row3': [
+                'tm-row3': [ 
                     { name: 'Docker', img: 'https://cdn.simpleicons.org/docker/2496ED' },
                     { name: 'Git', img: 'https://cdn.simpleicons.org/git/F05032' },
-                    { name: 'GitHub', img: 'https://cdn.simpleicons.org/github/white' },
+                    { name: 'GitHub', img: 'https://cdn.simpleicons.org/github/000000' },
                     { name: 'Gemini AI', img: 'https://cdn.simpleicons.org/googlegemini/4285F4' },
                     { name: 'reCAPTCHA v3', dot: '#4285F4' },
                     { name: 'Postman', img: 'https://cdn.simpleicons.org/postman/FF6C37' },
                     { name: 'npm', img: 'https://cdn.simpleicons.org/npm/CB3837' },
                     { name: 'Nginx', img: 'https://cdn.simpleicons.org/nginx/009639' },
-                    { name: 'Ubuntu', img: 'https://cdn.simpleicons.org/ubuntu/E9430F' },
+                    { name: 'Linux', img: 'https://cdn.simpleicons.org/linux/000000' },
+                    
                 ]
             };
 
@@ -1907,66 +2108,6 @@
                 if (!row) return;
                 // Double items for seamless loop
                 [...items, ...items, ...items].forEach(item => row.appendChild(makeChip(item)));
-            });
-        })();
-
-        /* ─── CUSTOM CURSOR SCRIPT ─── */
-        (() => {
-            const cursor = document.getElementById('customCursor');
-            let mouseX = 0, mouseY = 0;
-            let cursorX = 0, cursorY = 0;
-
-            // Smooth cursor tracking dengan requestAnimationFrame
-            const updateCursor = () => {
-                cursorX += (mouseX - cursorX) * 0.15;
-                cursorY += (mouseY - cursorY) * 0.15;
-                cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
-                requestAnimationFrame(updateCursor);
-            };
-            updateCursor();
-
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            });
-
-            // Add active class on interactive elements
-            const interactiveElements = document.querySelectorAll('a, button, .portal-card, .about-card, .stat-card, .chart-card, .nav-mobile-toggle, input, select, textarea');
-
-            interactiveElements.forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    cursor.classList.add('active');
-                });
-                el.addEventListener('mouseleave', () => {
-                    cursor.classList.remove('active');
-                });
-            });
-
-            // Cursor color toggle
-            window.setCursorColor = function (color) {
-                document.body.classList.remove('cursor-blue', 'cursor-black', 'cursor-brown');
-                document.body.classList.add('cursor-' + color);
-                localStorage.setItem('cursorColor', color);
-            };
-
-            // Load saved cursor color
-            const savedColor = localStorage.getItem('cursorColor') || 'blue';
-            window.setCursorColor(savedColor);
-
-            // Add keyboard shortcut: 1=blue, 2=black, 3=brown
-            document.addEventListener('keydown', (e) => {
-                if (e.key === '1') window.setCursorColor('blue');
-                if (e.key === '2') window.setCursorColor('black');
-                if (e.key === '3') window.setCursorColor('brown');
-            });
-
-            // Hide cursor when leaving window
-            document.addEventListener('mouseleave', () => {
-                cursor.style.opacity = '0';
-            });
-
-            document.addEventListener('mouseenter', () => {
-                cursor.style.opacity = '1';
             });
         })();
 
@@ -2004,6 +2145,39 @@
             } else {
                 initTextAnimations();
             }
+        })();
+
+        /* ─── BACK TO TOP BUTTON ─── */
+        (() => {
+            const btn = document.getElementById('backToTop');
+            const circle = document.getElementById('bttCircle');
+            if (!btn) return;
+
+            const CIRCUMFERENCE = 2 * Math.PI * 25; // r=25
+
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = docHeight > 0 ? scrollTop / docHeight : 0;
+
+                // Show/hide
+                btn.classList.toggle('visible', scrollTop > 400);
+
+                // Update progress circle
+                if (circle) {
+                    const offset = CIRCUMFERENCE - (progress * CIRCUMFERENCE);
+                    circle.style.strokeDashoffset = offset;
+                }
+            }, { passive: true });
+
+            btn.addEventListener('click', () => {
+                // Smooth scroll using Lenis if available
+                if (typeof lenis !== 'undefined' && lenis.scrollTo) {
+                    lenis.scrollTo(0, { duration: 2 });
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
         })();
     </script>
 </body>

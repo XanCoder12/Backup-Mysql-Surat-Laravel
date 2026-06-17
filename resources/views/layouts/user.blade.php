@@ -1491,6 +1491,7 @@
             window.history.scrollRestoration = 'auto';
         }
     </script>
+    @stack('styles')
 </head>
 <body>
 
@@ -1598,6 +1599,11 @@
                class="user-sidebar-item {{ request()->routeIs('user.sla.index') ? 'is-active' : '' }}" data-tooltip="Monitoring SLA">
                 <i class="bi bi-speedometer2"></i>
                 <span>Monitoring SLA</span>
+            </a>
+            <a href="{{ route('user.agenda.index') }}"
+               class="user-sidebar-item {{ request()->routeIs('user.agenda.*') ? 'is-active' : '' }}" data-tooltip="Agenda">
+                <i class="bi bi-calendar2-week"></i>
+                <span>Agenda</span>
             </a>
             <a href="{{ route('user.template.index') }}" 
                class="user-sidebar-item {{ request()->routeIs('user.template.*') ? 'is-active' : '' }}" data-tooltip="Template">

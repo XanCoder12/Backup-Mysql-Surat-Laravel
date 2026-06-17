@@ -35,6 +35,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/faq', [UserDashboard::class, 'faq'])->name('user.faq.index');
     Route::get('/statistik', [UserStatistik::class, 'index'])->name('user.statistik.index');
     Route::get('/monitoring-sla', [UserSlaMonitoring::class, 'index'])->name('user.sla.index');
+    Route::get('/agenda', [\App\Http\Controllers\User\AgendaController::class, 'index'])->name('user.agenda.index');
+    Route::get('/agenda/events', [\App\Http\Controllers\User\AgendaController::class, 'events'])->name('user.agenda.events');
     Route::get('/notifikasi', [\App\Http\Controllers\User\NotifikasiController::class, 'index'])->name('user.notifikasi.index');
     
     // Activity Log
