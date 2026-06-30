@@ -1,0 +1,411 @@
+{
+  "_type": "Project",
+  "_id": "AAAAAAFF+h6SjaM2Hec=",
+  "name": "Persuratan BP Suml",
+  "ownedElements": [
+    {
+      "_type": "ERDDataModel",
+      "_id": "AAAAAAFF+qBWK6M3Z8Y=",
+      "name": "Persuratan ERD",
+      "_parent": { "$ref": "AAAAAAFF+h6SjaM2Hec=" },
+      "ownedElements": [
+        {
+          "_type": "ERDEntity",
+          "_id": "AAA001",
+          "name": "users",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "columns": [
+            { "_type": "ERDColumn", "_id": "AAA001C01", "name": "id", "type": "BIGINT UNSIGNED", "primaryKey": true, "nullable": false, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA001C02", "name": "uuid", "type": "CHAR(36)", "primaryKey": false, "nullable": true, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA001C03", "name": "name", "type": "VARCHAR(255)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA001C04", "name": "email", "type": "VARCHAR(255)", "primaryKey": false, "nullable": false, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA001C05", "name": "nip", "type": "VARCHAR(255)", "primaryKey": false, "nullable": true, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA001C06", "name": "role", "type": "ENUM('user','admin','admin_aspirasi','admin_kasubbag_tu','admin_kepala_balai','it_support')", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA001C07", "name": "role_selected", "type": "TINYINT(1)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA001C08", "name": "profile_photo", "type": "VARCHAR(255)", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA001C09", "name": "signature_path", "type": "VARCHAR(255)", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA001C10", "name": "signature_pin", "type": "VARCHAR(255)", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA001C11", "name": "switch_token", "type": "VARCHAR(100)", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA001C12", "name": "switch_token_expires_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA001C13", "name": "email_verified_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA001C14", "name": "password", "type": "VARCHAR(255)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA001C15", "name": "remember_token", "type": "VARCHAR(100)", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA001C16", "name": "created_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA001C17", "name": "updated_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true }
+          ]
+        },
+        {
+          "_type": "ERDEntity",
+          "_id": "AAA002",
+          "name": "surats",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "columns": [
+            { "_type": "ERDColumn", "_id": "AAA002C01", "name": "id", "type": "BIGINT UNSIGNED", "primaryKey": true, "nullable": false, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA002C02", "name": "uuid", "type": "CHAR(36)", "primaryKey": false, "nullable": true, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA002C03", "name": "user_id", "type": "BIGINT UNSIGNED", "primaryKey": false, "nullable": false, "foreignKey": true },
+            { "_type": "ERDColumn", "_id": "AAA002C04", "name": "judul", "type": "VARCHAR(255)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA002C05", "name": "jenis", "type": "ENUM('nota_dinas','surat_dinas','surat_keputusan','surat_pernyataan','surat_keterangan','surat_undangan','surat_lainnya')", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA002C06", "name": "sifat", "type": "ENUM('biasa','segera','rahasia')", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA002C07", "name": "tujuan", "type": "TEXT", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA002C08", "name": "catatan_pengusul", "type": "TEXT", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA002C09", "name": "alasan_keterlambatan", "type": "VARCHAR(255)", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA002C10", "name": "file_word", "type": "VARCHAR(255)", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA002C11", "name": "file_lampiran", "type": "VARCHAR(255)", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA002C12", "name": "nomor_surat", "type": "VARCHAR(255)", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA002C13", "name": "tanggal_surat", "type": "DATE", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA002C14", "name": "tahap_sekarang", "type": "INT", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA002C15", "name": "status", "type": "ENUM('draft','proses','revisi','revisi_admin','ditolak','selesai')", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA002C16", "name": "status_revisi", "type": "TINYINT(1)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA002C17", "name": "revisi_count", "type": "INT", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA002C18", "name": "revisi_uploaded_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA002C19", "name": "perlu_follow_up", "type": "TINYINT(1)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA002C20", "name": "catatan_follow_up", "type": "TEXT", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA002C21", "name": "rating", "type": "INT", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA002C22", "name": "deadline_sla", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA002C23", "name": "disetujui_pada", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA002C24", "name": "file_dihapus_pada", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA002C25", "name": "file_expires_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA002C26", "name": "created_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA002C27", "name": "updated_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true }
+          ]
+        },
+        {
+          "_type": "ERDEntity",
+          "_id": "AAA003",
+          "name": "surat_tahapans",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "columns": [
+            { "_type": "ERDColumn", "_id": "AAA003C01", "name": "id", "type": "BIGINT UNSIGNED", "primaryKey": true, "nullable": false, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA003C02", "name": "surat_id", "type": "BIGINT UNSIGNED", "primaryKey": false, "nullable": false, "foreignKey": true },
+            { "_type": "ERDColumn", "_id": "AAA003C03", "name": "tahap", "type": "INT", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA003C04", "name": "nama_tahap", "type": "VARCHAR(255)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA003C05", "name": "status", "type": "ENUM('menunggu','proses','selesai','ditolak')", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA003C06", "name": "diproses_oleh", "type": "BIGINT UNSIGNED", "primaryKey": false, "nullable": true, "foreignKey": true },
+            { "_type": "ERDColumn", "_id": "AAA003C07", "name": "catatan", "type": "TEXT", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA003C08", "name": "selesai_pada", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA003C09", "name": "created_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA003C10", "name": "updated_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true }
+          ]
+        },
+        {
+          "_type": "ERDEntity",
+          "_id": "AAA004",
+          "name": "surat_delete_requests",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "columns": [
+            { "_type": "ERDColumn", "_id": "AAA004C01", "name": "id", "type": "BIGINT UNSIGNED", "primaryKey": true, "nullable": false, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA004C02", "name": "surat_id", "type": "BIGINT UNSIGNED", "primaryKey": false, "nullable": false, "foreignKey": true },
+            { "_type": "ERDColumn", "_id": "AAA004C03", "name": "user_id", "type": "BIGINT UNSIGNED", "primaryKey": false, "nullable": false, "foreignKey": true },
+            { "_type": "ERDColumn", "_id": "AAA004C04", "name": "admin_id", "type": "BIGINT UNSIGNED", "primaryKey": false, "nullable": true, "foreignKey": true },
+            { "_type": "ERDColumn", "_id": "AAA004C05", "name": "alasan", "type": "TEXT", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA004C06", "name": "status", "type": "ENUM('pending','disetujui','ditolak')", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA004C07", "name": "admin_catatan", "type": "TEXT", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA004C08", "name": "admin_approved_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA004C09", "name": "created_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA004C10", "name": "updated_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true }
+          ]
+        },
+        {
+          "_type": "ERDEntity",
+          "_id": "AAA005",
+          "name": "aspirasis",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "columns": [
+            { "_type": "ERDColumn", "_id": "AAA005C01", "name": "id", "type": "BIGINT UNSIGNED", "primaryKey": true, "nullable": false, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA005C02", "name": "uuid", "type": "CHAR(36)", "primaryKey": false, "nullable": false, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA005C03", "name": "user_id", "type": "BIGINT UNSIGNED", "primaryKey": false, "nullable": false, "foreignKey": true },
+            { "_type": "ERDColumn", "_id": "AAA005C04", "name": "judul", "type": "VARCHAR(255)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA005C05", "name": "isi", "type": "TEXT", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA005C06", "name": "kategori", "type": "VARCHAR(255)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA005C07", "name": "tujuan", "type": "VARCHAR(255)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA005C08", "name": "status", "type": "ENUM('pending','dibaca','dibalas')", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA005C09", "name": "balasan", "type": "TEXT", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA005C10", "name": "dibalas_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA005C11", "name": "created_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA005C12", "name": "updated_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true }
+          ]
+        },
+        {
+          "_type": "ERDEntity",
+          "_id": "AAA006",
+          "name": "it_support_tickets",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "columns": [
+            { "_type": "ERDColumn", "_id": "AAA006C01", "name": "id", "type": "BIGINT UNSIGNED", "primaryKey": true, "nullable": false, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA006C02", "name": "admin_id", "type": "BIGINT UNSIGNED", "primaryKey": false, "nullable": false, "foreignKey": true },
+            { "_type": "ERDColumn", "_id": "AAA006C03", "name": "subjek", "type": "VARCHAR(255)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA006C04", "name": "kategori", "type": "ENUM('bug','error','fitur','lainnya')", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA006C05", "name": "detail", "type": "TEXT", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA006C06", "name": "status", "type": "ENUM('menunggu','diproses','selesai')", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA006C07", "name": "catatan_it", "type": "TEXT", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA006C08", "name": "created_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA006C09", "name": "updated_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true }
+          ]
+        },
+        {
+          "_type": "ERDEntity",
+          "_id": "AAA007",
+          "name": "activity_logs",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "columns": [
+            { "_type": "ERDColumn", "_id": "AAA007C01", "name": "id", "type": "BIGINT UNSIGNED", "primaryKey": true, "nullable": false, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA007C02", "name": "user_id", "type": "BIGINT UNSIGNED", "primaryKey": false, "nullable": false, "foreignKey": true },
+            { "_type": "ERDColumn", "_id": "AAA007C03", "name": "action", "type": "VARCHAR(255)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA007C04", "name": "model_type", "type": "VARCHAR(255)", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA007C05", "name": "model_id", "type": "BIGINT UNSIGNED", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA007C06", "name": "description", "type": "VARCHAR(255)", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA007C07", "name": "changes", "type": "JSON", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA007C08", "name": "ip_address", "type": "VARCHAR(255)", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA007C09", "name": "user_agent", "type": "TEXT", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA007C10", "name": "created_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA007C11", "name": "updated_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true }
+          ]
+        },
+        {
+          "_type": "ERDEntity",
+          "_id": "AAA008",
+          "name": "notifications",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "columns": [
+            { "_type": "ERDColumn", "_id": "AAA008C01", "name": "id", "type": "CHAR(36)", "primaryKey": true, "nullable": false, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA008C02", "name": "type", "type": "VARCHAR(255)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA008C03", "name": "notifiable_type", "type": "VARCHAR(255)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA008C04", "name": "notifiable_id", "type": "BIGINT UNSIGNED", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA008C05", "name": "data", "type": "TEXT", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA008C06", "name": "read_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA008C07", "name": "created_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA008C08", "name": "updated_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true }
+          ]
+        },
+        {
+          "_type": "ERDEntity",
+          "_id": "AAA009",
+          "name": "sessions",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "columns": [
+            { "_type": "ERDColumn", "_id": "AAA009C01", "name": "id", "type": "VARCHAR(255)", "primaryKey": true, "nullable": false, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA009C02", "name": "user_id", "type": "BIGINT UNSIGNED", "primaryKey": false, "nullable": true, "foreignKey": true },
+            { "_type": "ERDColumn", "_id": "AAA009C03", "name": "ip_address", "type": "VARCHAR(45)", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA009C04", "name": "user_agent", "type": "TEXT", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA009C05", "name": "payload", "type": "LONGTEXT", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA009C06", "name": "last_activity", "type": "INT", "primaryKey": false, "nullable": false }
+          ]
+        },
+        {
+          "_type": "ERDEntity",
+          "_id": "AAA010",
+          "name": "password_reset_tokens",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "columns": [
+            { "_type": "ERDColumn", "_id": "AAA010C01", "name": "email", "type": "VARCHAR(255)", "primaryKey": true, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA010C02", "name": "token", "type": "VARCHAR(255)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA010C03", "name": "created_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": true }
+          ]
+        },
+        {
+          "_type": "ERDEntity",
+          "_id": "AAA011",
+          "name": "jobs",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "columns": [
+            { "_type": "ERDColumn", "_id": "AAA011C01", "name": "id", "type": "BIGINT UNSIGNED", "primaryKey": true, "nullable": false, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA011C02", "name": "queue", "type": "VARCHAR(255)", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA011C03", "name": "payload", "type": "LONGTEXT", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA011C04", "name": "attempts", "type": "TINYINT UNSIGNED", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA011C05", "name": "reserved_at", "type": "INT UNSIGNED", "primaryKey": false, "nullable": true },
+            { "_type": "ERDColumn", "_id": "AAA011C06", "name": "available_at", "type": "INT UNSIGNED", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA011C07", "name": "created_at", "type": "INT UNSIGNED", "primaryKey": false, "nullable": false }
+          ]
+        },
+        {
+          "_type": "ERDEntity",
+          "_id": "AAA012",
+          "name": "failed_jobs",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "columns": [
+            { "_type": "ERDColumn", "_id": "AAA012C01", "name": "id", "type": "BIGINT UNSIGNED", "primaryKey": true, "nullable": false, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA012C02", "name": "uuid", "type": "VARCHAR(255)", "primaryKey": false, "nullable": false, "unique": true },
+            { "_type": "ERDColumn", "_id": "AAA012C03", "name": "connection", "type": "TEXT", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA012C04", "name": "queue", "type": "TEXT", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA012C05", "name": "payload", "type": "LONGTEXT", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA012C06", "name": "exception", "type": "LONGTEXT", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA012C07", "name": "failed_at", "type": "TIMESTAMP", "primaryKey": false, "nullable": false }
+          ]
+        },
+        {
+          "_type": "ERDEntity",
+          "_id": "AAA013",
+          "name": "cache",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "columns": [
+            { "_type": "ERDColumn", "_id": "AAA013C01", "name": "key", "type": "VARCHAR(255)", "primaryKey": true, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA013C02", "name": "value", "type": "MEDIUMTEXT", "primaryKey": false, "nullable": false },
+            { "_type": "ERDColumn", "_id": "AAA013C03", "name": "expiration", "type": "INT", "primaryKey": false, "nullable": false }
+          ]
+        },
+        {
+          "_type": "ERDRelationship",
+          "_id": "REL001",
+          "name": "users_surats",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL001E1",
+            "reference": { "$ref": "AAA001" },
+            "cardinality": "1"
+          },
+          "end2": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL001E2",
+            "reference": { "$ref": "AAA002" },
+            "cardinality": "*"
+          }
+        },
+        {
+          "_type": "ERDRelationship",
+          "_id": "REL002",
+          "name": "surats_surat_tahapans",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL002E1",
+            "reference": { "$ref": "AAA002" },
+            "cardinality": "1"
+          },
+          "end2": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL002E2",
+            "reference": { "$ref": "AAA003" },
+            "cardinality": "*"
+          }
+        },
+        {
+          "_type": "ERDRelationship",
+          "_id": "REL003",
+          "name": "users_surat_tahapans_diproses",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL003E1",
+            "reference": { "$ref": "AAA001" },
+            "cardinality": "1"
+          },
+          "end2": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL003E2",
+            "reference": { "$ref": "AAA003" },
+            "cardinality": "*"
+          }
+        },
+        {
+          "_type": "ERDRelationship",
+          "_id": "REL004",
+          "name": "surats_delete_requests",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL004E1",
+            "reference": { "$ref": "AAA002" },
+            "cardinality": "1"
+          },
+          "end2": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL004E2",
+            "reference": { "$ref": "AAA004" },
+            "cardinality": "*"
+          }
+        },
+        {
+          "_type": "ERDRelationship",
+          "_id": "REL005",
+          "name": "users_delete_requests_user",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL005E1",
+            "reference": { "$ref": "AAA001" },
+            "cardinality": "1"
+          },
+          "end2": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL005E2",
+            "reference": { "$ref": "AAA004" },
+            "cardinality": "*"
+          }
+        },
+        {
+          "_type": "ERDRelationship",
+          "_id": "REL006",
+          "name": "users_aspirasis",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL006E1",
+            "reference": { "$ref": "AAA001" },
+            "cardinality": "1"
+          },
+          "end2": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL006E2",
+            "reference": { "$ref": "AAA005" },
+            "cardinality": "*"
+          }
+        },
+        {
+          "_type": "ERDRelationship",
+          "_id": "REL007",
+          "name": "users_it_support_tickets",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL007E1",
+            "reference": { "$ref": "AAA001" },
+            "cardinality": "1"
+          },
+          "end2": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL007E2",
+            "reference": { "$ref": "AAA006" },
+            "cardinality": "*"
+          }
+        },
+        {
+          "_type": "ERDRelationship",
+          "_id": "REL008",
+          "name": "users_activity_logs",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL008E1",
+            "reference": { "$ref": "AAA001" },
+            "cardinality": "1"
+          },
+          "end2": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL008E2",
+            "reference": { "$ref": "AAA007" },
+            "cardinality": "*"
+          }
+        },
+        {
+          "_type": "ERDRelationship",
+          "_id": "REL009",
+          "name": "users_sessions",
+          "_parent": { "$ref": "AAAAAAFF+qBWK6M3Z8Y=" },
+          "end1": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL009E1",
+            "reference": { "$ref": "AAA001" },
+            "cardinality": "1"
+          },
+          "end2": {
+            "_type": "ERDRelationshipEnd",
+            "_id": "REL009E2",
+            "reference": { "$ref": "AAA009" },
+            "cardinality": "*"
+          }
+        }
+      ]
+    }
+  ]
+}
