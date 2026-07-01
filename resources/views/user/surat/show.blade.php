@@ -579,7 +579,7 @@
                     <span class="text-muted">{{ $surat->jenis_label }} · {{ $surat->created_at?->format('d M Y') ?? '-' }}</span>
                     </div>
                     @php
-                        $bisaLangsungHapus = in_array($surat->status, ['draft', 'ditolak', 'selesai']) || $surat->sla_status === 'terlambat';
+                        $bisaLangsungHapus = in_array($surat->status, ['draft', 'ditolak', 'selesai']);
                         $existingRequest = \App\Models\SuratDeleteRequest::where('surat_id', $surat->id)->where('status', 'pending')->first();
                     @endphp
 
