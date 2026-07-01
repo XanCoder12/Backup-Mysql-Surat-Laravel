@@ -579,14 +579,19 @@
                     <span class="text-muted">{{ $surat->jenis_label }} · {{ $surat->created_at?->format('d M Y') ?? '-' }}</span>
                     </div>
                     @php
-                        $bisaLangsungHapus = in_array($surat->status, ['draft', 'ditolak', 'selesai']);
+                        $bisaLangsungHapus = in_array($surat->status, ['draft', 'ditolak', 'selesai'])
+                            || ($surat->status === 'proses' && $surat->tahap_sekarang <= 2);
                         $existingRequest = \App\Models\SuratDeleteRequest::where('surat_id', $surat->id)->where('status', 'pending')->first();
                     @endphp
 
                     @if($bisaLangsungHapus)
                         <div class="alert alert-warning" style="font-size:13px;">
-                            <i class="bi bi-exclamation-triangle"></i> 
-                            Surat ini akan <strong>langsung dihapus</strong> tanpa perlu persetujuan admin.
+                            <i class="bi bi-exclamation-triangle"></i>
+                            @if($surat->status === 'proses' && $surat->tahap_sekarang <= 2)
+                                Surat masih di tahap awal (Verifikasi Arsiparis). Akan <strong>langsung dihapus</strong> tanpa perlu persetujuan admin.
+                            @else
+                                Surat ini akan <strong>langsung dihapus</strong> tanpa perlu persetujuan admin.
+                            @endif
                         </div>
                         <div class="mb-3">
                             <label class="form-label" style="font-size:13px;font-weight:600;color:var(--text-primary);">
