@@ -1,297 +1,309 @@
 <div align="center">
-<h2> 📬 Persuratan BP Suml </h2>
+
+# 📬 Sistem Informasi Persuratan Digital
+### Balai Perhubungan Sumatera Utara (BP Suml)
+
+[![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat-square&logo=php&logoColor=white)](https://php.net)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16+-336791?style=flat-square&logo=postgresql&logoColor=white)](https://postgresql.org)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+
+Aplikasi pengelolaan surat-menyurat digital berbasis web untuk Balai Perhubungan Sumatera Utara. Menggantikan alur kerja manual dengan sistem tracking 10 tahap yang terintegrasi, SLA monitoring, tanda tangan digital, dan audit trail lengkap.
+
 </div>
 
-<p align="center">
-  <b>Sistem manajemen surat digital berbasis web untuk Balai Pengujian (BP Suml)</b><br/>
-  Dikembangkan sebagai proyek PKL oleh siswa SMK Al-Falah
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Laravel-12-FF2D20?style=flat&logo=laravel&logoColor=white" />
-  <img src="https://img.shields.io/badge/PHP-8.x-777BB4?style=flat&logo=php&logoColor=white" />
-  <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat&logo=mysql&logoColor=white" />
-  <img src="https://img.shields.io/badge/Redis-Cache-DC382D?style=flat&logo=redis&logoColor=white" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white" />
-  <img src="https://img.shields.io/badge/Alpine.js-8BC0D0?style=flat&logo=alpine.js&logoColor=black" />
-</p> <br>
-
 ---
 
-<p align="center">
-  <a href="https://tubpsuml.go.id"><strong>🌐 Live Demo (Production)</strong></a> | 
-  <a href="https://drive.google.com/drive/folders/1UYCrUPZQjaQawTXM33jwFN9uRqLGoQh_?usp=sharing"><strong>🎬 Tonton Demo Video</strong></a>
-</p>
+## 📋 Daftar Isi
 
-<img width="1920" height="1080" alt="photo-collage png" src="https://github.com/user-attachments/assets/3f48cd21-0327-4b98-8d6c-60520b35a9cd" />
-
-
----
-## 📑 Daftar Isi
-
-- [Demo & Akses](#-demo--akses)
-- [Tech Stack](#️-tech-stack)
-- [Role Pengguna](#-role-pengguna)
-- [Alur Pemrosesan Surat](#-alur-pemrosesan-surat-10-tahap)
-- [Fitur Unggulan](#-fitur-unggulan)
-- [Struktur Halaman](#-struktur-halaman)
-- [Keamanan](#-keamanan)
+- [Fitur Utama](#-fitur-utama)
+- [Tech Stack](#-tech-stack)
+- [Arsitektur Multi-Role](#-arsitektur-multi-role)
+- [Alur Kerja Surat](#-alur-kerja-surat-10-tahap)
+- [Struktur Database](#-struktur-database)
 - [Instalasi Lokal](#-instalasi-lokal)
-- [Format Surat yang Didukung](#-format-surat-yang-didukung)
-- [Demo Video](#-demo-video)
-- [Tim Pengembang](#-tim-pengembang)
-- [Lisensi](#-lisensi)
+- [Deployment](#-deployment-docker--railway)
+- [Environment Variables](#-environment-variables)
+- [Keamanan](#-keamanan)
+- [Kontribusi](#-kontribusi)
 
 ---
 
-## 🌐 Demo & Akses
+## ✨ Fitur Utama
 
-| Lingkungan | URL |
+| Fitur | Deskripsi |
 |---|---|
-| Production | [tubpsuml.com](https://tubpsuml.go.id) |
-| Local Dev | `http://127.0.0.1:8000` |
+| **Tracking 10 Tahap** | Surat mengikuti alur kerja dari pengajuan hingga pengarsipan dengan status real-time |
+| **SLA Monitoring** | Batas waktu 1 hari kerja otomatis, alarm keterlambatan, dan laporan kepatuhan |
+| **Multi-Role RBAC** | 6 role dengan kewenangan terisolasi per tahap — tidak bisa lintas tahap |
+| **Tanda Tangan Digital** | Upload tanda tangan + PIN terenkripsi untuk otentikasi dokumen |
+| **Audit Trail** | Log seluruh aktivitas dengan JSON diff (before/after) per aksi |
+| **Notifikasi Real-time** | Server-Sent Events (SSE) + database notification untuk semua event penting |
+| **Aspirasi & Tiket IT** | Modul feedback dan pelaporan teknis terintegrasi |
+| **Ekspor Data** | Laporan Excel dan statistik per periode |
+| **Statistik & Grafik** | Dashboard analitik dengan 15+ jenis chart (Chart.js) |
+| **Draft Surat** | User bisa simpan draf kapan saja, submit hanya saat jam kerja (bypass di `local`) |
+| **Switch Account** | Token-based multi-account dengan expiry 30 hari |
+| **Docker Ready** | Dockerfile + Nginx config siap deploy |
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠 Tech Stack
 
-### Backend
-- **Framework:** Laravel 12 + Breeze (Auth)
-- **Database:** MySQL
-- **Cache/Queue:** Redis
-- **API:** REST API
-- **Document:** PhpOffice (Word/Excel)
-- **Runtime:** Node.js
+**Backend**
+- [Laravel 12](https://laravel.com) — PHP framework
+- [PHP 8.2+](https://php.net) — Runtime
+- [PostgreSQL 16+](https://postgresql.org) — Database utama
+- [maatwebsite/excel](https://laravel-excel.com) — Ekspor Excel
+- [phpoffice/phpword](https://phpword.readthedocs.io) — Konversi dokumen Word
 
-### Frontend
-- Bootstrap 5
-- Tailwind CSS
-- Alpine.js
-- Chart.js
-- GSAP + Anime.js
-- Three.js
+**Frontend**
+- [Bootstrap 5](https://getbootstrap.com) — Layout & komponen dasar
+- [Tailwind CSS](https://tailwindcss.com) — Utility classes
+- [Alpine.js](https://alpinejs.dev) — State management & interaktivitas ringan
+- [Hotwire Turbo](https://turbo.hotwired.dev) — SPA-like navigation
+- [Chart.js](https://chartjs.org) — Visualisasi data
+- [GSAP](https://gsap.com) & [Anime.js](https://animejs.com) — Animasi halaman depan
+- Glassmorphism design — tema *Midnight Indigo* (`#1e293b`) + *Professional Blue* (`#4361ee`)
 
-### Infrastructure & Security
-- **Web Server:** Nginx
-- **OS:** Linux
-- **CDN:** Cloudflare CDN, jsDelivr, CDNJS
-- **Security:** Cloudflare WAF, Google reCAPTCHA v2, HSTS, SSL/TLS, Rate Limiting, CSRF & XSS Protection
-
-### Tools Dev
-XAMPP · Cursor IDE · Bash · Postman · Git & GitHub · SSH · Antigravity
+**Keamanan**
+- Google reCAPTCHA v2
+- CSRF protection
+- UUID anti-enumeration di semua public URL
+- File akses melalui controller (disk `private`, bukan `public`)
+- PIN tanda tangan di-hash dengan bcrypt
 
 ---
 
-## 👥 Role Pengguna
-
-| Role | Akses |
-|---|---|
-| **User** | Mengajukan surat (tahap 1), revisi surat |
-| **Admin Aspirasi** | Mengelola surat di tahap 2, 5–10 |
-| **Admin Kassubagtu** | Mengelola surat di tahap 3 |
-| **Admin Kaplai** | Mengelola surat di tahap 4 |
-| **IT Support** | Mengirim notifikasi penting |
-
----
-
-## 🔄 Alur Pemrosesan Surat (10 Tahap)
+## 👥 Arsitektur Multi-Role
 
 ```
-1. Pengajuan              → User
-2. Verifikasi Aspirasi    → Admin Aspirasi
-3. Verifikasi Kassubagtu  → Admin Kassubagtu
-4. Verifikasi Kepala Balai→ Admin Kaplai
-5. Penomoran Surat        → Admin Aspirasi
-6. Tanda Tangan (DS)      → Admin Aspirasi
-7. Pengiriman via TNDe    → Admin Aspirasi
-8. Pengiriman via Srikandi→ Admin Aspirasi
-9. Pengarsipan            → Admin Aspirasi
-10. ✅ Selesai
+┌─────────────────────────────────────────────────────┐
+│                       ROLES                         │
+├──────────────────┬──────────────────────────────────┤
+│ user             │ Mengajukan & merevisi surat       │
+│ admin_aspirasi   │ Tahap 2, 5–10 + re-upload dokumen │
+│ admin_kasubbag_tu│ Tahap 3 — Verifikasi Kasubbag TU  │
+│ admin_kepala_balai│ Tahap 4 — Verifikasi Kepala Balai│
+│ it_support       │ Tiket teknis & broadcast notif    │
+│ admin            │ Legacy (tidak aktif)              │
+└──────────────────┴──────────────────────────────────┘
+```
+
+Setiap role hanya bisa mengakses dan memproses tahap yang menjadi kewenangannya. Middleware `AdminMiddleware` + pengecekan `canApproveTahap()` di model memastikan isolasi ini.
+
+---
+
+## 📄 Alur Kerja Surat (10 Tahap)
+
+```
+[User] ──Ajukan──▶ [1. Pengajuan]
+                        │
+                        ▼
+               [2. Verifikasi Arsiparis] ◀── admin_aspirasi
+                        │
+                        ▼
+              [3. Verifikasi Kasubbag TU] ◀── admin_kasubbag_tu
+                        │
+                        ▼
+             [4. Verifikasi Kepala Balai] ◀── admin_kepala_balai
+                        │
+                        ▼
+                [5. Penomoran Surat] ◀──┐
+                        │              │
+                        ▼              │ admin_aspirasi
+              [6. Tanda Tangan Digital] │ (tahap 5–10)
+                        │              │
+                        ▼              │
+              [7. Pengiriman via TNDe] ─┤
+                        │              │
+                        ▼              │
+            [8. Pengiriman via Srikandi]┤
+                        │              │
+                        ▼              │
+                  [9. Pengarsipan] ─────┘
+                        │
+                        ▼
+                  [10. ✅ Selesai]
+
+  Ditolak di tahap mana pun → Revisi ke User atau Revisi ke Admin Aspirasi
+```
+
+**Status surat:** `draft` · `proses` · `revisi` · `revisi_admin` · `ditolak` · `selesai`
+
+---
+
+## 🗄 Struktur Database
+
+18 tabel aplikasi + 6 tabel sistem Laravel. Lihat dokumentasi lengkap di [`database/DATABASE_DESIGN.md`](database/DATABASE_DESIGN.md).
+
+**Tabel inti:**
+
+```
+users                → Semua pengguna (multi-role)
+surats               → Data surat + SLA + status
+surat_tahapans       → Riwayat per tahap
+surat_delete_requests→ Permintaan hapus butuh approval
+aspirasis            → Feedback & aspirasi pengguna
+it_support_tickets   → Tiket teknis ke IT Support
+activity_logs        → Audit trail (JSON diff)
+notifications        → Notifikasi database Laravel
 ```
 
 ---
 
-## ✨ Fitur Unggulan
+## 🚀 Instalasi Lokal
 
-### 🔁 Beralih Akun (Switch Account)
-- Ganti akun tanpa perlu logout terlebih dahulu
-- Mendukung multi-akun dalam satu browser
-- Keamanan via `switch_token` (hash, expired 30 hari)
+### Prasyarat
 
-### 📊 Dashboard Realtime
-- Update otomatis setiap 15–20 detik selama user berada di halaman dashboard (fitur ini berhenti otomatis saat pindah ke halaman lain untuk mengurangi beban server)
-- Chart statistik persuratan (Line, Bar, Pie, Donut, Mixed Chart)
-- Kartu ringkasan: Total Surat, Draft, Disetujui, Ditolak, Diproses, Revisi
+- PHP 8.2+ dengan ekstensi: `pdo_pgsql`, `pgsql`, `gd`, `zip`, `fileinfo`
+- PostgreSQL 14+
+- Composer 2.x
+- Node.js 18+ & NPM
 
-### 🔔 Notifikasi Lengkap
-- Trigger otomatis: surat baru, disetujui, ditolak, revisi, SLA
-- Mark as read, mark all, hapus per item atau semua
-- Notifikasi lama (>1 minggu) dihapus otomatis setiap Senin pukul 01.00
+### Langkah Instalasi
 
-### ⏱️ SLA (Service Level Agreement)
-- Durasi 24 jam per surat masuk
-- Notifikasi otomatis jika SLA terlampaui
-- Tampilan waktu terlambat, contoh: `-1.4 jam`
-- SLA dibekukan saat akhir pekan (contoh: surat masuk Jumat 15.00 → deadline Senin 15.00)
+**1. Clone dan install dependencies**
 
-### ♻️ Manajemen Revisi & Penghapusan
-- Revisi surat bisa diarahkan ke User atau kembali ke Admin Aspirasi
-- Surat selesai > 3 hari → file fisik otomatis dihapus (riwayat/tracking tetap tersimpan)
-- Surat ditolak yang tidak direvisi > 5 hari → dihapus otomatis termasuk tracking
+```bash
+git clone https://github.com/username/persuratan-bpsuml.git
+cd persuratan-bpsuml
+composer install
+npm install
+```
 
-### 🔐 UUID-Based Verification
-- Setiap surat memiliki URL unik berbasis UUID
-- Bisa diverifikasi publik tanpa login
-- Dilengkapi QR Code verifikasi
+**2. Konfigurasi environment**
 
-### 📝 Template Surat
-- Admin dapat mengunggah template custom
-- User bisa memilih template saat mengajukan surat
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-### 🕐 Jam Operasional
+Edit `.env` sesuai konfigurasi lokal kamu:
 
-| Hari | Jam Operasional |
-|---|---|
-| Senin – Kamis | 07.30 – 16.00 |
-| Jumat | 07.30 – 16.30 |
-| Sabtu – Minggu | ❌ Libur |
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=db_persuratan_bpsuml
+DB_USERNAME=postgres
+DB_PASSWORD=your_password
+
+RECAPTCHA_SITE_KEY=your_site_key
+RECAPTCHA_SECRET_KEY=your_secret_key
+ADMIN_SECRET_CODE=your_admin_code
+```
+
+**3. Buat database di PostgreSQL**
+
+```bash
+psql -U postgres -c "CREATE DATABASE db_persuratan_bpsuml;"
+```
+
+**4. Jalankan migrasi dan seeder**
+
+```bash
+php artisan migrate --seed
+```
+
+**5. Build assets dan jalankan server**
+
+```bash
+npm run build
+php artisan serve
+```
+
+Akses di `http://127.0.0.1:8000`
+
+> **Catatan lokal:** `APP_ENV=local` secara otomatis menonaktifkan pembatasan jam kerja dan membypass SSL verify untuk reCAPTCHA.
 
 ---
 
-## 📁 Struktur Halaman
+## 🐳 Deployment (Docker / Railway)
 
-### User (`/`)
+### Docker
 
-| Path | Halaman |
-|---|---|
-| `/dashboard` | Dashboard & statistik |
-| `/surat` | Daftar surat (card & tabel) |
-| `/surat/ajukan` | Form pengajuan surat |
-| `/surat/{uuid}` | Detail & tracking surat |
-| `/statistik` | Grafik statistik |
-| `/notifikasi` | Pusat notifikasi |
-| `/aspirasi` | Kotak aspirasi |
-| `/faq` | Bantuan & dokumentasi |
-| `/about` | Tentang website |
+```bash
+docker build -t persuratan-bpsuml .
+docker run -p 8000:80 --env-file .env persuratan-bpsuml
+```
 
-### Admin (`/Admin/`)
+### Railway
 
-| Path | Halaman |
-|---|---|
-| `/Admin/Dashboard` | Dashboard admin realtime |
-| `/Admin/surat` | Antrian & kelola surat |
-| `/Admin/Surat-Masuk` | Surat baru masuk |
-| `/Admin/Surat-Proses` | Surat sedang diproses |
-| `/Admin/Surat-Selesai` | Surat selesai |
-| `/Admin/Surat-Ditolak` | Surat ditolak/revisi |
-| `/Admin/Laporan` | Rekap bulanan (export Excel/PDF) |
-| `/Admin/Riwayat` | Riwayat pemrosesan (export CSV/Excel) |
-| `/Admin/Chart` | Statistik & chart lengkap |
-| `/Admin/Aspirasi` | Kelola aspirasi user |
-| `/Admin/Template` | Kelola template surat |
-| `/Admin/Settings/Users` | Data pegawai |
-| `/Admin/Settings/File-Surat` | Kelola file fisik surat |
-| `/Admin/Settings/Logs` | Log aktivitas sistem |
-| `/Admin/faq` | Pengelolaan FAQ |
+1. Fork repo ini ke GitHub
+2. Buat project baru di [Railway](https://railway.app)
+3. Tambahkan service **PostgreSQL** dari Railway
+4. Set environment variables berdasarkan template di [`docker/railway-env-template.txt`](docker/railway-env-template.txt)
+5. Deploy otomatis dari branch `main`
+
+---
+
+## ⚙️ Environment Variables
+
+| Variable | Wajib | Deskripsi |
+|---|---|---|
+| `APP_KEY` | ✅ | Application key (generate via `php artisan key:generate`) |
+| `APP_ENV` | ✅ | `local` atau `production` |
+| `DB_CONNECTION` | ✅ | `pgsql` |
+| `DB_HOST` | ✅ | Host PostgreSQL |
+| `DB_DATABASE` | ✅ | Nama database |
+| `DB_USERNAME` | ✅ | Username PostgreSQL |
+| `DB_PASSWORD` | ✅ | Password PostgreSQL |
+| `RECAPTCHA_SITE_KEY` | ✅ | Google reCAPTCHA v2 site key |
+| `RECAPTCHA_SECRET_KEY` | ✅ | Google reCAPTCHA v2 secret key |
+| `ADMIN_SECRET_CODE` | ✅ | Kode rahasia untuk registrasi akun admin |
+| `IT_SUPPORT_CODE` | ✅ | Kode rahasia untuk registrasi akun IT Support |
+| `MAIL_*` | ✅ | Konfigurasi SMTP untuk notifikasi email |
+| `GEMINI_API_KEY` | ❌ | API key Google Gemini (fitur AI, opsional) |
 
 ---
 
 ## 🔒 Keamanan
 
-- ✅ Hashing password & NIP (bcrypt)
-- ✅ Google reCAPTCHA v2
-- ✅ Email verifikasi saat registrasi
-- ✅ CSRF Protection (Laravel built-in)
-- ✅ XSS Protection
-- ✅ SQL Injection Prevention
-- ✅ Rate Limit login: 5x/menit per IP
-- ✅ RBAC (Role Based Access Control)
-- ✅ Anti-Enumeration via UUID
-- ✅ Validasi MIME & ukuran file upload
-- ✅ HSTS (HTTP Strict Transport Security)
-- ✅ Cloudflare WAF
+- **UUID di semua public URL** — mencegah ID enumeration attack
+- **File disimpan di disk `private`** — tidak dapat diakses langsung via URL, hanya melalui controller dengan autentikasi
+- **Tanda tangan digital di-hash** — PIN tidak tersimpan plaintext
+- **NIP dienkripsi** — menggunakan Laravel `encrypted` cast
+- **Session dienkripsi** — `SESSION_ENCRYPT=true` di production
+- **Security Headers Middleware** — `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`
+- **Rate limiting** — throttle pada route registrasi dan login
+- **CSRF** — aktif di semua form mutation
 
 ---
 
-## 📦 Instalasi Lokal
+## 📊 Fitur Monitoring
 
-```bash
-# Clone repo
-git clone https://github.com/Ye-Shaiyoe/Surat-Laravel
-cd Surat-Laravel
+- **SLA Dashboard** — visualisasi tepat waktu vs terlambat per bulan
+- **Activity Heatmap** — kontribusi aktivitas ala GitHub
+- **15+ Jenis Chart** — surat per bulan, per jenis, per status, bottleneck tahap, rata-rata waktu proses, dan lainnya
+- **Audit Log** — setiap aksi tercatat dengan IP, user agent, dan diff data
 
-# Install dependencies
-composer install
-npm install
+---
 
-# Setup environment
-cp .env.example .env
-php artisan key:generate
+## 🤝 Kontribusi
 
-# Konfigurasi database di .env
-# DB_DATABASE=persuratan
-# DB_USERNAME=root
-# DB_PASSWORD=
+Project ini dikembangkan dalam rangka PKL di Balai Perhubungan Sumatera Utara.
 
-# Migrasi & seeder
-php artisan migrate --seed
+Untuk kontribusi, silakan baca [`AGENT.md`](AGENT.md) terlebih dahulu — file tersebut berisi arsitektur, standar koding, dan aturan desain yang wajib diikuti.
 
-# Jalankan server
-php artisan serve
-npm run build -> npm run dev
+```
+1. Fork repo
+2. Buat branch fitur: git checkout -b feat/nama-fitur
+3. Commit: git commit -m "feat: deskripsi singkat"
+4. Push: git push origin feat/nama-fitur
+5. Buat Pull Request
 ```
 
-> **Requirement:** PHP 8.2+, Composer, Node.js, MySQL/MariaDB, Redis (opsional untuk queue)
+---
+
+## 📄 Lisensi
+
+Didistribusikan di bawah [MIT License](LICENSE). Lihat `LICENSE` untuk detail lebih lanjut.
 
 ---
 
-## 📄 Format Surat yang Didukung
+<div align="center">
 
-- **Upload:** `.docx` (Word), maks. 10MB
-- **Lampiran:** Opsional, maks. 20MB
-- **Jenis Surat:** Nota Dinas, Surat Dinas, Surat Keputusan, Surat Pernyataan, Surat Keterangan, Undangan, Lainnya
-- **Sifat Surat:** Biasa, Penting/Segera, Rahasia
+Dibuat dengan ☕ dan Laravel untuk Balai Perhubungan Sumatera Utara
 
----
-
-## 🎥 Demo Video
-
-<table>
-  <tr>
-    <td align="center" width="50%">
-      <b>🔐 Halaman Autentikasi (Login/Register)</b><br/><br/>
-      <!-- Ganti link di bawah dengan video kamu -->
-      <a href="#"><img src="https://via.placeholder.com/480x270.png?text=Demo+Auth" /></a>
-    </td>
-    <td align="center" width="50%">
-      <b>🏠 Landing Page</b><br/><br/>
-      <a href="#"><img src="https://via.placeholder.com/480x270.png?text=Demo+Landing+Page" /></a>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="50%">
-      <b>📊 User Dashboard</b><br/><br/>
-      <a href="#"><img src="https://via.placeholder.com/480x270.png?text=Demo+User+Dashboard" /></a>
-    </td>
-    <td align="center" width="50%">
-      <b>🛠️ Admin Dashboard</b><br/><br/>
-      <a href="#"><img src="https://via.placeholder.com/480x270.png?text=Demo+Admin+Dashboard" /></a>
-    </td>
-  </tr>
-</table>
-
----
-
-## 👨‍💻 Tim Pengembang
-
-Dikembangkan oleh siswa PKL **SMK Al-Falah** sebagai proyek full stack development.
-
----
-
-## 📜 Lisensi
-
-Proyek ini dibuat untuk keperluan **pendidikan dan PKL**. Hak cipta sepenuhnya milik tim pengembang dan instansi terkait.
-
----
-
-<p align="center">Made by | Yusuf Akram | PKL SMK Al-Falah | BP Suml | </p>
+</div>
