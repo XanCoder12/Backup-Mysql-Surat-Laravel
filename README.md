@@ -1,4 +1,6 @@
-# 📬 Persuratan BP Suml
+<div align="center">
+<h2> 📬 Persuratan BP Suml </h2>
+</div>
 
 <p align="center">
   <b>Sistem manajemen surat digital berbasis web untuk Balai Pengujian (BP Suml)</b><br/>
@@ -20,6 +22,9 @@
   <a href="https://tubpsuml.go.id"><strong>🌐 Live Demo (Production)</strong></a> | 
   <a href="https://drive.google.com/drive/folders/1UYCrUPZQjaQawTXM33jwFN9uRqLGoQh_?usp=sharing"><strong>🎬 Tonton Demo Video</strong></a>
 </p>
+
+<img width="1920" height="1080" alt="photo-collage png" src="https://github.com/user-attachments/assets/3f48cd21-0327-4b98-8d6c-60520b35a9cd" />
+
 
 ---
 ## 📑 Daftar Isi
@@ -275,8 +280,6 @@ npm run build -> npm run dev
   </tr>
 </table>
 
-> 💡 Tips: ganti `href="#"` dengan link video (YouTube/Drive) dan `src` thumbnail dengan screenshot/GIF asli dari masing-masing halaman.
-
 ---
 
 ## 👨‍💻 Tim Pengembang
@@ -291,4 +294,4 @@ Proyek ini dibuat untuk keperluan **pendidikan dan PKL**. Hak cipta sepenuhnya m
 
 ---
 
-<p align="center">Made with ❤️ by PKL SMK Al-Falah | Yusuf Akram | BP Suml</p>
+<p align="center">Made by | Yusuf Akram | PKL SMK Al-Falah | BP Suml | </p>
