@@ -302,8 +302,3 @@ Didistribusikan di bawah [MIT License](LICENSE). Lihat `LICENSE` untuk detail le
 
 ---
 
-<div align="center">
-
-Dibuat dengan ☕ dan Laravel untuk Balai Perhubungan Sumatera Utara
-
-</div>
