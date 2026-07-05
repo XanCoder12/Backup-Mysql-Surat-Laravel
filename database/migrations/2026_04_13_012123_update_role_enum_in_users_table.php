@@ -12,9 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Ubah enum role: tambahkan admin_aspirasi, admin_kasubbag_tu, admin_kepala_balai
-        // Hapus enum lama, buat baru dengan nilai lengkap
-        DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('user', 'admin', 'admin_aspirasi', 'admin_kasubbag_tu', 'admin_kepala_balai') DEFAULT 'user'");
+        // Change role column to string — PostgreSQL does not support MODIFY COLUMN ENUM
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('role')->default('user')->change();
+        });
     }
 
     /**
@@ -22,7 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Kembalikan ke enum lama
-        DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('user', 'admin') DEFAULT 'user'");
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('role')->default('user')->change();
+        });
     }
 };

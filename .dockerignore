@@ -29,3 +29,4 @@ debugging
 tests
 phpunit.xml
 .phpunit.result.cache
+/docker/railway-env-template.txt

@@ -55,7 +55,11 @@ class RegisteredUserController extends Controller
             return back()->withErrors(['recaptcha' => 'Harap selesaikan verifikasi reCAPTCHA terlebih dahulu.'])->withInput();
         }
 
-        $recaptchaVerify = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+        $recaptchaHttp = app()->isLocal()
+            ? Http::withoutVerifying()->asForm()
+            : Http::asForm();
+
+        $recaptchaVerify = $recaptchaHttp->post('https://www.google.com/recaptcha/api/siteverify', [
             'secret'   => config('services.recaptcha.secret'),
             'response' => $recaptchaToken,
             'remoteip' => $request->ip(),

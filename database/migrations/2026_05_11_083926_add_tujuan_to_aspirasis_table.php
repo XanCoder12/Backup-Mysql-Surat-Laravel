@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('aspirasis', function (Blueprint $table) {
-            $table->enum('tujuan', ['admin', 'itsupport'])->default('admin')->after('isi');
+            $table->string('tujuan')->default('admin')->after('isi');
         });
     }
 

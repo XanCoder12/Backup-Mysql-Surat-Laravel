@@ -588,7 +588,7 @@
                             { name: 'Laravel 12',    img: 'https://cdn.simpleicons.org/laravel/FF2D20' },
                             { name: 'PHP 8.2',       img: 'https://cdn.simpleicons.org/php/777BB4' },
                             { name: 'Laravel Reverb',img: 'https://cdn.simpleicons.org/laravel/FF2D20' },
-                            { name: 'MySQL 8',       img: 'https://cdn.simpleicons.org/mysql/4479A1' },
+                            { name: 'PostgreSQL',       img: 'https://cdn.simpleicons.org/postgresql/4479A1' },
                             { name: 'Redis',         img: 'https://cdn.simpleicons.org/redis/DC382D' },
                             { name: 'REST API',      dot: '#0ea5e9' },
                             { name: 'Eloquent ORM',  dot: '#e11d48' },

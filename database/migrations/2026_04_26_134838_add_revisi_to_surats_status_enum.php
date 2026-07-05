@@ -12,14 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('surats', function (Blueprint $table) {
-            $table->enum('status', ['proses', 'selesai', 'ditolak', 'revisi', 'draft'])->default('proses')->change();
+            // No-op: status is already a string column — change() not needed for PostgreSQL
+            $table->string('status')->default('proses')->change();
         });
     }
 
     public function down(): void
     {
         Schema::table('surats', function (Blueprint $table) {
-            $table->enum('status', ['proses', 'selesai', 'ditolak', 'draft'])->default('proses')->change();
+            $table->string('status')->default('proses')->change();
         });
     }
 };

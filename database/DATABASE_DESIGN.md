@@ -1,6 +1,6 @@
 # Desain Database — Sistem Persuratan Digital BP Suml
 
-**Framework:** Laravel 12 | **Database:** MySQL  
+**Framework:** Laravel 12 | **Database:** PostgreSQL  
 **Total Tabel:** 18 tabel (aplikasi) + 6 tabel sistem Laravel
 
 ---

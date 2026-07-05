@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('admin_id')->nullable()->constrained('users')->nullOnDelete();
             $table->text('alasan')->nullable();
-            $table->enum('status', ['pending', 'disetujui', 'ditolak'])->default('pending');
+            $table->string('status')->default('pending');
             $table->text('admin_catatan')->nullable();
             $table->timestamp('admin_approved_at')->nullable();
             $table->timestamps();

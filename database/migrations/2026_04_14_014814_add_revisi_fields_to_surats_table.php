@@ -17,8 +17,10 @@ return new class extends Migration
             $table->timestamp('revisi_uploaded_at')->nullable()->after('revisi_count');
         });
 
-        // Update enum status untuk menambah 'revisi'
-        DB::statement("ALTER TABLE surats MODIFY status ENUM('proses', 'selesai', 'ditolak', 'revisi') DEFAULT 'proses'");
+        // Change status column to string — PostgreSQL does not support MODIFY COLUMN ENUM
+        Schema::table('surats', function (Blueprint $table) {
+            $table->string('status')->default('proses')->change();
+        });
     }
 
     /**
@@ -30,7 +32,8 @@ return new class extends Migration
             $table->dropColumn(['status_revisi', 'revisi_count', 'revisi_uploaded_at']);
         });
 
-        // Kembalikan enum ke semula
-        DB::statement("ALTER TABLE surats MODIFY status ENUM('proses', 'selesai', 'ditolak') DEFAULT 'proses'");
+        Schema::table('surats', function (Blueprint $table) {
+            $table->string('status')->default('proses')->change();
+        });
     }
 };

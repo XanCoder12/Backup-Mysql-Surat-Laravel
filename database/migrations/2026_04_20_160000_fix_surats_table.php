@@ -12,8 +12,8 @@ return new class extends Migration
             // Make file_word nullable (since we purge files by setting to null)
             $table->string('file_word')->nullable()->change();
 
-            // Update enum for jenis to include surat_undangan and surat_lainnya
-            $table->enum('jenis', ['nota_dinas', 'surat_dinas', 'surat_keputusan', 'surat_pernyataan', 'surat_keterangan', 'surat_undangan', 'surat_lainnya'])->change();
+            // Change jenis to string — PostgreSQL does not use ENUM
+            $table->string('jenis')->change();
         });
     }
 
@@ -23,8 +23,7 @@ return new class extends Migration
             // Revert file_word to not nullable
             $table->string('file_word')->nullable(false)->change();
 
-            // Revert enum for jenis to original values
-            $table->enum('jenis', ['nota_dinas', 'surat_dinas', 'surat_keputusan', 'surat_pernyataan', 'surat_keterangan'])->change();
+            $table->string('jenis')->change();
         });
     }
 };

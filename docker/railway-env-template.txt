@@ -1,7 +1,3 @@
-# ============================================================
-# RAILWAY ENVIRONMENT VARIABLES TEMPLATE
-# Copy-paste variabel ini ke Railway → Service → Variables
-# ============================================================
 
 APP_NAME="Persuratan BP Suml"
 APP_ENV=production

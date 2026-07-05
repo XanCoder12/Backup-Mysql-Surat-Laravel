@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // MySQL doesn't support modifying ENUM columns easily, so we use raw SQL
-        \DB::statement("ALTER TABLE surats MODIFY COLUMN jenis ENUM('nota_dinas', 'surat_dinas', 'surat_keputusan', 'surat_pernyataan', 'surat_keterangan', 'surat_undangan', 'surat_lainnya')");
+        // Change jenis column to string — PostgreSQL does not use MODIFY COLUMN ENUM
+        Schema::table('surats', function (Blueprint $table) {
+            $table->string('jenis')->change();
+        });
     }
 
     /**
@@ -20,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        \DB::statement("ALTER TABLE surats MODIFY COLUMN jenis ENUM('nota_dinas', 'surat_dinas', 'surat_keputusan', 'surat_pernyataan', 'surat_keterangan')");
+        Schema::table('surats', function (Blueprint $table) {
+            $table->string('jenis')->change();
+        });
     }
 };

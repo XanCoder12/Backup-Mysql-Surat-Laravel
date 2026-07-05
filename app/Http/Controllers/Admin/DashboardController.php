@@ -83,7 +83,7 @@ class DashboardController extends Controller
         $antrian = (clone $workloadQuery)
             ->whereIn('status', ['proses', 'revisi', 'revisi_admin'])
             ->with('user')
-            ->orderByRaw("CASE WHEN status = 'revisi' OR status = 'revisi_admin' THEN 0 ELSE 1 END")
+            ->orderByRaw("CASE WHEN status IN ('revisi', 'revisi_admin') THEN 0 ELSE 1 END")
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get()

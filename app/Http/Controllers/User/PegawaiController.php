@@ -72,8 +72,8 @@ class PegawaiController extends Controller
             $dailyData = $user->surats()
                 ->whereYear('created_at', $tahun)
                 ->whereMonth('created_at', $m)
-                ->select(DB::raw('DAY(created_at) as day'), DB::raw('count(*) as count'))
-                ->groupBy('day')
+                ->selectRaw('EXTRACT(DAY FROM created_at)::int as day, count(*) as count')
+                ->groupByRaw('EXTRACT(DAY FROM created_at)')
                 ->pluck('count', 'day')
                 ->toArray();
 

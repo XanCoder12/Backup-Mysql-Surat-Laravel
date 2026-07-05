@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('judul');
             $table->text('isi');
-            $table->enum('kategori', ['saran', 'keluhan', 'pertanyaan'])->default('saran');
-            $table->enum('status', ['pending', 'dibaca', 'dibalas'])->default('pending');
+            $table->string('kategori')->default('saran');
+            $table->string('status')->default('pending');
             $table->text('balasan')->nullable();
             $table->timestamp('dibalas_at')->nullable();
             $table->timestamps();

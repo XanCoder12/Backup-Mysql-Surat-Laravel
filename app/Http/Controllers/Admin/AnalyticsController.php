@@ -43,7 +43,7 @@ class AnalyticsController extends Controller
                     ->whereIn('current.tahap', $stages)
                     ->where('current.status', 'selesai')
                     ->whereBetween('current.selesai_pada', [$start, $end])
-                    ->select(DB::raw('AVG(TIMESTAMPDIFF(HOUR, previous.selesai_pada, current.selesai_pada)) as avg_hours'))
+                    ->select(DB::raw('AVG(EXTRACT(EPOCH FROM (current.selesai_pada - previous.selesai_pada)) / 3600) as avg_hours'))
                     ->first();
 
                 $dataPoints[] = round($averageTime->avg_hours ?? 0, 1);

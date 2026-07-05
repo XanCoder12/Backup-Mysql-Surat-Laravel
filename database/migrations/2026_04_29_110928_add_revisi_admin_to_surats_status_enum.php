@@ -8,19 +8,16 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // No-op: status column is already string type — PostgreSQL uses string for flexible status
         Schema::table('surats', function (Blueprint $table) {
-            $table->enum('status', ['proses', 'selesai', 'ditolak', 'revisi', 'draft', 'revisi_admin'])
-                  ->default('proses')
-                  ->change();
+            $table->string('status')->default('proses')->change();
         });
     }
 
     public function down(): void
     {
         Schema::table('surats', function (Blueprint $table) {
-            $table->enum('status', ['proses', 'selesai', 'ditolak', 'revisi', 'draft'])
-                  ->default('proses')
-                  ->change();
+            $table->string('status')->default('proses')->change();
         });
     }
 };

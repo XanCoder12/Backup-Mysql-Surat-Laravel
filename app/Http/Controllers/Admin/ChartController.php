@@ -53,16 +53,16 @@ class ChartController extends Controller
     {
         $rows = DB::table('surats')
             ->whereYear('created_at', $tahun)
-            ->selectRaw('
-                MONTH(created_at) as bulan,
+            ->selectRaw("
+                EXTRACT(MONTH FROM created_at) as bulan,
                 COUNT(*) as total,
-                SUM(status = "selesai") as selesai,
-                SUM(status = "proses")  as proses,
-                SUM(status = "ditolak") as ditolak,
-                SUM(status = "revisi" OR status = "revisi_admin") as revisi
-            ')
-            ->groupBy('bulan')
-            ->orderBy('bulan')
+                SUM(CASE WHEN status = 'selesai' THEN 1 ELSE 0 END) as selesai,
+                SUM(CASE WHEN status = 'proses' THEN 1 ELSE 0 END) as proses,
+                SUM(CASE WHEN status = 'ditolak' THEN 1 ELSE 0 END) as ditolak,
+                SUM(CASE WHEN status IN ('revisi','revisi_admin') THEN 1 ELSE 0 END) as revisi
+            ")
+            ->groupByRaw('EXTRACT(MONTH FROM created_at)')
+            ->orderByRaw('EXTRACT(MONTH FROM created_at)')
             ->get()
             ->keyBy('bulan');
 
@@ -143,13 +143,13 @@ class ChartController extends Controller
         $withDeadline = DB::table('surats')
             ->whereYear('created_at', $tahun)
             ->whereNotNull('deadline_sla')
-            ->selectRaw('
-                MONTH(created_at) as bulan,
-                SUM(status = "selesai" AND deadline_sla >= updated_at) as tepat,
-                SUM(deadline_sla < NOW() AND status != "selesai")      as terlambat
-            ')
-            ->groupBy('bulan')
-            ->orderBy('bulan')
+            ->selectRaw("
+                EXTRACT(MONTH FROM created_at) as bulan,
+                SUM(CASE WHEN status = 'selesai' AND deadline_sla >= updated_at THEN 1 ELSE 0 END) as tepat,
+                SUM(CASE WHEN deadline_sla < NOW() AND status != 'selesai' THEN 1 ELSE 0 END) as terlambat
+            ")
+            ->groupByRaw('EXTRACT(MONTH FROM created_at)')
+            ->orderByRaw('EXTRACT(MONTH FROM created_at)')
             ->get()
             ->keyBy('bulan');
 
@@ -157,13 +157,13 @@ class ChartController extends Controller
         $noDeadline = DB::table('surats')
             ->whereYear('created_at', $tahun)
             ->whereNull('deadline_sla')
-            ->selectRaw('
-                MONTH(created_at) as bulan,
-                SUM(status = "selesai") as tepat,
-                SUM(status = "ditolak") as terlambat
-            ')
-            ->groupBy('bulan')
-            ->orderBy('bulan')
+            ->selectRaw("
+                EXTRACT(MONTH FROM created_at) as bulan,
+                SUM(CASE WHEN status = 'selesai' THEN 1 ELSE 0 END) as tepat,
+                SUM(CASE WHEN status = 'ditolak' THEN 1 ELSE 0 END) as terlambat
+            ")
+            ->groupByRaw('EXTRACT(MONTH FROM created_at)')
+            ->orderByRaw('EXTRACT(MONTH FROM created_at)')
             ->get()
             ->keyBy('bulan');
 
@@ -198,12 +198,12 @@ class ChartController extends Controller
                 ->join('surats as s', 'st.surat_id', '=', 's.id')
                 ->where('s.status', 'proses')
                 ->where('st.status', 'menunggu')
-                ->whereRaw('st.tahap = (
+                ->whereRaw("st.tahap = (
                     SELECT MIN(st2.tahap)
                     FROM surat_tahapans st2
                     WHERE st2.surat_id = st.surat_id
-                      AND st2.status = "menunggu"
-                )')
+                      AND st2.status = 'menunggu'
+                )")
                 ->selectRaw('st.nama_tahap as tahap, COUNT(*) as total')
                 ->groupBy('st.nama_tahap')
                 ->orderByDesc('total')
@@ -283,12 +283,12 @@ class ChartController extends Controller
     {
         $rows = DB::table('surats')
             ->whereYear('created_at', $tahun)
-            ->selectRaw('
-                MONTH(created_at) as bulan,
-                SUM(status = "revisi") as user,
-                SUM(status = "revisi_admin") as admin
-            ')
-            ->groupBy('bulan')
+            ->selectRaw("
+                EXTRACT(MONTH FROM created_at) as bulan,
+                SUM(CASE WHEN status = 'revisi' THEN 1 ELSE 0 END) as user,
+                SUM(CASE WHEN status = 'revisi_admin' THEN 1 ELSE 0 END) as admin
+            ")
+            ->groupByRaw('EXTRACT(MONTH FROM created_at)')
             ->get()
             ->keyBy('bulan');
 
@@ -308,17 +308,20 @@ class ChartController extends Controller
     // ── Hari pengajuan (polar) ───────────────────────────────────────────────
     private function hariPengajuan(int $tahun): array
     {
+        // PostgreSQL: EXTRACT(DOW FROM ...) returns 0=Sunday..6=Saturday
+        // MySQL: DAYOFWEEK returns 1=Sunday..7=Saturday
+        // We remap PgSQL 0-6 → index 0-6 matching labels below
         $rows = DB::table('surats')
             ->whereYear('created_at', $tahun)
-            ->selectRaw('DAYOFWEEK(created_at) as hari, COUNT(*) as total')
-            ->groupBy('hari')
+            ->selectRaw('EXTRACT(DOW FROM created_at)::int as hari, COUNT(*) as total')
+            ->groupByRaw('EXTRACT(DOW FROM created_at)')
             ->get()
             ->keyBy('hari');
 
         $labels = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
         $data = [];
 
-        for ($h = 1; $h <= 7; $h++) {
+        for ($h = 0; $h <= 6; $h++) {
             $data[] = (int) ($rows->get($h)?->total ?? 0);
         }
 
@@ -332,10 +335,10 @@ class ChartController extends Controller
             ->join('surats as s', 'st.surat_id', '=', 's.id')
             ->whereYear('st.created_at', $tahun)
             ->whereIn('st.status', ['selesai', 'ditolak'])
-            ->selectRaw('st.nama_tahap, 
-                SUM(st.status = "selesai") as selesai,
-                SUM(st.status = "ditolak") as ditolak
-            ')
+            ->selectRaw("st.nama_tahap,
+                SUM(CASE WHEN st.status = 'selesai' THEN 1 ELSE 0 END) as selesai,
+                SUM(CASE WHEN st.status = 'ditolak' THEN 1 ELSE 0 END) as ditolak
+            ")
             ->groupBy('st.nama_tahap')
             ->orderBy('st.nama_tahap')
             ->get();
@@ -373,7 +376,7 @@ class ChartController extends Controller
         $rows = DB::table('surats')
             ->whereYear('created_at', $tahun)
             ->where('status', 'selesai')
-            ->selectRaw('jenis, AVG(TIMESTAMPDIFF(HOUR, created_at, updated_at)) as avg_jam')
+            ->selectRaw('jenis, AVG(EXTRACT(EPOCH FROM (updated_at - created_at)) / 3600) as avg_jam')
             ->groupBy('jenis')
             ->get();
 

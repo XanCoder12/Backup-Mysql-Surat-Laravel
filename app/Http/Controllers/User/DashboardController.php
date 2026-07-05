@@ -62,11 +62,11 @@ class DashboardController extends Controller
         $trenBulanan = Surat::where('user_id', $userId)
             ->where('created_at', '>=', $sixMonthsAgo)
             ->select(
-                DB::raw("DATE_FORMAT(created_at, '%M %Y') as month"),
+                DB::raw("TO_CHAR(created_at, 'Month YYYY') as month"),
                 DB::raw('count(*) as total')
             )
-            ->groupBy('month')
-            ->orderBy('month', 'asc')
+            ->groupByRaw("TO_CHAR(created_at, 'Month YYYY')")
+            ->orderByRaw("MIN(created_at)")
             ->pluck('total', 'month')
             ->toArray();
 

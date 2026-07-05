@@ -30,10 +30,11 @@ class SlaMonitoringController extends Controller
             $start = Carbon::parse($ym)->startOfMonth();
             $end = Carbon::parse($ym)->endOfMonth();
 
+            // PostgreSQL-compatible: cast COALESCE result explicitly
             $baseSelesai = Surat::query()
                 ->where('user_id', $userId)
                 ->where('status', 'selesai')
-                ->whereBetween(DB::raw('COALESCE(disetujui_pada, updated_at)'), [$start, $end]);
+                ->whereRaw('COALESCE(disetujui_pada, updated_at) BETWEEN ? AND ?', [$start, $end]);
 
             $tepatWaktu[] = (clone $baseSelesai)->where(function ($q) {
                 $q->whereNull('deadline_sla')
@@ -47,9 +48,9 @@ class SlaMonitoringController extends Controller
             $avg = Surat::query()
                 ->where('user_id', $userId)
                 ->where('status', 'selesai')
-                ->whereBetween(DB::raw('COALESCE(disetujui_pada, updated_at)'), [$start, $end])
+                ->whereRaw('COALESCE(disetujui_pada, updated_at) BETWEEN ? AND ?', [$start, $end])
                 ->selectRaw(
-                    'AVG(TIMESTAMPDIFF(HOUR, created_at, COALESCE(disetujui_pada, updated_at))) as avg_h'
+                    'AVG(EXTRACT(EPOCH FROM (COALESCE(disetujui_pada, updated_at) - created_at)) / 3600) as avg_h'
                 )
                 ->value('avg_h');
 

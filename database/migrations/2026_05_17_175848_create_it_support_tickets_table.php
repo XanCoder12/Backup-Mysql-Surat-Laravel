@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('admin_id')->constrained('users')->onDelete('cascade');
             $table->string('subjek');
-            $table->enum('kategori', ['bug', 'error', 'fitur', 'lainnya']);
+            $table->string('kategori');
             $table->text('detail');
-            $table->enum('status', ['menunggu', 'diproses', 'selesai'])->default('menunggu');
+            $table->string('status')->default('menunggu');
             $table->text('catatan_it')->nullable(); // Catatan balasan dari IT Support
             $table->timestamps();
         });

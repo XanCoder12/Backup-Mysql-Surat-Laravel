@@ -2098,7 +2098,7 @@
                 'tm-row1': [
                     { name: 'Laravel', img: 'https://cdn.simpleicons.org/laravel/FF2D20' },
                     { name: 'Redis', img: 'https://cdn.simpleicons.org/redis/DC382D' },
-                    { name: 'MySQL', img: 'https://cdn.simpleicons.org/mysql/646CFF' },
+                    { name: 'PostgreSQL', img: 'https://cdn.simpleicons.org/postgresql/646CFF' },
                     { name: 'Eloquent ORM', dot: '#e11d48' },
                     { name: 'REST API', dot: '#0ea5e9' },
                     { name: 'Sanctum Auth', img: 'https://cdn.simpleicons.org/laravel/FF2D20' },

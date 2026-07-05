@@ -12,7 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('user', 'admin', 'admin_aspirasi', 'admin_kasubbag_tu', 'admin_kepala_balai', 'it_support') DEFAULT 'user'");
+        // No-op: role column is already string type — PostgreSQL uses string for flexible roles
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('role')->default('user')->change();
+        });
     }
 
     /**
@@ -20,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('user', 'admin', 'admin_aspirasi', 'admin_kasubbag_tu', 'admin_kepala_balai') DEFAULT 'user'");
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('role')->default('user')->change();
+        });
     }
 };

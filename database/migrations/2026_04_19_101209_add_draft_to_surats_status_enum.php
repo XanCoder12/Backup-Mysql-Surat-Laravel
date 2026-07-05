@@ -12,7 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("ALTER TABLE surats MODIFY status ENUM('proses', 'selesai', 'ditolak', 'revisi', 'draft') DEFAULT 'proses'");
+        // No-op: status column is already string type — no ENUM modification needed for PostgreSQL
+        Schema::table('surats', function (Blueprint $table) {
+            $table->string('status')->default('proses')->change();
+        });
     }
 
     /**
@@ -20,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("ALTER TABLE surats MODIFY status ENUM('proses', 'selesai', 'ditolak', 'revisi') DEFAULT 'proses'");
+        Schema::table('surats', function (Blueprint $table) {
+            $table->string('status')->default('proses')->change();
+        });
     }
 };

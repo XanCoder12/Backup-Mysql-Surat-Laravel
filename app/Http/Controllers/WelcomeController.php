@@ -44,27 +44,27 @@ class WelcomeController extends Controller
         $from12 = now()->subMonths(11)->startOfMonth();
 
         $monthlyCreated = Surat::query()
-            ->selectRaw('
-                YEAR(created_at) as y,
-                MONTH(created_at) as m,
+            ->selectRaw("
+                EXTRACT(YEAR FROM created_at)::int as y,
+                EXTRACT(MONTH FROM created_at)::int as m,
                 COUNT(*) as masuk,
                 SUM(CASE WHEN tahap_sekarang >= 5 THEN 1 ELSE 0 END) as keluar
-            ')
+            ")
             ->where('created_at', '>=', $from12)
-            ->groupByRaw('YEAR(created_at), MONTH(created_at)')
+            ->groupByRaw('EXTRACT(YEAR FROM created_at), EXTRACT(MONTH FROM created_at)')
             ->get()
             ->keyBy(fn ($row) => sprintf('%04d-%02d', $row->y, $row->m));
 
         $monthlySelesai = Surat::query()
-            ->selectRaw('
-                YEAR(updated_at) as y,
-                MONTH(updated_at) as m,
+            ->selectRaw("
+                EXTRACT(YEAR FROM updated_at)::int as y,
+                EXTRACT(MONTH FROM updated_at)::int as m,
                 COUNT(*) as total,
                 SUM(CASE WHEN deadline_sla IS NULL OR updated_at <= deadline_sla THEN 1 ELSE 0 END) as on_time
-            ')
+            ")
             ->where('status', 'selesai')
             ->where('updated_at', '>=', $from12)
-            ->groupByRaw('YEAR(updated_at), MONTH(updated_at)')
+            ->groupByRaw('EXTRACT(YEAR FROM updated_at), EXTRACT(MONTH FROM updated_at)')
             ->get()
             ->keyBy(fn ($row) => sprintf('%04d-%02d', $row->y, $row->m));
 
