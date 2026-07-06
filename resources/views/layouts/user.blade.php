@@ -1911,11 +1911,7 @@
 
         var switchToNewAccount = function(e) {
             if (e) e.preventDefault();
-            // Simpan akun saat ini ke localStorage sebelum pergi ke register
-            // agar tidak hilang saat sesi baru dibuat
-            saveCurrentAccount();
-            // Langsung ke register tanpa logout — akun lama tetap tersimpan di localStorage
-            window.location.href = '{{ route("register") }}';
+            document.getElementById('logout-form').submit();
         };
 
         var logoutCurrentUser = function() {
