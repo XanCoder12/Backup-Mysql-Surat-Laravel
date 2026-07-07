@@ -1349,6 +1349,13 @@
         }
 
         /* ===== OFFCANVAS NOTIF ===== */
+        /* Lighten the default Bootstrap offcanvas backdrop */
+        .offcanvas-backdrop {
+            background-color: rgba(15, 23, 42, 0.25) !important;
+        }
+        .offcanvas-backdrop.show {
+            opacity: 1 !important;
+        }
         .offcanvas-notif {
             width: 380px !important;
             background: rgba(255, 255, 255, 0.75) !important;
@@ -2179,6 +2186,53 @@
             });
         };
 
+        // ===== OFFCANVAS NOTIF INIT =====
+        // Initialize offcanvas without backdrop blocking — use custom light backdrop via CSS
+        (function initNotifOffcanvas() {
+            var el = document.getElementById('offcanvasNotif');
+            if (!el) return;
+
+            // Destroy any existing Bootstrap instance first to avoid double-init
+            var existing = bootstrap.Offcanvas.getInstance(el);
+            if (existing) existing.dispose();
+
+            // Re-init: backdrop true (needed for click-outside to close), scroll true
+            var offcanvasInstance = new bootstrap.Offcanvas(el, {
+                backdrop: true,
+                scroll: true,
+                keyboard: true
+            });
+
+            // Override the bell toggle button to use the instance directly
+            var toggleBtn = document.getElementById('notif-toggle');
+            if (toggleBtn) {
+                // Remove Bootstrap's data-bs-toggle to prevent double-init
+                toggleBtn.removeAttribute('data-bs-toggle');
+                toggleBtn.removeAttribute('data-bs-target');
+                toggleBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    offcanvasInstance.toggle();
+                });
+            }
+
+            // Re-initialize on Turbo navigation so offcanvas always works after page change
+            document.addEventListener('turbo:render', function () {
+                var elAfter = document.getElementById('offcanvasNotif');
+                if (!elAfter) return;
+                var inst = bootstrap.Offcanvas.getInstance(elAfter);
+                if (!inst) {
+                    inst = new bootstrap.Offcanvas(elAfter, { backdrop: true, scroll: true, keyboard: true });
+                }
+                var btn = document.getElementById('notif-toggle');
+                if (btn && btn.dataset.bsToggle !== undefined) {
+                    btn.removeAttribute('data-bs-toggle');
+                    btn.removeAttribute('data-bs-target');
+                    btn.onclick = function(e) { e.preventDefault(); e.stopPropagation(); inst.toggle(); };
+                }
+            }, { once: false });
+        })();
+
         // ===== SMOOTH PAGE NAVIGATION (Turbo Drive) =====
         if (!window.__userTurboNavBound) {
             window.__userTurboNavBound = true;
@@ -2189,11 +2243,25 @@
 
             document.addEventListener('turbo:before-render', function () {
                 document.documentElement.classList.add('turbo-loading');
+
+                // Cleanup modal backdrops
                 document.querySelectorAll('.modal-backdrop').forEach(function (el) { el.remove(); });
                 document.querySelectorAll('.modal.show').forEach(function (el) {
                     el.classList.remove('show');
                     el.style.display = '';
                 });
+
+                // Cleanup offcanvas backdrops & state to prevent black/stuck screen on navigation
+                document.querySelectorAll('.offcanvas-backdrop').forEach(function (el) { el.remove(); });
+                document.querySelectorAll('.offcanvas.show').forEach(function (el) {
+                    try {
+                        var instance = bootstrap.Offcanvas.getInstance(el);
+                        if (instance) instance.hide();
+                    } catch(e) {
+                        el.classList.remove('show');
+                    }
+                });
+
                 document.body.classList.remove('modal-open');
                 document.body.style.overflow = '';
                 document.body.style.paddingRight = '';
