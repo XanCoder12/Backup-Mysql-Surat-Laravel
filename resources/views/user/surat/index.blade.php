@@ -20,7 +20,7 @@
 <div class="card card-custom mb-3 animate-in" style="animation-delay: 0.1s;">
     <div class="card-body py-3 px-4">
         <form method="GET" action="{{ route('user.surat.index') }}" data-turbo="false"
-              class="d-flex gap-3 align-items-end flex-wrap">
+              class="d-flex gap-3 align-items-end flex-wrap filter-form">
             <div>
                 <label class="form-label mb-1" style="font-size:11px;color:#6b7280;font-weight:600;">STATUS</label>
                 <select name="status" class="form-select form-select-sm" style="font-size:13px;border-radius:7px;width:130px;background:#ffffff;color:#111827;border-color:#e5e7eb;">
@@ -103,7 +103,6 @@
                 searchTimer = setTimeout(() => {
                     const form = this.closest('form');
                     if (form) {
-                        // Using requestSubmit() to trigger Turbo if available
                         if (typeof form.requestSubmit === 'function') {
                             form.requestSubmit();
                         } else {
@@ -113,6 +112,19 @@
                 }, 600); // Debounce 600ms
             });
         }
+
+        // Auto-submit on select change (status, jenis, tahun, bulan)
+        document.querySelectorAll('.filter-form select').forEach(function(sel) {
+            sel.addEventListener('change', function() {
+                var form = this.closest('form');
+                if (!form) return;
+                if (typeof form.requestSubmit === 'function') {
+                    form.requestSubmit();
+                } else {
+                    form.submit();
+                }
+            });
+        });
     });
 </script>
 
